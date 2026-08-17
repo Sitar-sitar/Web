@@ -33,6 +33,9 @@ const brandColors: Record<Rubber["brand"], string> = {
   Butterfly: "border border-[#e93947]/30 bg-[#e93947]/10 text-[#9a1f2a]",
   Nittaku: "border border-[#d62e2e]/30 bg-[#d62e2e]/10 text-[#991c1c]",
   VICTAS: "border border-[#0b356d]/25 bg-[#0b356d]/10 text-[#0b356d]",
+  Yasaka: "border border-[#1370b8]/25 bg-[#1370b8]/10 text-[#125285]",
+  TIBHAR: "border border-[#29444e]/25 bg-[#29444e]/10 text-[#29444e]",
+  XIOM: "border border-[#8b4d00]/25 bg-[#8b4d00]/10 text-[#714200]",
 };
 
 const typeColors: Record<RubberType, string> = {
@@ -254,7 +257,7 @@ export default function Home() {
             <div className="col-span-12 flex justify-start border-t border-white/20 pt-6 md:col-span-2 md:justify-end md:border-0 md:pt-0">
               <div className="grid grid-cols-3 gap-x-6 gap-y-2 md:grid-cols-1 md:text-right">
                 <div><p className="font-display text-3xl font-black text-[#b9ef39]">{rubbers.length}</p><p className="text-[10px] font-bold tracking-[0.14em] text-[#b8c7d8]">掲載モデル</p></div>
-                <div><p className="font-display text-3xl font-black text-[#b9ef39]">3</p><p className="text-[10px] font-bold tracking-[0.14em] text-[#b8c7d8]">主要ブランド</p></div>
+                <div><p className="font-display text-3xl font-black text-[#b9ef39]">6</p><p className="text-[10px] font-bold tracking-[0.14em] text-[#b8c7d8]">掲載ブランド</p></div>
                 <div><p className="font-display text-3xl font-black text-[#b9ef39]">4</p><p className="text-[10px] font-bold tracking-[0.14em] text-[#b8c7d8]">ラバー種別</p></div>
               </div>
             </div>
@@ -328,7 +331,7 @@ export default function Home() {
                   <div className="flex items-center justify-between"><p className="text-xs font-bold tracking-[0.12em] text-[#42556a]">フィルター</p><button onClick={resetFilters} className="text-xs font-bold text-[#0c436e] underline underline-offset-4" type="button">リセット</button></div>
                   <div className="mt-5 space-y-5">
                     <FilterGroup label="メーカー">
-                      <SelectValue value={brand} onChange={(event) => setBrand(event.target.value as typeof brand)} options={["すべて", "Butterfly", "Nittaku", "VICTAS"]} />
+                      <SelectValue value={brand} onChange={(event) => setBrand(event.target.value as typeof brand)} options={["すべて", "Butterfly", "Nittaku", "VICTAS", "Yasaka", "TIBHAR", "XIOM"]} />
                     </FilterGroup>
                     <FilterGroup label="ラバー種別">
                       <SelectValue value={type} onChange={(event) => setType(event.target.value as typeof type)} options={["すべて", "裏ソフト", "表ソフト", "粒高", "アンチ"]} />

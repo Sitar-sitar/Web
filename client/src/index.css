@@ -1,19 +1,9 @@
-/* 卓球ラバー図鑑 / Tempo Ledger — コートの速度感を電気的な青で、根拠の読みやすさを温白と精密な罫線で表現する。 */
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,800&family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap');
+/* 卓球ラバー図鑑 / Court Tempo — コートネイビー、クレイコーラル、ライムのスコアマーカーで、提案への短い進行をつくる。 */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900&family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
-
-@theme inline {
-  --font-sans: "Noto Sans JP", sans-serif;
-  --font-display: "Barlow Condensed", "Noto Sans JP", sans-serif;
-  --color-background: var(--background); --color-foreground: var(--foreground); --color-card: var(--card); --color-card-foreground: var(--card-foreground); --color-popover: var(--popover); --color-popover-foreground: var(--popover-foreground); --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground); --color-secondary: var(--secondary); --color-secondary-foreground: var(--secondary-foreground); --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground); --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground); --color-destructive: var(--destructive); --color-destructive-foreground: var(--destructive-foreground); --color-border: var(--border); --color-input: var(--input); --color-ring: var(--ring);
-}
-
-:root { --background: oklch(.97 .006 91); --foreground: oklch(.23 .035 250); --card: oklch(1 0 0); --card-foreground: oklch(.23 .035 250); --popover: oklch(1 0 0); --popover-foreground: oklch(.23 .035 250); --primary: oklch(.47 .19 258); --primary-foreground: oklch(1 0 0); --secondary: oklch(.94 .014 245); --secondary-foreground: oklch(.23 .035 250); --muted: oklch(.93 .012 245); --muted-foreground: oklch(.5 .025 250); --accent: oklch(.91 .17 123); --accent-foreground: oklch(.23 .035 250); --destructive: oklch(.62 .2 30); --destructive-foreground: oklch(1 0 0); --border: oklch(.87 .014 245); --input: oklch(.87 .014 245); --ring: oklch(.47 .19 258); }
-
-@layer base { * { @apply border-border outline-ring/50; } html { scroll-behavior:smooth; } body { @apply bg-background text-foreground font-sans; } button:not(:disabled),a[href],select:not(:disabled),input { @apply cursor-pointer; } }
-@keyframes fadeIn { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
-@keyframes slideIn { from { opacity:0; transform:translateX(24px) } to { opacity:1; transform:translateX(0) } }
-@media (prefers-reduced-motion:no-preference) { button:active { transform:scale(.97) } }
+@theme inline { --font-sans:"Noto Sans JP",sans-serif; --font-display:"Barlow Condensed","Noto Sans JP",sans-serif; --color-background:var(--background); --color-foreground:var(--foreground); --color-primary:var(--primary); --color-primary-foreground:var(--primary-foreground); --color-border:var(--border); --color-input:var(--input); --color-ring:var(--ring); }
+:root { --background:oklch(.98 .005 100); --foreground:oklch(.23 .04 252); --primary:oklch(.31 .08 250); --primary-foreground:oklch(1 0 0); --border:oklch(.88 .014 245); --input:oklch(.88 .014 245); --ring:oklch(.78 .19 125); }
+@layer base { * { @apply border-border outline-ring/50; } html{scroll-behavior:smooth} body { @apply bg-background text-foreground font-sans; } button:not(:disabled),a[href],select:not(:disabled),input { @apply cursor-pointer; } }
+@media (prefers-reduced-motion:no-preference){button:active{transform:scale(.97)}}

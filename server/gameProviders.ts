@@ -7,6 +7,7 @@ import {
   TargetStatDefinition,
   UidResponseCache,
   lookupUidBuild,
+  priorityRecommendations,
   withGuideMetadata,
 } from "./buildAdvisor";
 import { generatedGenshinGuide, generatedZzzGuide } from "./individualGuides";
@@ -246,12 +247,13 @@ export function normalizeGenshinPayload(payload: unknown, catalog: GenshinCatalo
     const weaponFlat = asRecord(weapon?.flat);
     const weaponInfo = asRecord(weapon?.weapon);
     const guide = genshinGuide(name);
+    const comparisons = comparisonsFromStats(guide.targets, statValues);
     return {
       id, name, level: number(asRecord(avatar.propMap)["4001"] && asRecord(asRecord(avatar.propMap)["4001"]).val, null as unknown as number),
       rank: asArray(avatar.talentIdList).length, portrait: iconUrl(text(metadata.SideIconName)) ?? null,
       element: elementMeta.label, elementColor: elementMeta.color, path: GI_WEAPONS[text(metadata.WeaponType)] ?? "武器",
       lightCone: weapon ? { name: localized(catalog.loc, weaponFlat.nameTextMapHash, "武器"), level: number(weaponInfo.level, null as unknown as number), rank: number(Object.values(asRecord(weaponInfo.affixMap))[0], -1) + 1, icon: iconUrl(text(weaponFlat.icon)) ?? null } : null,
-      relics, allStats, guide, comparisons: comparisonsFromStats(guide.targets, statValues),
+      relics, allStats, guide, comparisons, recommendations: priorityRecommendations(comparisons),
     };
   });
   return { player: { uid: text(root.uid), name: text(player.nickname, "旅人"), level: number(player.level, null as unknown as number) }, characters };
@@ -473,11 +475,12 @@ export function normalizeZzzPayload(payload: unknown, catalog: ZzzCatalog): Norm
     const weaponId = text(rawWeapon.Id ?? metadata.WeaponId);
     const weaponMeta = asRecord(catalog.weapons[weaponId]);
     const finalStats = finalZzzStats(catalog, zzzAgentBaseStats(catalog, metadata, avatar), zzzWeaponStats(catalog, weaponMeta, rawWeapon), equipmentByProperty);
+    const comparisons = comparisonsFromStats(guide.targets, finalStats.values);
     return {
       id, name, level: number(avatar.Level, null as unknown as number), rank: number(avatar.TalentLevel, null as unknown as number), portrait: iconUrl(text(metadata.Image)) ?? null,
       element: elements.map((element) => element?.label).filter(Boolean).join(" / ") || "属性", elementColor: elements[0]?.color ?? "#c28a42", path: (ZZZ_PROFESSIONS[profession] ?? profession) || "役割",
       lightCone: weaponId ? { name: zzzName(catalog, weaponMeta.ItemName, "音動機"), level: number(rawWeapon.Level, null as unknown as number), rank: number(rawWeapon.BreakLevel, null as unknown as number), icon: iconUrl(text(weaponMeta.ImagePath)) ?? null } : null,
-      relics, allStats: finalStats.display, statsNote: "エージェント・音動機・コア強化・ドライバディスクを合算した戦闘外の推定最終値です。戦闘中・条件付き効果は含みません。", guide, comparisons: comparisonsFromStats(guide.targets, finalStats.values),
+      relics, allStats: finalStats.display, statsNote: "エージェント・音動機・コア強化・ドライバディスクを合算した戦闘外の推定最終値です。戦闘中・条件付き効果は含みません。", guide, comparisons, recommendations: priorityRecommendations(comparisons),
     };
   });
   return { player: { uid: text(root.uid, text(profile.Uid)), name: text(profile.Nickname, "プロキシ"), level: number(profile.Level, null as unknown as number) }, characters };

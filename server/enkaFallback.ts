@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { guideFor, type BuildLookupResult, type CharacterProfile } from "./buildAdvisor";
+import { guideFor, priorityRecommendations, type BuildLookupResult, type CharacterProfile } from "./buildAdvisor";
 
 type RawRecord = Record<string, unknown>;
 type LookupData = Omit<BuildLookupResult, "cached" | "cacheExpiresAt" | "fetchedAt">;
@@ -92,12 +92,14 @@ export function normalizeEnkaPayload(payload: unknown, staticData: StaticIndex =
       return { id: `${str(relic.tid, "relic")}-${str(relic.type, String(relicIndex))}`, name: `遺物 ${relicIndex + 1}`, setName: str(staticData.relicSets[setId]?.name) || `未解決（ID: ${setId || "不明"}）`, level: num(relic.level), icon: null, main: props[0] ? { name: props[0].name, display: props[0].display } : null, subs: props.slice(1).map((item) => ({ name: item.name, display: item.display })) };
     });
     const cone = record(avatar.equipment); const coneId = str(cone.tid); const path = PATH_NAMES[str(avatarMeta.path)] ?? PATH_NAMES[fallbackMeta.path ?? ""] ?? "未設定"; const guide = guideFor(metaName, path);
+    const comparisons = guide.targets.map((target) => { const current = calculatedValue(target.label, calculatedTotals); return { ...target, current, currentDisplay: current === null ? "未取得" : `算出 ${current.toFixed(target.unit === "%" ? 1 : 0)}${target.unit}`, achieved: { "厳選": current === null ? null : current >= target.targets["厳選"], "目標": current === null ? null : current >= target.targets["目標"], "妥協": current === null ? null : current >= target.targets["妥協"] } }; });
     return {
       id: avatarId || `enka-${index}`, name: metaName, level: num(avatar.level), rank: num(avatar.rank),
       portrait: avatarId ? `https://enka.network/ui/hsr/SpriteOutput/AvatarRoundIcon/Avatar/${avatarId}.png` : null, element: ELEMENT_NAMES[str(avatarMeta.element)] ?? ELEMENT_NAMES[fallbackMeta.element ?? ""] ?? "未解決", elementColor: null, path,
       lightCone: Object.keys(cone).length ? { name: str(staticData.lightCones[coneId]?.name) || `未解決（ID: ${coneId || "不明"}）`, level: num(cone.level), rank: num(cone.rank), icon: null } : null,
       relics, allStats: aggregate(propertyRecords, base), guide,
-      comparisons: guide.targets.map((target) => { const current = calculatedValue(target.label, calculatedTotals); return { ...target, current, currentDisplay: current === null ? "未取得" : `算出 ${current.toFixed(target.unit === "%" ? 1 : 0)}${target.unit}`, achieved: { "厳選": current === null ? null : current >= target.targets["厳選"], "目標": current === null ? null : current >= target.targets["目標"], "妥協": current === null ? null : current >= target.targets["妥協"] } }; }),
+      comparisons,
+      recommendations: priorityRecommendations(comparisons),
     } satisfies CharacterProfile;
   });
   return { player: { uid: str(root.uid ?? detail.uid), name: str(detail.nickname, "開拓者"), level: num(detail.level) }, characters };

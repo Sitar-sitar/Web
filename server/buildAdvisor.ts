@@ -55,6 +55,41 @@ export type StatComparison = TargetStatDefinition & {
   achieved: Record<TierName, boolean | null>;
 };
 
+export type PriorityRecommendation = {
+  key: StatKey;
+  label: string;
+  unit: "" | "%";
+  current: number;
+  target: number;
+  deficit: number;
+  priority: "最優先" | "優先" | "次点";
+  rationale: string;
+};
+
+/** 公開プロフィールで計測できる値を、目標水準までの相対不足量で優先表示する。 */
+export function priorityRecommendations(comparisons: StatComparison[]): PriorityRecommendation[] {
+  return comparisons
+    .filter((comparison): comparison is StatComparison & { current: number } => comparison.current !== null && comparison.current < comparison.targets["目標"])
+    .map((comparison) => {
+      const target = comparison.targets["目標"];
+      const deficit = target - comparison.current;
+      const severity = deficit / Math.max(target, 1);
+      const priority: PriorityRecommendation["priority"] = severity >= 0.25 ? "最優先" : severity >= 0.1 ? "優先" : "次点";
+      return {
+        key: comparison.key,
+        label: comparison.label,
+        unit: comparison.unit,
+        current: comparison.current,
+        target,
+        deficit,
+        priority,
+        rationale: `目標 ${target}${comparison.unit} まであと ${deficit.toFixed(comparison.unit === "%" ? 1 : 0)}${comparison.unit}`,
+      };
+    })
+    .sort((left, right) => (right.deficit / Math.max(right.target, 1)) - (left.deficit / Math.max(left.target, 1)))
+    .slice(0, 3);
+}
+
 export type CharacterProfile = {
   id: string;
   name: string;
@@ -83,6 +118,7 @@ export type CharacterProfile = {
   statsNote?: string;
   guide: GuideDefinition;
   comparisons: StatComparison[];
+  recommendations: PriorityRecommendation[];
 };
 
 export type BuildLookupResult = {
@@ -361,6 +397,7 @@ function parseCharacter(source: RawRecord): CharacterProfile {
     };
   });
 
+  const comparisons = guide.targets.map((target) => comparisonFor(properties, target));
   return {
     id: text(source.id, name),
     name,
@@ -379,7 +416,8 @@ function parseCharacter(source: RawRecord): CharacterProfile {
     relics,
     allStats: properties.map((stat) => ({ name: text(stat.name), display: statDisplay(stat), icon: text(stat.icon) || null })).filter((stat) => stat.name),
     guide,
-    comparisons: guide.targets.map((target) => comparisonFor(properties, target)),
+    comparisons,
+    recommendations: priorityRecommendations(comparisons),
   };
 }
 

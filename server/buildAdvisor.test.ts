@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { guideFor, lookupUidBuild, lookupWithFallback, UidResponseCache, normalizeMihomoPayload, withGuideMetadata } from "./buildAdvisor";
+import { guideFor, lookupUidBuild, lookupWithFallback, UidResponseCache, normalizeMihomoPayload, priorityRecommendations, withGuideMetadata } from "./buildAdvisor";
 import { normalizeEnkaPayload } from "./enkaFallback";
 import { CHARACTER_GUIDE_CATALOG, HSR_RUNTIME_PATHS, ZZZ_RUNTIME_PROFESSIONS } from "./characterGuideCatalog";
 import { CHARACTER_GUIDE_METADATA } from "./characterGuideMetadata";
@@ -168,5 +168,18 @@ describe("全キャラクターガイドの網羅性", () => {
     CHARACTER_GUIDE_CATALOG.hsr.forEach((name, index) => expect(hsrGuides[index]?.profileId).toBe(expectedProfileFor("hsr", name)));
     CHARACTER_GUIDE_CATALOG.genshin.forEach((name, index) => expect(genshinGuides[index]?.profileId).toBe(expectedProfileFor("genshin", name)));
     CHARACTER_GUIDE_CATALOG.zzz.forEach((name, index) => expect(zzzGuides[index]?.profileId).toBe(expectedProfileFor("zzz", name)));
+  });
+});
+
+describe("未達ステータスの優先強化提案", () => {
+  it("目標水準までの相対不足が大きい項目を優先し、未取得値は提案から除外する", () => {
+    const recommendations = priorityRecommendations([
+      { key: "critRate", label: "会心率", unit: "%", current: 55, currentDisplay: "55.0%", targets: { "厳選": 85, "目標": 75, "妥協": 65 }, achieved: { "厳選": false, "目標": false, "妥協": false } },
+      { key: "speed", label: "速度", unit: "", current: 128, currentDisplay: "128", targets: { "厳選": 160, "目標": 134, "妥協": 120 }, achieved: { "厳選": false, "目標": false, "妥協": true } },
+      { key: "attack", label: "攻撃力", unit: "", current: null, currentDisplay: "未取得", targets: { "厳選": 3000, "目標": 2800, "妥協": 2500 }, achieved: { "厳選": null, "目標": null, "妥協": null } },
+    ]);
+    expect(recommendations).toHaveLength(2);
+    expect(recommendations[0]).toMatchObject({ key: "critRate", priority: "最優先", deficit: 20 });
+    expect(recommendations[1]).toMatchObject({ key: "speed", priority: "次点", deficit: 6 });
   });
 });

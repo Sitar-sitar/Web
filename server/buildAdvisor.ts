@@ -66,6 +66,17 @@ export type PriorityRecommendation = {
   rationale: string;
 };
 
+export type EquipmentAction = {
+  recommendationKey: StatKey;
+  statLabel: string;
+  action: "主ステータスを変更" | "サブステータスを厳選";
+  slot: string;
+  equippedName: string | null;
+  currentMain: string | null;
+  desiredStat: string;
+  reason: string;
+};
+
 /** 公開プロフィールで計測できる値を、目標水準までの相対不足量で優先表示する。 */
 export function priorityRecommendations(comparisons: StatComparison[]): PriorityRecommendation[] {
   return comparisons
@@ -90,6 +101,70 @@ export function priorityRecommendations(comparisons: StatComparison[]): Priority
     .slice(0, 3);
 }
 
+type RelicForAction = { name: string; slot?: string; main: { name: string; display: string } | null };
+
+const STAT_MAIN_LABELS: Record<StatKey, string[]> = {
+  critRate: ["会心率"], critDmg: ["会心ダメ"], speed: ["速度"], attack: ["攻撃力"], attackPercent: ["攻撃力"], breakEffect: ["撃破特効"],
+  effectHitRate: ["効果命中"], effectRes: ["効果抵抗"], hp: ["HP"], hpPercent: ["HP"], defense: ["防御力"], defPercent: ["防御力"],
+  energyRecharge: ["元素チャージ", "EP回復", "エネルギー"], elementalMastery: ["元素熟知"], anomalyMastery: ["異常マスタリー"], impact: ["衝撃力"], penRatio: ["貫通"], energyRegen: ["エネルギー"],
+};
+
+function guideFamily(guide: GuideDefinition): "hsr" | "genshin" | "zzz" {
+  const slots = guide.mainStats.map((entry) => entry.slot).join(" ");
+  if (/時計|杯|冠/.test(slots)) return "genshin";
+  if (/(^|\s)(IV|V|VI)(\s|$)/.test(slots)) return "zzz";
+  return "hsr";
+}
+
+function defaultSlotsForStat(family: "hsr" | "genshin" | "zzz", key: StatKey): string[] {
+  if (key === "critRate" || key === "critDmg") return [family === "genshin" ? "冠" : family === "zzz" ? "IV" : "胴体"];
+  if (key === "speed") return family === "hsr" ? ["脚部"] : family === "zzz" ? ["VI"] : [];
+  if (key === "energyRecharge") return family === "genshin" ? ["時計"] : family === "hsr" ? ["連結縄"] : ["VI"];
+  if (key === "elementalMastery") return family === "genshin" ? ["時計", "杯", "冠"] : [];
+  if (key === "anomalyMastery") return family === "zzz" ? ["IV", "VI"] : [];
+  if (key === "impact" || key === "energyRegen") return family === "zzz" ? ["VI"] : [];
+  if (key === "penRatio") return family === "zzz" ? ["V"] : [];
+  if (key === "breakEffect") return family === "hsr" ? ["連結縄"] : [];
+  if (key === "effectHitRate") return family === "hsr" ? ["胴体"] : [];
+  if (key === "attack" || key === "attackPercent") return family === "genshin" ? ["時計", "杯"] : family === "zzz" ? ["V", "VI"] : ["脚部", "連結縄"];
+  if (key === "hp" || key === "hpPercent" || key === "defense" || key === "defPercent") return family === "genshin" ? ["時計", "杯", "冠"] : ["胴体", "次元界オーブ", "連結縄"];
+  return [];
+}
+
+function normalizedSlot(slot: string) {
+  const normalized = slot.replace("時の砂", "時計").replace("空の杯", "杯").replace("理の冠", "冠").replace("ドライバディスク ", "").trim();
+  return ({ IV: "4", V: "5", VI: "6" } as Record<string, string>)[normalized] ?? normalized;
+}
+
+function mainStatMatchesGuide(currentMain: string | null, guideValue: string | undefined, labels: string[]) {
+  if (!currentMain) return false;
+  const current = currentMain.replace("ボーナス", "");
+  return labels.some((label) => current.includes(label)) || Boolean(guideValue && (guideValue.includes(current) || current.includes(guideValue.replace("%", ""))));
+}
+
+/** 未達ステータスを、公開プロフィール上の装備部位と主・サブステータスの具体的な見直しへ変換する。 */
+export function equipmentActionsFor(guide: GuideDefinition, relics: RelicForAction[], recommendations: PriorityRecommendation[]): EquipmentAction[] {
+  const family = guideFamily(guide);
+  return recommendations.map((recommendation) => {
+    const labels = STAT_MAIN_LABELS[recommendation.key];
+    const configuredSlots = guide.mainStats.filter((entry) => labels.some((label) => entry.value.includes(label))).map((entry) => entry.slot);
+    const slot = (configuredSlots.length ? configuredSlots : defaultSlotsForStat(family, recommendation.key))[0] ?? guide.mainStats[0]?.slot ?? "装備部位";
+    const equipped = relics.find((relic) => normalizedSlot(relic.slot ?? relic.name) === normalizedSlot(slot)) ?? null;
+    const currentMain = equipped?.main?.name ?? null;
+    const guideValue = guide.mainStats.find((entry) => normalizedSlot(entry.slot) === normalizedSlot(slot))?.value;
+    const mainMatches = mainStatMatchesGuide(currentMain, guideValue, labels);
+    const desiredStat = labels[0] ?? recommendation.label;
+    const action: EquipmentAction["action"] = mainMatches ? "サブステータスを厳選" : "主ステータスを変更";
+    return {
+      recommendationKey: recommendation.key, statLabel: recommendation.label, action, slot,
+      equippedName: equipped?.name ?? null, currentMain, desiredStat,
+      reason: mainMatches
+        ? `${slot}の主ステータスは${currentMain}です。${desiredStat}のサブステータスが付く個体を優先して厳選します。`
+        : `${slot}${currentMain ? `は現在${currentMain}` : ""}です。${desiredStat}を主ステータスにした${equipped?.name ?? "装備"}へ変更すると不足分を補いやすくなります。`,
+    };
+  });
+}
+
 export type CharacterProfile = {
   id: string;
   name: string;
@@ -108,6 +183,7 @@ export type CharacterProfile = {
   relics: Array<{
     id: string;
     name: string;
+    slot?: string;
     setName: string;
     level: number | null;
     icon: string | null;
@@ -119,6 +195,7 @@ export type CharacterProfile = {
   guide: GuideDefinition;
   comparisons: StatComparison[];
   recommendations: PriorityRecommendation[];
+  equipmentActions: EquipmentAction[];
 };
 
 export type BuildLookupResult = {
@@ -383,12 +460,14 @@ function parseCharacter(source: RawRecord): CharacterProfile {
   const properties = asArray(source.properties).map(asRecord);
   const name = text(source.name, "名称不明");
   const guide = guideFor(name, text(path.name));
+  const hsrSlots = ["頭部", "手部", "胴体", "脚部", "次元界オーブ", "連結縄"];
   const relics = asArray(source.relics).map((entry, index) => {
     const relic = asRecord(entry);
     const main = asRecord(relic.main_affix ?? relic.mainAffix);
     return {
       id: text(relic.id, `${name}-relic-${index}`),
       name: text(relic.name, "遺物"),
+      slot: hsrSlots[index] ?? text(relic.type ?? relic.slot),
       setName: text(relic.set_name ?? relic.setName),
       level: nullableNumber(relic.level),
       icon: text(relic.icon) || null,
@@ -398,6 +477,7 @@ function parseCharacter(source: RawRecord): CharacterProfile {
   });
 
   const comparisons = guide.targets.map((target) => comparisonFor(properties, target));
+  const recommendations = priorityRecommendations(comparisons);
   return {
     id: text(source.id, name),
     name,
@@ -417,7 +497,8 @@ function parseCharacter(source: RawRecord): CharacterProfile {
     allStats: properties.map((stat) => ({ name: text(stat.name), display: statDisplay(stat), icon: text(stat.icon) || null })).filter((stat) => stat.name),
     guide,
     comparisons,
-    recommendations: priorityRecommendations(comparisons),
+    recommendations,
+    equipmentActions: equipmentActionsFor(guide, relics, recommendations),
   };
 }
 

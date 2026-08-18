@@ -13,6 +13,7 @@ const lookupResult = {
     guide: { headline: "会心ダメージを強化する。", relicSet: "極地のヘヴィメタル ×4", planarSet: "会心率を優先", mainStats: [] },
     comparisons: [{ key: "critDmg", label: "会心ダメージ", unit: "%", current: 131.6, currentDisplay: "131.6%", targets: { "厳選": 180, "目標": 150, "妥協": 130 }, achieved: { "厳選": false, "目標": false, "妥協": true } }],
     recommendations: [{ key: "critDmg", label: "会心ダメージ", unit: "%", current: 131.6, target: 150, deficit: 18.4, priority: "優先", rationale: "目標 150% まであと 18.4%" }],
+    equipmentActions: [{ recommendationKey: "critDmg", statLabel: "会心ダメージ", action: "主ステータスを変更", slot: "IV", equippedName: "ドライバディスク 4", currentMain: "HP%", desiredStat: "会心ダメ", reason: "IVは現在HP%です。会心ダメを主ステータスにした装備へ変更します。" }],
   }],
 };
 
@@ -27,5 +28,7 @@ describe("優先強化項目の画面統合", () => {
     expect(screen.getByRole("heading", { name: "優先して強化する項目" })).toBeTruthy();
     expect(screen.getByText("目標 150% まであと 18.4%")).toBeTruthy();
     expect(screen.getByText("-18.4%", { exact: true })).toBeTruthy();
+    expect(screen.getByText("EQUIPMENT ACTION / 主ステータスを変更")).toBeTruthy();
+    expect(screen.getByText("IV：会心ダメ")).toBeTruthy();
   });
 });

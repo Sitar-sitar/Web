@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import {
   BuildLookupResult,
   CharacterProfile,
+  equipmentActionsFor,
   GuideDefinition,
   StatComparison,
   TargetStatDefinition,
@@ -235,6 +236,7 @@ export function normalizeGenshinPayload(payload: unknown, catalog: GenshinCatalo
       return {
         id: text(equip.itemId, `${id}-artifact-${index}`),
         name: localized(catalog.loc, flat.nameTextMapHash, GI_ARTIFACT_SLOTS[text(flat.equipType)] ?? "聖遺物"),
+        slot: GI_ARTIFACT_SLOTS[text(flat.equipType)] ?? "聖遺物",
         setName: localized(catalog.loc, flat.setNameTextMapHash, "聖遺物セット"),
         level: Math.max(0, number(reliquary.level) - 1), icon: iconUrl(text(flat.icon)) ?? null,
         main: mainProp ? { name: GI_PROP_NAMES[mainProp] ?? mainProp, display: giStat(mainProp, number(main.statValue), false).display } : null,
@@ -248,12 +250,13 @@ export function normalizeGenshinPayload(payload: unknown, catalog: GenshinCatalo
     const weaponInfo = asRecord(weapon?.weapon);
     const guide = genshinGuide(name);
     const comparisons = comparisonsFromStats(guide.targets, statValues);
+    const recommendations = priorityRecommendations(comparisons);
     return {
       id, name, level: number(asRecord(avatar.propMap)["4001"] && asRecord(asRecord(avatar.propMap)["4001"]).val, null as unknown as number),
       rank: asArray(avatar.talentIdList).length, portrait: iconUrl(text(metadata.SideIconName)) ?? null,
       element: elementMeta.label, elementColor: elementMeta.color, path: GI_WEAPONS[text(metadata.WeaponType)] ?? "武器",
       lightCone: weapon ? { name: localized(catalog.loc, weaponFlat.nameTextMapHash, "武器"), level: number(weaponInfo.level, null as unknown as number), rank: number(Object.values(asRecord(weaponInfo.affixMap))[0], -1) + 1, icon: iconUrl(text(weaponFlat.icon)) ?? null } : null,
-      relics, allStats, guide, comparisons, recommendations: priorityRecommendations(comparisons),
+      relics, allStats, guide, comparisons, recommendations, equipmentActions: equipmentActionsFor(guide, relics, recommendations),
     };
   });
   return { player: { uid: text(root.uid), name: text(player.nickname, "旅人"), level: number(player.level, null as unknown as number) }, characters };
@@ -464,7 +467,8 @@ export function normalizeZzzPayload(payload: unknown, catalog: ZzzCatalog): Norm
         addProperty(equipmentByProperty, stat.id, stat.value);
       });
       const setName = zzzName(catalog, suit.Name ?? `EquipmentSuit_${suitId}_name`, "ドライバディスクセット");
-      return { id: text(equipment.Uid, `${id}-disc-${index}`), name: `ドライバディスク ${text(entry.Slot, String(index + 1))}`, setName, level, icon: null, main: mainStats[0] ? { name: mainStats[0].name, display: mainStats[0].display } : null, subs: subs.map((stat) => ({ name: stat.name, display: stat.display })) };
+      const slot = text(entry.Slot, String(index + 1));
+      return { id: text(equipment.Uid, `${id}-disc-${index}`), name: `ドライバディスク ${slot}`, slot, setName, level, icon: null, main: mainStats[0] ? { name: mainStats[0].name, display: mainStats[0].display } : null, subs: subs.map((stat) => ({ name: stat.name, display: stat.display })) };
     });
     Object.entries(suitCounts).filter(([, count]) => count >= 2).forEach(([suitId]) => {
       const bonusProps = asRecord(asRecord(suits[suitId]).SetBonusProps);
@@ -476,11 +480,12 @@ export function normalizeZzzPayload(payload: unknown, catalog: ZzzCatalog): Norm
     const weaponMeta = asRecord(catalog.weapons[weaponId]);
     const finalStats = finalZzzStats(catalog, zzzAgentBaseStats(catalog, metadata, avatar), zzzWeaponStats(catalog, weaponMeta, rawWeapon), equipmentByProperty);
     const comparisons = comparisonsFromStats(guide.targets, finalStats.values);
+    const recommendations = priorityRecommendations(comparisons);
     return {
       id, name, level: number(avatar.Level, null as unknown as number), rank: number(avatar.TalentLevel, null as unknown as number), portrait: iconUrl(text(metadata.Image)) ?? null,
       element: elements.map((element) => element?.label).filter(Boolean).join(" / ") || "属性", elementColor: elements[0]?.color ?? "#c28a42", path: (ZZZ_PROFESSIONS[profession] ?? profession) || "役割",
       lightCone: weaponId ? { name: zzzName(catalog, weaponMeta.ItemName, "音動機"), level: number(rawWeapon.Level, null as unknown as number), rank: number(rawWeapon.BreakLevel, null as unknown as number), icon: iconUrl(text(weaponMeta.ImagePath)) ?? null } : null,
-      relics, allStats: finalStats.display, statsNote: "エージェント・音動機・コア強化・ドライバディスクを合算した戦闘外の推定最終値です。戦闘中・条件付き効果は含みません。", guide, comparisons, recommendations: priorityRecommendations(comparisons),
+      relics, allStats: finalStats.display, statsNote: "エージェント・音動機・コア強化・ドライバディスクを合算した戦闘外の推定最終値です。戦闘中・条件付き効果は含みません。", guide, comparisons, recommendations, equipmentActions: equipmentActionsFor(guide, relics, recommendations),
     };
   });
   return { player: { uid: text(root.uid, text(profile.Uid)), name: text(profile.Nickname, "プロキシ"), level: number(profile.Level, null as unknown as number) }, characters };

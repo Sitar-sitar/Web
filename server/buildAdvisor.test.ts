@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { guideFor, lookupUidBuild, lookupWithFallback, UidResponseCache, normalizeMihomoPayload, priorityRecommendations, withGuideMetadata } from "./buildAdvisor";
+import { equipmentActionsFor, guideFor, lookupUidBuild, lookupWithFallback, UidResponseCache, normalizeMihomoPayload, priorityRecommendations, withGuideMetadata } from "./buildAdvisor";
 import { normalizeEnkaPayload } from "./enkaFallback";
 import { CHARACTER_GUIDE_CATALOG, HSR_RUNTIME_PATHS, ZZZ_RUNTIME_PROFESSIONS } from "./characterGuideCatalog";
 import { CHARACTER_GUIDE_METADATA } from "./characterGuideMetadata";
@@ -16,7 +16,7 @@ describe("MiHoMoデータ正規化", () => {
         light_cone: { name: "夢が帰り着く場所", level: 80, rank: 1, icon: "https://example.com/cone.png" },
         properties: [
           { field: "speed", name: "速度", value: 154, display: "154", percent: false },
-          { field: "break_dmg", name: "撃破特効", value: 3.2, display: "320.0%", percent: true },
+          { field: "break_dmg", name: "撃破特効", value: 2.4, display: "240.0%", percent: true },
           { field: "attack_added_ratio", name: "攻撃力%", value: 0.5, display: "50.0%", percent: true },
         ],
         relics: [{ id: "1", name: "鉄騎", set_name: "鉄騎の執行者", level: 15, icon: "https://example.com/relic.png", main_affix: { name: "攻撃力%", value: 0.4, display: "43.2%", percent: true }, sub_affix: [] }],
@@ -27,7 +27,8 @@ describe("MiHoMoデータ正規化", () => {
     expect(data.characters[0]?.relics).toHaveLength(1);
     expect(data.characters[0]?.guide.relicSet).toContain("鉄騎");
     expect(data.characters[0]?.comparisons.find((item) => item.key === "speed")?.achieved["目標"]).toBe(true);
-    expect(data.characters[0]?.comparisons.find((item) => item.key === "breakEffect")?.current).toBe(320);
+    expect(data.characters[0]?.comparisons.find((item) => item.key === "breakEffect")?.current).toBe(240);
+    expect(data.characters[0]?.equipmentActions.find((action) => action.recommendationKey === "breakEffect")).toMatchObject({ slot: "連結縄", action: "主ステータスを変更" });
   });
 
   it("主要キャラクターには個別の遺物推奨定義を適用する", () => {
@@ -181,5 +182,19 @@ describe("未達ステータスの優先強化提案", () => {
     expect(recommendations).toHaveLength(2);
     expect(recommendations[0]).toMatchObject({ key: "critRate", priority: "最優先", deficit: 20 });
     expect(recommendations[1]).toMatchObject({ key: "speed", priority: "次点", deficit: 6 });
+  });
+
+  it("装備部位の主ステータス変更とサブステータス厳選を、現在の装備に応じて分けて提案する", () => {
+    const guide = guideFor("黄泉", "虚無");
+    const actions = equipmentActionsFor(guide, [
+      { name: "遺物 3", slot: "胴体", main: { name: "HP%", display: "43.2%" } },
+      { name: "遺物 4", slot: "脚部", main: { name: "速度", display: "25" } },
+    ], [
+      { key: "critDmg", label: "会心ダメ", unit: "%", current: 120, target: 150, deficit: 30, priority: "優先", rationale: "不足" },
+      { key: "speed", label: "速度", unit: "", current: 120, target: 134, deficit: 14, priority: "優先", rationale: "不足" },
+    ]);
+
+    expect(actions[0]).toMatchObject({ slot: "胴体", action: "主ステータスを変更", desiredStat: "会心ダメ" });
+    expect(actions[1]).toMatchObject({ slot: "脚部", action: "サブステータスを厳選", desiredStat: "速度" });
   });
 });

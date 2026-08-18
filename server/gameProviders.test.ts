@@ -26,6 +26,7 @@ describe("原神公開プロフィールの正規化", () => {
     expect(result.characters[0]?.relics[0]?.setName).toBe("氷風を彷徨う勇士");
     expect(result.characters[0]?.comparisons.find((comparison) => comparison.key === "critRate")?.current).toBe(72);
     expect(result.characters[0]?.comparisons.find((comparison) => comparison.key === "critDmg")?.current).toBe(155);
+    expect(result.characters[0]?.equipmentActions.find((action) => action.recommendationKey === "critDmg")).toMatchObject({ slot: "冠", action: "主ステータスを変更" });
   });
 
   it("キャラクターごとに異なる有効ステータスと優先度注記を選択する", () => {
@@ -97,6 +98,7 @@ describe("ZZZ公開プロフィールの正規化", () => {
     expect(result.characters[0]?.allStats.find((stat) => stat.name === "攻撃力")?.display).toBe("1070");
     expect(result.characters[0]?.comparisons.map((comparison) => comparison.key)).toEqual(["critRate", "critDmg", "attack"]);
     expect(result.characters[0]?.guide.targetContext).toContain("0号・アンビー専用");
+    expect(result.characters[0]?.equipmentActions.find((action) => action.recommendationKey === "critRate")).toMatchObject({ slot: "IV", action: "主ステータスを変更" });
   });
 
   it("キャラクターごとに異なる有効ステータスと優先度注記を選択する", () => {

@@ -8,6 +8,13 @@
       "when": 1787020725996,
       "tag": "0000_cloudy_mister_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1787059476924,
+      "tag": "0001_solid_lockjaw",
+      "breakpoints": true
     }
   ]
 }

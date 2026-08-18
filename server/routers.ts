@@ -1,5 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { createTranslationFeedback } from "./db";
 import { lookupGameBuild } from "./gameProviders";
 import { guideUpdateHistory } from "./guideUpdateHistory";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -29,6 +31,34 @@ export const appRouter = router({
         }
       }))
       .query(({ input }) => lookupGameBuild(input.game, input.uid)),
+  }),
+
+  feedback: router({
+    submit: publicProcedure
+      .input(z.object({
+        feedbackType: z.enum(["mistranslation", "improvement", "other"]),
+        locale: z.enum(["ja", "en", "zh-CN"]),
+        pagePath: z.string().trim().max(255).regex(/^\/[a-zA-Z0-9/_-]*$/, "Invalid page path"),
+        originalText: z.string().trim().max(800).optional(),
+        suggestedText: z.string().trim().min(3).max(1000),
+        notes: z.string().trim().max(2000).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          await createTranslationFeedback({
+            feedbackType: input.feedbackType,
+            locale: input.locale,
+            pagePath: input.pagePath,
+            originalText: input.originalText || null,
+            suggestedText: input.suggestedText,
+            notes: input.notes || null,
+          });
+          return { success: true } as const;
+        } catch (error) {
+          console.error("[Feedback] Failed to store translation feedback:", error);
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Unable to save feedback" });
+        }
+      }),
   }),
 
   // TODO: add feature routers here, e.g.

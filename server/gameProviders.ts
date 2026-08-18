@@ -233,7 +233,7 @@ export function normalizeGenshinPayload(payload: unknown, catalog: GenshinCatalo
 }
 
 const ZZZ_ELEMENTS: Record<string, { label: string; color: string }> = {
-  Fire: { label: "炎", color: "#d45b48" }, Ice: { label: "氷", color: "#76c8dc" }, Elec: { label: "電気", color: "#a278d2" }, Electric: { label: "電気", color: "#a278d2" }, Physical: { label: "物理", color: "#a6a6a6" }, Ether: { label: "エーテル", color: "#d875ce" },
+  Fire: { label: "炎", color: "#d45b48" }, Ice: { label: "氷", color: "#76c8dc" }, Elec: { label: "電気", color: "#a278d2" }, Electric: { label: "電気", color: "#a278d2" }, Physical: { label: "物理", color: "#a6a6a6" }, Physics: { label: "物理", color: "#a6a6a6" }, Ether: { label: "エーテル", color: "#d875ce" },
 };
 const ZZZ_PROFESSIONS: Record<string, string> = { Attack: "強攻", Anomaly: "異常", Stun: "撃破", Support: "支援", Defense: "防護", Rupture: "命破" };
 const ZZZ_PROP_FALLBACKS: Record<string, string> = {

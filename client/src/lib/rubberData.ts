@@ -16,7 +16,7 @@ export type PlayStyle =
 
 export type Rubber = {
   id: string;
-  brand: "Butterfly" | "Nittaku" | "VICTAS" | "Yasaka" | "TIBHAR" | "XIOM" | "STIGA" | "DONIC" | "andro";
+  brand: "Butterfly" | "Nittaku" | "VICTAS" | "Yasaka" | "TIBHAR" | "XIOM" | "STIGA" | "DONIC" | "andro" | "JOOLA";
   name: string;
   type: RubberType;
   price: number | null;
@@ -230,6 +230,14 @@ export const rubbers: Rubber[] = [
   { id: "rasanter-r45", brand: "andro", name: "ラザンター R45", type: "裏ソフト", price: 8360, priceLabel: "8,360円（税込）", hardness: "中", speed: 4, spin: 5, control: 5, styles: ["spin", "control"], suitableFor: "高い回転と安定性を扱いやすい硬度で求める人", source: "https://andro.jp/?item=rasanter-r45", officialNote: "エナジー・セル／硬度45°" },
   { id: "rasanter-r48", brand: "andro", name: "ラザンター R48", type: "裏ソフト", price: 8360, priceLabel: "8,360円（税込）", hardness: "中硬", speed: 5, spin: 5, control: 4, styles: ["spin", "counter"], suitableFor: "パワードライブと安定感を両立したい人", source: "https://andro.jp/?item=rasanter-r48", officialNote: "エナジー・セル／硬度48°" },
   { id: "rasanter-r53", brand: "andro", name: "ラザンター R53", type: "裏ソフト", price: 8360, priceLabel: "8,360円（税込）", hardness: "硬", speed: 5, spin: 5, control: 3, styles: ["spin", "counter"], suitableFor: "硬めのスポンジで最大限の加速と回転を求める人", source: "https://andro.jp/?item=rasanter-r53", officialNote: "エナジー・セル／硬度53°" },
+  { id: "trinity-hugo-calderano-dynamic", brand: "JOOLA", name: "トリニティ ウーゴ カルデラノ ダイナミック", type: "裏ソフト", price: 12100, priceLabel: "12,100円（税込）", hardness: "硬", speed: 5, spin: 5, control: 3, styles: ["spin", "counter"], suitableFor: "強いスイングで回転と威力を両立したい人", source: "https://joola.co.jp/collections/table-tennis-rubbers-pimples-in-rubbers", officialNote: "JOOLA公式の裏ラバーカテゴリ掲載モデル" },
+  { id: "trinity-hugo-calderano-charge", brand: "JOOLA", name: "トリニティ ウーゴ カルデラノ チャージ", type: "裏ソフト", price: 12100, priceLabel: "12,100円（税込）", hardness: "中硬", speed: 5, spin: 5, control: 3, styles: ["spin", "counter"], suitableFor: "反発と回転のバランスで積極的に攻めたい人", source: "https://joola.co.jp/collections/table-tennis-rubbers-pimples-in-rubbers", officialNote: "JOOLA公式の裏ラバーカテゴリ掲載モデル" },
+  { id: "golden-tango", brand: "JOOLA", name: "ゴールデン タンゴ", type: "裏ソフト", price: 7480, priceLabel: "7,480円（税込）", hardness: "中硬", speed: 4, spin: 5, control: 3, styles: ["sticky", "spin"], suitableFor: "粘着系の回転を使ってドライブを打ちたい人", source: "https://joola.co.jp/collections/table-tennis-rubbers-pimples-in-rubbers", officialNote: "JOOLA公式の裏ラバーカテゴリ掲載モデル" },
+  { id: "tango-ultra", brand: "JOOLA", name: "タンゴ ウルトラ", type: "表ソフト", price: 7590, priceLabel: "7,590円（税込）", hardness: "中", speed: 4, spin: 3, control: 5, styles: ["shortPips", "control"], suitableFor: "表ソフトでブロックとミートを安定させたい人", source: "https://joola.co.jp/products/tango-ultra-table-tennis-rubber", officialNote: "スピードグルー効果内蔵テンション表ラバー" },
+  { id: "express-ultra", brand: "JOOLA", name: "エクスプレス ウルトラ", type: "表ソフト", price: 7970, priceLabel: "7,970円（税込）", hardness: "中", speed: 5, spin: 3, control: 3, styles: ["shortPips"], suitableFor: "強い弾みを生かして速攻したい人", source: "https://joola.co.jp/products/express-ultra-table-tennis-rubber", officialNote: "スピード系テンション表ソフトラバー" },
+  { id: "allegro-s", brand: "JOOLA", name: "アレグロ S", type: "表ソフト", price: 7150, priceLabel: "7,150円（税込）", hardness: "中", speed: 4, spin: 3, control: 4, styles: ["shortPips", "control"], suitableFor: "表ソフトで反発とコントロールを両立したい人", source: "https://joola.co.jp/collections/table-tennis-rubbers-pimples-out-rubbers", officialNote: "JOOLA公式の表ラバーカテゴリ掲載モデル" },
+  { id: "adagio", brand: "JOOLA", name: "アダジオ", type: "表ソフト", price: 4807, priceLabel: "4,807円（税込）", hardness: "中", speed: 3, spin: 3, control: 5, styles: ["shortPips", "beginner"], suitableFor: "表ソフトの基本技術と安定感を身につけたい人", source: "https://joola.co.jp/collections/table-tennis-rubbers-pimples-out-rubbers", officialNote: "JOOLA公式の表ラバーカテゴリ掲載モデル" },
+  { id: "scordato", brand: "JOOLA", name: "スコルダート", type: "表ソフト", price: 5693, priceLabel: "5,693円（税込）", hardness: "中", speed: 4, spin: 3, control: 4, styles: ["shortPips"], suitableFor: "表ソフトで攻撃と安定をバランスよく使いたい人", source: "https://joola.co.jp/collections/table-tennis-rubbers-pimples-out-rubbers", officialNote: "JOOLA公式の表ラバーカテゴリ掲載モデル" },
 ];
 
 export function getRecommendedRubbers(style: PlayStyle) {
@@ -253,4 +261,5 @@ export const sources = [
   { name: "STIGA ラバー製品情報", url: "https://stigasports.jp/products_cat/rubber" },
   { name: "DONIC-JAPAN ラバーカタログ", url: "https://www.donic.jp/home/download.php?pg=Catalogue" },
   { name: "andro ラバー製品情報", url: "https://www.andro.de/ja/raha" },
+  { name: "JOOLA JAPAN ラバー製品情報", url: "https://joola.co.jp/collections/table-tennis-rubbers-1" },
 ];

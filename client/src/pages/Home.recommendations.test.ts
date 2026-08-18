@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { createElement } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Home from "./Home";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const lookupResult = {
   player: { uid: "1300622089", name: "検証用プロキシ", level: 60 },
@@ -21,14 +22,25 @@ vi.mock("@/lib/trpc", () => ({ trpc: { build: { lookup: { useQuery: () => ({ dat
 vi.mock("@/lib/uidHistory", () => ({ isValidUidForGame: () => true, loadLastUid: () => "", saveLastUid: () => undefined }));
 
 describe("優先強化項目の画面統合", () => {
-  beforeEach(() => window.history.replaceState({}, "", "/?game=zzz&uid=1300622089&character=eren"));
+  beforeEach(() => {
+    window.localStorage.setItem("starrail-build-advisor.language", "ja");
+    window.history.replaceState({}, "", "/?game=zzz&uid=1300622089&character=eren");
+  });
 
   it("未達キャラクターを初期選択すると、優先強化カードと不足量を描画する", () => {
-    render(createElement(Home));
+    render(createElement(LanguageProvider, null, createElement(Home)));
     expect(screen.getByRole("heading", { name: "優先して強化する項目" })).toBeTruthy();
     expect(screen.getByText("目標 150% まであと 18.4%")).toBeTruthy();
     expect(screen.getByText("-18.4%", { exact: true })).toBeTruthy();
-    expect(screen.getByText("EQUIPMENT ACTION / 主ステータスを変更")).toBeTruthy();
+    expect(screen.getByText("装備アクション / 主ステータスを変更")).toBeTruthy();
     expect(screen.getByText("IV：会心ダメ")).toBeTruthy();
+  });
+
+  it("保存済みの英語設定で、優先強化提案と装備アクションを英語表示する", () => {
+    window.localStorage.setItem("starrail-build-advisor.language", "en");
+    render(createElement(LanguageProvider, null, createElement(Home)));
+    expect(screen.getByRole("heading", { name: "Priority Upgrades" })).toBeTruthy();
+    expect(screen.getByText("EQUIPMENT ACTION / Change Main Stat")).toBeTruthy();
+    expect(screen.getByText("CURRENT 131.6%", { exact: false })).toBeTruthy();
   });
 });

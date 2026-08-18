@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
+import { isValidUidForGame, loadLastUid, saveLastUid } from "@/lib/uidHistory";
 import { ArrowDownRight, Check, CircleAlert, Clock3, Database, Loader2, Search, ShieldCheck, Sparkles, X } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
@@ -45,27 +46,28 @@ export default function Home() {
   const initialParams = useMemo(() => new URLSearchParams(window.location.search), []);
   const requestedGame = initialParams.get("game");
   const initialGame = (requestedGame && requestedGame in GAMES ? requestedGame : "hsr") as GameId;
-  const initialUid = (initialParams.get("uid") ?? "").replace(/\D/g, "");
-  const initialUidValid = initialGame === "zzz" ? /^\d{8,10}$/.test(initialUid) : /^\d{9,10}$/.test(initialUid);
+  const requestedUid = (initialParams.get("uid") ?? "").replace(/\D/g, "");
+  const initialUid = isValidUidForGame(initialGame, requestedUid) ? requestedUid : loadLastUid(initialGame);
+  const initialUidValid = isValidUidForGame(initialGame, initialUid);
   const [game, setGame] = useState<GameId>(initialGame);
   const [uid, setUid] = useState(initialUid);
   const [lookupUid, setLookupUid] = useState(initialUidValid ? initialUid : "");
   const [selectedId, setSelectedId] = useState("");
   const activeGame = GAMES[game];
-  const validUid = game === "zzz" ? /^\d{8,10}$/.test(uid) : /^\d{9,10}$/.test(uid);
+  const validUid = isValidUidForGame(game, uid);
   const query = trpc.build.lookup.useQuery({ game, uid: lookupUid || "0" }, { enabled: Boolean(lookupUid), retry: false, staleTime: 60_000 });
   const characters = (query.data?.characters ?? []) as Character[];
   const selected = useMemo(() => characters.find((character) => character.id === selectedId) ?? characters[0], [characters, selectedId]);
 
   useEffect(() => { if (characters.length && !characters.some((character) => character.id === selectedId)) setSelectedId(characters[0]?.id ?? ""); }, [characters, selectedId]);
-  function handleSubmit(event: FormEvent) { event.preventDefault(); const normalized = uid.trim(); const isValid = game === "zzz" ? /^\d{8,10}$/.test(normalized) : /^\d{9,10}$/.test(normalized); if (isValid) setLookupUid(normalized); }
-  function selectGame(nextGame: GameId) { setGame(nextGame); setUid(""); setLookupUid(""); setSelectedId(""); }
+  function handleSubmit(event: FormEvent) { event.preventDefault(); const normalized = uid.trim(); if (isValidUidForGame(game, normalized)) { saveLastUid(game, normalized); setLookupUid(normalized); } }
+  function selectGame(nextGame: GameId) { setGame(nextGame); setUid(loadLastUid(nextGame)); setLookupUid(""); setSelectedId(""); }
 
   return <div className="min-h-screen overflow-hidden">
     <header className="container pt-6 sm:pt-8"><div className="flex items-center justify-between border-y border-stone-400 py-3"><div className="flex items-center gap-3"><span className="inline-block h-2 w-2 rounded-full bg-amber-700" /><p className="detail-mono text-[9px] text-stone-600">PUBLIC BUILD INTELLIGENCE</p></div><p className="detail-mono text-[9px] text-stone-500">01 — {activeGame.short} / UID ONLY</p></div></header>
     <main className="container pb-20 pt-10 sm:pt-16">
       <section className="grid gap-10 lg:grid-cols-[1.12fr_.88fr] lg:items-end"><div><p className="detail-mono mb-4 text-[10px] text-amber-800">{activeGame.eyebrow}</p><h1 className="display-serif max-w-3xl text-5xl font-bold leading-[.98] tracking-[-.055em] text-stone-900 sm:text-7xl">Build with<br /><em className="font-medium">Intention.</em></h1><p className="mt-6 max-w-xl font-serif text-base leading-7 text-stone-600">{activeGame.description} 次の一手を、静かに、明快に示します。</p></div>
-        <form onSubmit={handleSubmit} className="paper-card border border-stone-300 p-5 sm:p-6"><div className="flex items-start justify-between gap-4"><div><p className="detail-mono text-[9px] text-stone-500">ARCHIVE ACCESS</p><h2 className="display-serif mt-1 text-2xl font-semibold">UIDを照会</h2></div><Database className="h-5 w-5 text-amber-800" /></div><div className="mt-5 grid grid-cols-3 gap-1 border border-stone-300 bg-stone-100/60 p-1" role="group" aria-label="ゲームを選択">{(Object.keys(GAMES) as GameId[]).map((id) => <button key={id} type="button" onClick={() => selectGame(id)} className={cn("min-h-11 px-2 text-center text-[10px] font-semibold transition-colors", game === id ? "bg-stone-900 text-stone-50" : "text-stone-600 hover:bg-stone-200")} aria-pressed={game === id}>{GAMES[id].short}</button>)}</div><p className="detail-mono mt-2 text-[9px] text-stone-500">{activeGame.name}</p><div className="mt-4 flex gap-2"><Input value={uid} onChange={(event) => setUid(event.target.value.replace(/\D/g, ""))} inputMode="numeric" maxLength={10} placeholder={activeGame.uidHint} aria-label={`${activeGame.name} UID`} className="h-12 rounded-none border-stone-400 bg-transparent font-mono text-sm shadow-none focus-visible:ring-amber-700" /><Button type="submit" disabled={!validUid || query.isFetching} className="h-12 rounded-none bg-stone-900 px-4 text-stone-50 hover:bg-amber-900"><Search className="h-4 w-4" /><span className="sr-only">照会する</span></Button></div><div className="mt-3 flex items-center gap-2 text-[11px] text-stone-500"><ShieldCheck className="h-3.5 w-3.5 text-emerald-800" />公開設定済みのプロフィール情報のみを参照します。</div><p className="mt-2 text-[10px] leading-4 text-stone-500">第三者の公開データサービスを一時参照します。本サイトは各ゲームの公式・公認サービスではありません。</p></form>
+        <form onSubmit={handleSubmit} className="paper-card border border-stone-300 p-5 sm:p-6"><div className="flex items-start justify-between gap-4"><div><p className="detail-mono text-[9px] text-stone-500">ARCHIVE ACCESS</p><h2 className="display-serif mt-1 text-2xl font-semibold">UIDを照会</h2></div><Database className="h-5 w-5 text-amber-800" /></div><div className="mt-5 grid grid-cols-3 gap-1 border border-stone-300 bg-stone-100/60 p-1" role="group" aria-label="ゲームを選択">{(Object.keys(GAMES) as GameId[]).map((id) => <button key={id} type="button" onClick={() => selectGame(id)} className={cn("min-h-11 px-2 text-center text-[10px] font-semibold transition-colors", game === id ? "bg-stone-900 text-stone-50" : "text-stone-600 hover:bg-stone-200")} aria-pressed={game === id}>{GAMES[id].short}</button>)}</div><p className="detail-mono mt-2 text-[9px] text-stone-500">{activeGame.name}</p><div className="mt-4 flex gap-2"><Input value={uid} onChange={(event) => setUid(event.target.value.replace(/\D/g, ""))} inputMode="numeric" maxLength={10} placeholder={activeGame.uidHint} aria-label={`${activeGame.name} UID`} className="h-12 rounded-none border-stone-400 bg-transparent font-mono text-sm shadow-none focus-visible:ring-amber-700" /><Button type="submit" disabled={!validUid || query.isFetching} className="h-12 rounded-none bg-stone-900 px-4 text-stone-50 hover:bg-amber-900"><Search className="h-4 w-4" /><span className="sr-only">照会する</span></Button></div><div className="mt-3 flex items-center gap-2 text-[11px] text-stone-500"><ShieldCheck className="h-3.5 w-3.5 text-emerald-800" />公開設定済みのプロフィール情報のみを参照します。</div><p className="mt-2 text-[10px] leading-4 text-stone-500">直近に照会したUIDは、この端末内にゲーム別で保存されます。</p><p className="mt-1 text-[10px] leading-4 text-stone-500">第三者の公開データサービスを一時参照します。本サイトは各ゲームの公式・公認サービスではありません。</p></form>
       </section>
       {query.isFetching && <section className="mt-10 flex min-h-56 items-center justify-center border-y border-stone-300"><Loader2 className="mr-3 h-5 w-5 animate-spin text-amber-800" /><p className="detail-mono text-[10px] text-stone-500">RETRIEVING PUBLIC ARCHIVE</p></section>}
       {query.error && <section className="mt-10 border border-rose-300 bg-rose-50/50 p-5"><div className="flex gap-3"><CircleAlert className="mt-0.5 h-5 w-5 text-rose-700" /><div><p className="detail-mono text-[10px] text-rose-700">LOOKUP UNAVAILABLE</p><p className="mt-1 text-sm text-stone-700">{query.error.message}</p></div></div></section>}

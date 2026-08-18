@@ -52,6 +52,7 @@ export type CharacterProfile = {
     subs: Array<{ name: string; display: string }>;
   }>;
   allStats: Array<{ name: string; display: string; icon: string | null }>;
+  statsNote?: string;
   guide: GuideDefinition;
   comparisons: StatComparison[];
 };

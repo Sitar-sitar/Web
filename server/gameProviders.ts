@@ -263,6 +263,95 @@ function zzzStat(catalog: ZzzCatalog, stat: RawRecord, multiplier: number) {
   return { id, name, value: displayValue, display: percent ? `${displayValue.toFixed(1)}%` : displayValue.toFixed(0), percent };
 }
 
+function zzzPropertyValue(catalog: ZzzCatalog, propertyId: string, rawValue: number, multiplier = 1) {
+  return zzzStat(catalog, { PropertyId: propertyId, PropertyValue: rawValue }, multiplier).value;
+}
+
+function addProperty(target: Record<string, number>, propertyId: string, value: number) {
+  target[propertyId] = (target[propertyId] ?? 0) + value;
+}
+
+function zzzAgentBaseStats(catalog: ZzzCatalog, metadata: RawRecord, avatar: RawRecord) {
+  const baseProps = asRecord(metadata.BaseProps);
+  const growthProps = asRecord(metadata.GrowthProps);
+  const promotionProps = asArray(metadata.PromotionProps).map(asRecord);
+  const coreProps = asArray(metadata.CoreEnhancementProps).map(asRecord);
+  const promotionIndex = Math.max(0, Math.min(promotionProps.length - 1, number(avatar.PromotionLevel, 1) - 1));
+  const coreIndex = Math.max(0, Math.min(coreProps.length - 1, number(avatar.CoreSkillEnhancement, 0)));
+  const promotion = promotionProps[promotionIndex] ?? {};
+  const core = coreProps[coreIndex] ?? {};
+  const level = Math.max(1, number(avatar.Level, 1));
+  const allIds = new Set([...Object.keys(baseProps), ...Object.keys(growthProps), ...Object.keys(promotion), ...Object.keys(core)]);
+  const values: Record<string, number> = {};
+  allIds.forEach((propertyId) => {
+    const rawBase = number(baseProps[propertyId]);
+    const rawGrowth = number(growthProps[propertyId]) * (level - 1) / 10_000;
+    const rawPromotion = number(promotion[propertyId]);
+    const rawCore = number(core[propertyId]);
+    const property = asRecord(catalog.property[propertyId]);
+    const percent = text(property.Format).includes("%");
+    const rawTotal = percent || propertyId === "11101" ? rawBase + rawGrowth + rawPromotion + rawCore : Math.floor(rawBase + rawGrowth + rawPromotion + rawCore);
+    values[propertyId] = zzzPropertyValue(catalog, propertyId, rawTotal);
+  });
+  return values;
+}
+
+function zzzWeaponStats(catalog: ZzzCatalog, weaponMeta: RawRecord, rawWeapon: RawRecord) {
+  const level = Math.max(1, number(rawWeapon.Level, 1));
+  const breakLevel = Math.max(0, number(rawWeapon.BreakLevel, 0));
+  const values: Record<string, number> = {};
+  const main = asRecord(weaponMeta.MainStat);
+  const secondary = asRecord(weaponMeta.SecondaryStat);
+  const mainId = text(main.PropertyId);
+  const secondaryId = text(secondary.PropertyId);
+  if (mainId) {
+    const value = zzzPropertyValue(catalog, mainId, number(main.PropertyValue), 1 + 0.1568166666666667 * level + 0.8922 * breakLevel);
+    addProperty(values, mainId, text(asRecord(catalog.property[mainId]).Format).includes("%") ? value : Math.floor(value));
+  }
+  if (secondaryId) {
+    const value = zzzPropertyValue(catalog, secondaryId, number(secondary.PropertyValue), 1 + 0.3 * breakLevel);
+    addProperty(values, secondaryId, text(asRecord(catalog.property[secondaryId]).Format).includes("%") ? value : Math.floor(value));
+  }
+  return values;
+}
+
+function finalZzzStats(catalog: ZzzCatalog, agent: Record<string, number>, weapon: Record<string, number>, equipment: Record<string, number>) {
+  const combined: Record<string, number> = {};
+  const allIds = new Set([...Object.keys(agent), ...Object.keys(weapon), ...Object.keys(equipment)]);
+  allIds.forEach((id) => { combined[id] = (agent[id] ?? 0) + (weapon[id] ?? 0) + (equipment[id] ?? 0); });
+  const total = (id: string) => combined[id] ?? 0;
+  const scale = (base: string, percent: string, flat: string, roundToNearest = false) => {
+    const value = total(base) * (1 + total(percent) / 100) + total(flat);
+    return roundToNearest ? Math.round(value) : Math.floor(value);
+  };
+  const entries: Array<[string, number, boolean]> = [
+    ["HP", scale("11101", "11102", "11103", true), false],
+    ["攻撃力", scale("12101", "12102", "12103"), false],
+    ["防御力", scale("13101", "13102", "13103"), false],
+    ["衝撃力", total("12201") * (1 + total("12202") / 100), false],
+    ["会心率", total("20101") + total("20103"), true],
+    ["会心ダメージ", total("21101") + total("21103"), true],
+    ["異常掌握", total("31401") * (1 + total("31402") / 100) + total("31403"), false],
+    ["異常マスタリー", total("31201") + total("31203"), false],
+    ["貫通率", total("23101") + total("23103"), true],
+    ["貫通値", total("23201") + total("23203"), false],
+    ["エネルギー自動回復", total("30501") * (1 + total("30502") / 100) + total("30503"), false],
+    ["物理属性ダメージボーナス", total("31501") + total("31503"), true],
+    ["炎属性ダメージボーナス", total("31601") + total("31603"), true],
+    ["氷属性ダメージボーナス", total("31701") + total("31703"), true],
+    ["電気属性ダメージボーナス", total("31801") + total("31803"), true],
+    ["エーテル属性ダメージボーナス", total("31901") + total("31903"), true],
+  ];
+  const display = entries.filter(([, value]) => value !== 0).map(([name, value, percent]) => ({ name, value, display: percent ? `${value.toFixed(1)}%` : Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1), icon: null }));
+  return {
+    display,
+    values: {
+      critRate: total("20101") + total("20103"), critDmg: total("21101") + total("21103"), attackPercent: total("12102"), hpPercent: total("11102"),
+      impact: total("12201") * (1 + total("12202") / 100), anomalyMastery: total("31201") + total("31203"), penRatio: total("23101") + total("23103"), energyRegen: total("30501") * (1 + total("30502") / 100) + total("30503"),
+    },
+  };
+}
+
 function zzzGuide(name: string, profession: string): GuideDefinition {
   const base = {
     headline: "役割に合う主ステータスと、ドライバディスクのサブステータスを両立させる。",
@@ -288,6 +377,8 @@ export function normalizeZzzPayload(payload: unknown, catalog: ZzzCatalog): Norm
     const profession = text(metadata.ProfessionType);
     const name = zzzName(catalog, metadata.Name, `エージェント #${id}`);
     const aggregate: Record<string, number> = {};
+    const equipmentByProperty: Record<string, number> = {};
+    const suitCounts: Record<string, number> = {};
     const items = asRecord(catalog.equipments.Items);
     const suits = asRecord(catalog.equipments.Suits ?? catalog.equipments.Suit);
     const relics = asArray(avatar.EquippedList).map(asRecord).map((entry, index) => {
@@ -296,29 +387,33 @@ export function normalizeZzzPayload(payload: unknown, catalog: ZzzCatalog): Norm
       const itemMeta = asRecord(items[equipmentId]);
       const suitId = text(itemMeta.SuitId);
       const suit = asRecord(suits[suitId]);
+      if (suitId) suitCounts[suitId] = (suitCounts[suitId] ?? 0) + 1;
       const rarity = number(itemMeta.Rarity, 4);
       const scale = ({ 2: 0.3, 3: 0.25, 4: 0.2 } as Record<number, number>)[rarity] ?? 0.2;
       const level = number(equipment.Level);
       const mainStats = asArray(equipment.MainPropertyList).map(asRecord).map((stat) => zzzStat(catalog, stat, 1 + level * scale));
       const subs = asArray(equipment.RandomPropertyList).map(asRecord).map((stat) => zzzStat(catalog, stat, Math.max(1, number(stat.PropertyLevel, 1))));
-      [...mainStats, ...subs].forEach((stat) => { aggregate[stat.name] = (aggregate[stat.name] ?? 0) + stat.value; });
+      [...mainStats, ...subs].forEach((stat) => {
+        aggregate[stat.name] = (aggregate[stat.name] ?? 0) + stat.value;
+        addProperty(equipmentByProperty, stat.id, stat.value);
+      });
       const setName = zzzName(catalog, suit.Name ?? `EquipmentSuit_${suitId}_name`, "ドライバディスクセット");
       return { id: text(equipment.Uid, `${id}-disc-${index}`), name: `ドライバディスク ${text(entry.Slot, String(index + 1))}`, setName, level, icon: null, main: mainStats[0] ? { name: mainStats[0].name, display: mainStats[0].display } : null, subs: subs.map((stat) => ({ name: stat.name, display: stat.display })) };
     });
-    const allStats = Object.entries(aggregate).sort(([, left], [, right]) => right - left).slice(0, 10).map(([name, value]) => ({ name, display: name.includes("%") || name.includes("会心") || name.includes("貫通率") ? `${value.toFixed(1)}%` : value.toFixed(0), icon: null }));
+    Object.entries(suitCounts).filter(([, count]) => count >= 2).forEach(([suitId]) => {
+      const bonusProps = asRecord(asRecord(suits[suitId]).SetBonusProps);
+      Object.entries(bonusProps).forEach(([propertyId, rawValue]) => addProperty(equipmentByProperty, propertyId, zzzPropertyValue(catalog, propertyId, number(rawValue))));
+    });
     const guide = zzzGuide(name, profession);
-    const values = {
-      critRate: aggregate["会心率"] ?? 0, critDmg: aggregate["会心ダメージ"] ?? 0, attackPercent: aggregate["攻撃力%"] ?? 0, hpPercent: aggregate["HP%"] ?? 0,
-      impact: aggregate["衝撃力"] ?? 0, anomalyMastery: aggregate["異常マスタリー"] ?? 0, penRatio: aggregate["貫通率"] ?? 0, energyRegen: aggregate["エネルギー自動回復"] ?? 0,
-    };
     const rawWeapon = asRecord(avatar.Weapon);
     const weaponId = text(rawWeapon.Id ?? metadata.WeaponId);
     const weaponMeta = asRecord(catalog.weapons[weaponId]);
+    const finalStats = finalZzzStats(catalog, zzzAgentBaseStats(catalog, metadata, avatar), zzzWeaponStats(catalog, weaponMeta, rawWeapon), equipmentByProperty);
     return {
       id, name, level: number(avatar.Level, null as unknown as number), rank: number(avatar.TalentLevel, null as unknown as number), portrait: iconUrl(text(metadata.Image)) ?? null,
       element: elements.map((element) => element?.label).filter(Boolean).join(" / ") || "属性", elementColor: elements[0]?.color ?? "#c28a42", path: (ZZZ_PROFESSIONS[profession] ?? profession) || "役割",
       lightCone: weaponId ? { name: zzzName(catalog, weaponMeta.ItemName, "音動機"), level: number(rawWeapon.Level, null as unknown as number), rank: number(rawWeapon.BreakLevel, null as unknown as number), icon: iconUrl(text(weaponMeta.ImagePath)) ?? null } : null,
-      relics, allStats, guide, comparisons: comparisonsFromStats(guide.targets, values),
+      relics, allStats: finalStats.display, statsNote: "エージェント・音動機・コア強化・ドライバディスクを合算した戦闘外の推定最終値です。戦闘中・条件付き効果は含みません。", guide, comparisons: comparisonsFromStats(guide.targets, finalStats.values),
     };
   });
   return { player: { uid: text(root.uid, text(profile.Uid)), name: text(profile.Nickname, "プロキシ"), level: number(profile.Level, null as unknown as number) }, characters };

@@ -1,4 +1,6 @@
 import { COOKIE_NAME } from "@shared/const";
+import { z } from "zod";
+import { lookupUidBuild } from "./buildAdvisor";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
@@ -15,6 +17,12 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+  }),
+
+  build: router({
+    lookup: publicProcedure
+      .input(z.object({ uid: z.string().trim().regex(/^\d{9,10}$/, "UIDは9〜10桁の数字で入力してください。") }))
+      .query(({ input }) => lookupUidBuild(input.uid)),
   }),
 
   // TODO: add feature routers here, e.g.

@@ -1,0 +1,415 @@
+import { TRPCError } from "@trpc/server";
+
+export type TierName = "厳選" | "目標" | "妥協";
+type StatKey = "critRate" | "critDmg" | "speed" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hpPercent" | "defPercent";
+
+type RawRecord = Record<string, unknown>;
+
+export type TargetStatDefinition = {
+  key: StatKey;
+  label: string;
+  unit: "%" | "";
+  targets: Record<TierName, number>;
+};
+
+export type GuideDefinition = {
+  headline: string;
+  relicSet: string;
+  planarSet: string;
+  mainStats: Array<{ slot: string; value: string }>;
+  targets: TargetStatDefinition[];
+};
+
+export type StatComparison = TargetStatDefinition & {
+  current: number | null;
+  currentDisplay: string;
+  achieved: Record<TierName, boolean | null>;
+};
+
+export type CharacterProfile = {
+  id: string;
+  name: string;
+  level: number | null;
+  rank: number | null;
+  portrait: string | null;
+  element: string;
+  elementColor: string | null;
+  path: string;
+  lightCone: {
+    name: string;
+    level: number | null;
+    rank: number | null;
+    icon: string | null;
+  } | null;
+  relics: Array<{
+    id: string;
+    name: string;
+    setName: string;
+    level: number | null;
+    icon: string | null;
+    main: { name: string; display: string } | null;
+    subs: Array<{ name: string; display: string }>;
+  }>;
+  allStats: Array<{ name: string; display: string; icon: string | null }>;
+  guide: GuideDefinition;
+  comparisons: StatComparison[];
+};
+
+export type BuildLookupResult = {
+  player: { uid: string; name: string; level: number | null };
+  characters: CharacterProfile[];
+  cached: boolean;
+  cacheExpiresAt: string;
+  fetchedAt: string;
+};
+
+const DAMAGE_TARGETS: TargetStatDefinition[] = [
+  { key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 75, "妥協": 65 } },
+  { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 180, "目標": 150, "妥協": 120 } },
+  { key: "speed", label: "速度", unit: "", targets: { "厳選": 134, "目標": 134, "妥協": 120 } },
+  { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 70, "目標": 55, "妥協": 40 } },
+];
+
+const SUPPORT_TARGETS: TargetStatDefinition[] = [
+  { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 145, "妥協": 134 } },
+  { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 45, "目標": 30, "妥協": 20 } },
+  { key: "hpPercent", label: "HP%", unit: "%", targets: { "厳選": 45, "目標": 32, "妥協": 20 } },
+];
+
+const BREAK_TARGETS: TargetStatDefinition[] = [
+  { key: "breakEffect", label: "撃破特効", unit: "%", targets: { "厳選": 360, "目標": 300, "妥協": 240 } },
+  { key: "speed", label: "速度", unit: "", targets: { "厳選": 154, "目標": 150, "妥協": 145 } },
+  { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 45, "目標": 35, "妥協": 25 } },
+];
+
+const DOT_TARGETS: TargetStatDefinition[] = [
+  { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 147, "妥協": 134 } },
+  { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 90, "目標": 75, "妥協": 60 } },
+  { key: "effectHitRate", label: "効果命中", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } },
+];
+
+function damageGuide(headline: string, relicSet: string, planarSet: string, targets = DAMAGE_TARGETS): GuideDefinition {
+  return { headline, relicSet, planarSet, mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度 / 攻撃力%" }, { slot: "次元界オーブ", value: "属性ダメージ" }, { slot: "連結縄", value: "攻撃力%" }], targets };
+}
+
+function supportGuide(headline: string, relicSet: string, planarSet: string, targets = SUPPORT_TARGETS): GuideDefinition {
+  return { headline, relicSet, planarSet, mainStats: [{ slot: "胴体", value: "HP% / 防御力%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP% / 防御力%" }, { slot: "連結縄", value: "EP回復効率" }], targets };
+}
+
+const GUIDE_OVERRIDES: Record<string, GuideDefinition> = {
+  "ホタル": {
+    headline: "超撃破を軸に、速度と撃破特効の均衡を整える。",
+    relicSet: "鉄騎の執行者 ×4",
+    planarSet: "劫火と灯鋒 ×2",
+    mainStats: [
+      { slot: "胴体", value: "攻撃力%" },
+      { slot: "脚部", value: "速度" },
+      { slot: "次元界オーブ", value: "攻撃力%" },
+      { slot: "連結縄", value: "撃破特効" },
+    ],
+    targets: BREAK_TARGETS,
+  },
+  "カフカ": {
+    headline: "持続ダメージを安定させるため、速度と攻撃力を優先する。",
+    relicSet: "深い牢獄の囚人 ×4",
+    planarSet: "宇宙封印ステーション ×2",
+    mainStats: [
+      { slot: "胴体", value: "攻撃力%" },
+      { slot: "脚部", value: "速度" },
+      { slot: "次元界オーブ", value: "雷属性ダメージ" },
+      { slot: "連結縄", value: "攻撃力%" },
+    ],
+    targets: DOT_TARGETS,
+  },
+  "銀狼": {
+    headline: "弱点付与の安定性を支える、効果命中と速度の設計。",
+    relicSet: "流星の跡を追う怪盗 ×2 / 仮想空間を漫遊するメッセンジャー ×2",
+    planarSet: "折れた竜骨 ×2",
+    mainStats: [
+      { slot: "胴体", value: "効果命中" },
+      { slot: "脚部", value: "速度" },
+      { slot: "次元界オーブ", value: "HP% / 防御力%" },
+      { slot: "連結縄", value: "EP回復効率" },
+    ],
+    targets: [
+      { key: "effectHitRate", label: "効果命中", unit: "%", targets: { "厳選": 96, "目標": 85, "妥協": 70 } },
+      { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 145, "妥協": 134 } },
+      { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } },
+    ],
+  },
+};
+
+const ROLE_GUIDES: Record<string, GuideDefinition> = {
+  "調和": {
+    headline: "味方への支援を最優先に、行動順と耐久を設計する。",
+    relicSet: "仮想空間を漫遊するメッセンジャー ×4",
+    planarSet: "折れた竜骨 ×2",
+    mainStats: [
+      { slot: "胴体", value: "HP% / 防御力%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP% / 防御力%" }, { slot: "連結縄", value: "EP回復効率" },
+    ],
+    targets: SUPPORT_TARGETS,
+  },
+  "虚無": {
+    headline: "デバフの命中精度と行動頻度を優先する。",
+    relicSet: "深い牢獄の囚人 ×4",
+    planarSet: "宇宙封印ステーション ×2",
+    mainStats: [
+      { slot: "胴体", value: "効果命中 / 攻撃力%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "属性ダメージ" }, { slot: "連結縄", value: "攻撃力%" },
+    ],
+    targets: DOT_TARGETS,
+  },
+  "豊穣": {
+    headline: "回復の安定性を支える、速度と耐久のバランス。",
+    relicSet: "流雲無痕の過客 ×2 / 仮想空間を漫遊するメッセンジャー ×2",
+    planarSet: "折れた竜骨 ×2",
+    mainStats: [
+      { slot: "胴体", value: "治癒量 / HP%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP%" }, { slot: "連結縄", value: "EP回復効率" },
+    ],
+    targets: SUPPORT_TARGETS,
+  },
+  "存護": {
+    headline: "被弾を抑えつつ、味方を守る行動頻度を確保する。",
+    relicSet: "純庭教会の聖騎士 ×4",
+    planarSet: "折れた竜骨 ×2",
+    mainStats: [
+      { slot: "胴体", value: "防御力%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "防御力%" }, { slot: "連結縄", value: "EP回復効率 / 防御力%" },
+    ],
+    targets: [
+      { key: "speed", label: "速度", unit: "", targets: { "厳選": 150, "目標": 134, "妥協": 120 } },
+      { key: "defPercent", label: "防御力%", unit: "%", targets: { "厳選": 80, "目標": 60, "妥協": 45 } },
+      { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 45, "目標": 30, "妥協": 20 } },
+    ],
+  },
+};
+
+Object.assign(GUIDE_OVERRIDES, {
+  "黄泉": damageGuide("必殺技を主軸に、会心と速度をバランス良く高める。", "死水に潜る先駆者 ×4", "出雲顕世と高天神国 ×2"),
+  "ゼーレ": damageGuide("再現性のある連続行動へ、会心の安定感を優先する。", "星の如く輝く天才 ×4", "サルソットの出陣 ×2"),
+  "景元": damageGuide("神君の追撃を伸ばすため、会心と攻撃力を整える。", "灰燼を燃やし尽くす大公 ×4", "サルソットの出陣 ×2"),
+  "姫子": damageGuide("追加攻撃の回転と瞬間火力を、会心ステータスで支える。", "灰燼を燃やし尽くす大公 ×4", "サルソットの出陣 ×2"),
+  "Dr.レイシオ": damageGuide("単体への追加攻撃を最大化する、会心重視の設計。", "荒海を歩む旅人 ×4", "サルソットの出陣 ×2"),
+  "トパーズ＆カブ": damageGuide("追加攻撃の頻度と火力を、会心と攻撃力で支える。", "灰燼を燃やし尽くす大公 ×4", "サルソットの出陣 ×2"),
+  "飲月": damageGuide("強化通常攻撃の一撃を、会心比率で磨き上げる。", "荒海を歩む旅人 ×4", "ルサカの海中世界 ×2"),
+  "刃": { headline: "HPを基盤に、会心と速度で追加攻撃の価値を高める。", relicSet: "宝命長存の蒔者 ×4", planarSet: "自転が止まったサルソット ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "風属性ダメージ / HP%" }, { slot: "連結縄", value: "HP%" }], targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 75, "妥協": 65 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 190, "目標": 160, "妥協": 130 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 134, "目標": 134, "妥協": 120 } }, { key: "hpPercent", label: "HP%", unit: "%", targets: { "厳選": 55, "目標": 45, "妥協": 35 } }] },
+  "ブートヒル": { headline: "弱点撃破へ直結する、速度と撃破特効を研ぎ澄ます。", relicSet: "流星の跡を追う怪盗 ×2 / 鉄騎の執行者 ×2", planarSet: "盗賊公国タリア ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "物理属性ダメージ" }, { slot: "連結縄", value: "撃破特効" }], targets: BREAK_TARGETS },
+  "ルアン・メェイ": { headline: "撃破特効と速度で、味方全体の戦闘テンポを形作る。", relicSet: "流星の跡を追う怪盗 ×2 / 仮想空間を漫遊するメッセンジャー ×2", planarSet: "盗賊公国タリア ×2", mainStats: [{ slot: "胴体", value: "HP% / 防御力%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP% / 防御力%" }, { slot: "連結縄", value: "撃破特効" }], targets: [{ key: "breakEffect", label: "撃破特効", unit: "%", targets: { "厳選": 180, "目標": 160, "妥協": 140 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 145, "妥協": 134 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }] },
+  "花火": supportGuide("会心ダメージと高速行動で、主力アタッカーを引き上げる。", "仮想空間を漫遊するメッセンジャー ×4", "折れた竜骨 ×2", [{ key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 230, "目標": 200, "妥協": 170 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 161, "目標": 160, "妥協": 145 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }]),
+  "ブローニャ": supportGuide("行動順の最適化を最優先に、耐久を添える。", "仮想空間を漫遊するメッセンジャー ×4", "折れた竜骨 ×2"),
+  "符玄": { headline: "味方の生存を支えるため、HP・防御・速度を厚く積む。", relicSet: "宝命長存の蒔者 ×2 / 純庭教会の聖騎士 ×2", planarSet: "竜骨の守護者 ×2", mainStats: [{ slot: "胴体", value: "HP%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP%" }, { slot: "連結縄", value: "HP% / EP回復効率" }], targets: SUPPORT_TARGETS },
+  "アベンチュリン": { headline: "防御力を基盤に、バリアと追加攻撃の両面を整える。", relicSet: "純庭教会の聖騎士 ×4", planarSet: "ベロブルグの建築家 ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ / 防御力%" }, { slot: "脚部", value: "速度 / 防御力%" }, { slot: "次元界オーブ", value: "防御力%" }, { slot: "連結縄", value: "防御力%" }], targets: [{ key: "speed", label: "速度", unit: "", targets: { "厳選": 134, "目標": 134, "妥協": 120 } }, { key: "defPercent", label: "防御力%", unit: "%", targets: { "厳選": 90, "目標": 70, "妥協": 50 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }] },
+  "フォフォ": supportGuide("回復と必殺技回転を安定させる、速度中心の構成。", "仮想空間を漫遊するメッセンジャー ×2 / 流雲無痕の過客 ×2", "折れた竜骨 ×2"),
+  "ギャラガー": { headline: "弱点撃破と回復の両立を、撃破特効と速度で組み立てる。", relicSet: "流星の跡を追う怪盗 ×2 / 仮想空間を漫遊するメッセンジャー ×2", planarSet: "盗賊公国タリア ×2", mainStats: [{ slot: "胴体", value: "治癒量 / HP%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP%" }, { slot: "連結縄", value: "撃破特効" }], targets: [{ key: "breakEffect", label: "撃破特効", unit: "%", targets: { "厳選": 180, "目標": 150, "妥協": 120 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 145, "妥協": 134 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }] },
+});
+
+const DEFAULT_GUIDE: GuideDefinition = {
+  headline: "基礎火力を軸に、会心・速度・攻撃力の優先度を整える。",
+  relicSet: "キャラクター適性に応じた属性セット ×4",
+  planarSet: "攻撃系オーナメント ×2",
+  mainStats: [
+    { slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度 / 攻撃力%" }, { slot: "次元界オーブ", value: "属性ダメージ" }, { slot: "連結縄", value: "攻撃力%" },
+  ],
+  targets: DAMAGE_TARGETS,
+};
+
+const STAT_MATCHERS: Record<StatKey, RegExp[]> = {
+  critRate: [/crit.*rate/i, /critical.*chance/i, /会心率/i],
+  critDmg: [/crit.*dmg/i, /critical.*damage/i, /会心ダメ/i],
+  speed: [/^speed$/i, /spd/i, /速度/i],
+  attackPercent: [/attack.*ratio/i, /atk.*ratio/i, /attack.*percent/i, /攻撃力%/i],
+  breakEffect: [/break/i, /撃破特効/i],
+  effectHitRate: [/effect.*hit/i, /status.*hit/i, /効果命中/i],
+  effectRes: [/effect.*res/i, /status.*res/i, /効果抵抗/i],
+  hpPercent: [/hp.*ratio/i, /hp.*percent/i, /HP%/i],
+  defPercent: [/def.*ratio/i, /def.*percent/i, /防御力%/i],
+};
+
+function asRecord(value: unknown): RawRecord {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as RawRecord : {};
+}
+
+function asArray(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function text(value: unknown, fallback = ""): string {
+  return typeof value === "string" ? value : typeof value === "number" ? String(value) : fallback;
+}
+
+function nullableNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function statDisplay(stat: RawRecord): string {
+  const shown = text(stat.display);
+  if (shown) return shown;
+  const value = nullableNumber(stat.value);
+  if (value === null) return "—";
+  const percent = stat.percent === true || text(stat.field).includes("ratio");
+  return percent ? `${(value <= 1 ? value * 100 : value).toFixed(1)}%` : value.toFixed(0);
+}
+
+function statNumber(stat: RawRecord): number | null {
+  const value = nullableNumber(stat.value);
+  const display = statDisplay(stat);
+  if (display.includes("%")) {
+    const displayedPercent = Number.parseFloat(display.replace(/,/g, ""));
+    if (Number.isFinite(displayedPercent)) return displayedPercent;
+  }
+  const isPercent = stat.percent === true || display.includes("%") || /ratio|percent/i.test(text(stat.field));
+  if (value !== null) return isPercent && value <= 1 ? value * 100 : value;
+  const parsed = Number.parseFloat(display.replace(/,/g, ""));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function guideFor(name: string, path: string): GuideDefinition {
+  return GUIDE_OVERRIDES[name] ?? ROLE_GUIDES[path] ?? DEFAULT_GUIDE;
+}
+
+function comparisonFor(properties: RawRecord[], target: TargetStatDefinition): StatComparison {
+  const match = properties.find((property) => {
+    const haystack = `${text(property.field)} ${text(property.name)}`;
+    return STAT_MATCHERS[target.key].some((pattern) => pattern.test(haystack));
+  });
+  const current = match ? statNumber(match) : null;
+  return {
+    ...target,
+    current,
+    currentDisplay: match ? statDisplay(match) : "未取得",
+    achieved: {
+      "厳選": current === null ? null : current >= target.targets["厳選"],
+      "目標": current === null ? null : current >= target.targets["目標"],
+      "妥協": current === null ? null : current >= target.targets["妥協"],
+    },
+  };
+}
+
+function parseCharacter(source: RawRecord): CharacterProfile {
+  const path = asRecord(source.path);
+  const element = asRecord(source.element);
+  const lightCone = asRecord(source.light_cone ?? source.lightCone);
+  const properties = asArray(source.properties).map(asRecord);
+  const name = text(source.name, "名称不明");
+  const guide = guideFor(name, text(path.name));
+  const relics = asArray(source.relics).map((entry, index) => {
+    const relic = asRecord(entry);
+    const main = asRecord(relic.main_affix ?? relic.mainAffix);
+    return {
+      id: text(relic.id, `${name}-relic-${index}`),
+      name: text(relic.name, "遺物"),
+      setName: text(relic.set_name ?? relic.setName),
+      level: nullableNumber(relic.level),
+      icon: text(relic.icon) || null,
+      main: Object.keys(main).length ? { name: text(main.name), display: statDisplay(main) } : null,
+      subs: asArray(relic.sub_affix ?? relic.subAffix).map(asRecord).map((sub) => ({ name: text(sub.name), display: statDisplay(sub) })),
+    };
+  });
+
+  return {
+    id: text(source.id, name),
+    name,
+    level: nullableNumber(source.level),
+    rank: nullableNumber(source.rank),
+    portrait: text(source.portrait ?? source.preview ?? source.icon) || null,
+    element: text(element.name),
+    elementColor: text(element.color) || null,
+    path: text(path.name),
+    lightCone: Object.keys(lightCone).length ? {
+      name: text(lightCone.name, "光円錐"),
+      level: nullableNumber(lightCone.level),
+      rank: nullableNumber(lightCone.rank),
+      icon: text(lightCone.icon) || null,
+    } : null,
+    relics,
+    allStats: properties.map((stat) => ({ name: text(stat.name), display: statDisplay(stat), icon: text(stat.icon) || null })).filter((stat) => stat.name),
+    guide,
+    comparisons: guide.targets.map((target) => comparisonFor(properties, target)),
+  };
+}
+
+export function normalizeMihomoPayload(payload: unknown): Omit<BuildLookupResult, "cached" | "cacheExpiresAt" | "fetchedAt"> {
+  const root = asRecord(payload);
+  const player = asRecord(root.player);
+  return {
+    player: {
+      uid: text(player.uid ?? root.uid),
+      name: text(player.nickname ?? player.name, "開拓者"),
+      level: nullableNumber(player.level),
+    },
+    characters: asArray(root.characters).map(asRecord).map(parseCharacter),
+  };
+}
+
+export class UidResponseCache<T> {
+  private cache = new Map<string, { value: T; expiresAt: number }>();
+
+  getEntry(key: string, now = Date.now()): { value: T; expiresAt: number } | null {
+    const entry = this.cache.get(key);
+    if (!entry || entry.expiresAt <= now) {
+      this.cache.delete(key);
+      return null;
+    }
+    return entry;
+  }
+
+  get(key: string, now = Date.now()): T | null {
+    return this.getEntry(key, now)?.value ?? null;
+  }
+
+  set(key: string, value: T, ttlMs: number, now = Date.now()): number {
+    const expiresAt = now + ttlMs;
+    this.cache.set(key, { value, expiresAt });
+    return expiresAt;
+  }
+}
+
+const lookupCache = new UidResponseCache<Omit<BuildLookupResult, "cached" | "cacheExpiresAt" | "fetchedAt">>();
+const inFlightLookups = new Map<string, Promise<BuildLookupResult>>();
+const FALLBACK_TTL_MS = 4 * 60 * 1000;
+
+function ttlFromPayload(payload: unknown): number {
+  const ttlSeconds = nullableNumber(asRecord(payload).ttl);
+  if (ttlSeconds === null) return FALLBACK_TTL_MS;
+  return Math.max(60_000, Math.min(ttlSeconds * 1000, 10 * 60 * 1000));
+}
+
+async function requestMihomo(uid: string): Promise<BuildLookupResult> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 14_000);
+  try {
+    const response = await fetch(`https://api.mihomo.me/sr_info_parsed/${encodeURIComponent(uid)}?lang=jp`, {
+      headers: { "User-Agent": "Star-Rail-Build-Advisor/1.0 (personal-use)" },
+      signal: controller.signal,
+    });
+    const payload: unknown = await response.json().catch(() => ({}));
+    if (!response.ok || asRecord(payload).detail) {
+      const detail = text(asRecord(payload).detail, "データを取得できませんでした。");
+      const message = response.status === 429 ? "照会が集中しています。数分後に再度お試しください。" : detail;
+      throw new TRPCError({ code: response.status === 404 ? "NOT_FOUND" : "BAD_GATEWAY", message });
+    }
+    const normalized = normalizeMihomoPayload(payload);
+    if (!normalized.characters.length) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "公開中のキャラクターが見つかりません。ゲーム内の巡星ビザ設定をご確認ください。" });
+    }
+    const expiresAt = lookupCache.set(uid, normalized, ttlFromPayload(payload));
+    const fetchedAt = new Date().toISOString();
+    return { ...normalized, cached: false, fetchedAt, cacheExpiresAt: new Date(expiresAt).toISOString() };
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+    throw new TRPCError({ code: "BAD_GATEWAY", message: "外部データサービスへ接続できませんでした。少し時間を置いて再試行してください。", cause: error });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function lookupUidBuild(uid: string): Promise<BuildLookupResult> {
+  const cached = lookupCache.getEntry(uid);
+  if (cached) {
+    const now = new Date();
+    return { ...cached.value, cached: true, fetchedAt: now.toISOString(), cacheExpiresAt: new Date(cached.expiresAt).toISOString() };
+  }
+  const pending = inFlightLookups.get(uid);
+  if (pending) return pending;
+  const request = requestMihomo(uid).finally(() => inFlightLookups.delete(uid));
+  inFlightLookups.set(uid, request);
+  return request;
+}

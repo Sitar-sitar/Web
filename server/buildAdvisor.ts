@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { fetchEnkaPayload } from "./enkaFallback";
 
 export type TierName = "厳選" | "目標" | "妥協";
-export type StatKey = "critRate" | "critDmg" | "speed" | "attack" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hpPercent" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
+export type StatKey = "critRate" | "critDmg" | "speed" | "attack" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hp" | "hpPercent" | "defense" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
 
 type RawRecord = Record<string, unknown>;
 
@@ -203,6 +203,19 @@ Object.assign(GUIDE_OVERRIDES, {
   "アベンチュリン": { headline: "防御力を基盤に、バリアと追加攻撃の両面を整える。", relicSet: "純庭教会の聖騎士 ×4", planarSet: "ベロブルグの建築家 ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ / 防御力%" }, { slot: "脚部", value: "速度 / 防御力%" }, { slot: "次元界オーブ", value: "防御力%" }, { slot: "連結縄", value: "防御力%" }], targets: [{ key: "speed", label: "速度", unit: "", targets: { "厳選": 134, "目標": 134, "妥協": 120 } }, { key: "defPercent", label: "防御力%", unit: "%", targets: { "厳選": 90, "目標": 70, "妥協": 50 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }] },
   "フォフォ": supportGuide("回復と必殺技回転を安定させる、速度中心の構成。", "仮想空間を漫遊するメッセンジャー ×2 / 流雲無痕の過客 ×2", "折れた竜骨 ×2"),
   "ギャラガー": { headline: "弱点撃破と回復の両立を、撃破特効と速度で組み立てる。", relicSet: "流星の跡を追う怪盗 ×2 / 仮想空間を漫遊するメッセンジャー ×2", planarSet: "盗賊公国タリア ×2", mainStats: [{ slot: "胴体", value: "治癒量 / HP%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP%" }, { slot: "連結縄", value: "撃破特効" }], targets: [{ key: "breakEffect", label: "撃破特効", unit: "%", targets: { "厳選": 180, "目標": 150, "妥協": 120 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 145, "妥協": 134 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }] },
+  "キャストリス": { headline: "HPを火力へ転換するため、会心とHPを優先して整える。", relicSet: "詩人のサルソー ×4", planarSet: "巨樹の葉を掴む静謐な荘園 ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "HP% / 速度" }, { slot: "次元界オーブ", value: "量子属性ダメージ / HP%" }, { slot: "連結縄", value: "HP%" }], targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 80, "目標": 70, "妥協": 60 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 220, "目標": 180, "妥協": 150 } }, { key: "hp", label: "HP", unit: "", targets: { "厳選": 10000, "目標": 8500, "妥協": 7500 } }] },
+  "アグライア": { headline: "召喚物の手数を支える速度と、会心比率を優先する。", relicSet: "流星を追う怪盗 ×4", planarSet: "奔狼の都藍王朝 ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "雷属性ダメージ" }, { slot: "連結縄", value: "攻撃力%" }], targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 75, "妥協": 65 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 190, "目標": 160, "妥協": 130 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 134, "妥協": 120 } }] },
+  "アナイクス": damageGuide("拡散攻撃の総火力を、会心・攻撃力・行動回数で支える。", "知識の海に溺れる学者 ×4", "出雲顕世と高天神国 ×2"),
+  "飛霄": damageGuide("追加攻撃と必殺技の確定会心を活かし、会心ダメージを優先する。", "風雲を薙ぎ払う勇烈 ×4", "自転が止まったサルソット ×2", [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 90, "目標": 80, "妥協": 70 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 210, "目標": 180, "妥協": 150 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 143, "目標": 134, "妥協": 120 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 70, "目標": 55, "妥協": 40 } }]),
+  "雲璃": damageGuide("反撃の一撃を安定させるため、会心と攻撃力を優先する。", "灰燼を燃やし尽くす大公 ×4", "自転が止まったサルソット ×2"),
+  "霊砂": { headline: "撃破特効を回復・追加攻撃へ還元するため、速度と撃破特効を整える。", relicSet: "蝗害を掃討せし鉄騎 ×4", planarSet: "盗賊公国タリア ×2", mainStats: [{ slot: "胴体", value: "治癒量 / 攻撃力%" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "攻撃力%" }, { slot: "連結縄", value: "撃破特効" }], targets: [{ key: "breakEffect", label: "撃破特効", unit: "%", targets: { "厳選": 220, "目標": 180, "妥協": 150 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 145, "妥協": 134 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 60, "目標": 45, "妥協": 30 } }] },
+  "椒丘": { headline: "必殺技の付与を安定させるため、効果命中と速度を最優先する。", relicSet: "死水に潜る先駆者 ×2 / 仮想空間を漫遊するメッセンジャー ×2", planarSet: "海に沈んだルサカ ×2", mainStats: [{ slot: "胴体", value: "効果命中" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP% / 炎属性ダメージ" }, { slot: "連結縄", value: "EP回復効率" }], targets: [{ key: "effectHitRate", label: "効果命中", unit: "%", targets: { "厳選": 178, "目標": 160, "妥協": 140 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 145, "妥協": 134 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }] },
+  "ブラックスワン": { headline: "持続ダメージの命中と行動回数を、効果命中・速度・攻撃力で整える。", relicSet: "深い牢獄の囚人 ×4", planarSet: "囚われの歌姫 ×2", mainStats: [{ slot: "胴体", value: "効果命中" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "風属性ダメージ / 攻撃力%" }, { slot: "連結縄", value: "攻撃力%" }], targets: [{ key: "effectHitRate", label: "効果命中", unit: "%", targets: { "厳選": 150, "目標": 120, "妥協": 100 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 147, "妥協": 134 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 90, "目標": 75, "妥協": 60 } }] },
+  "サンデー": { headline: "会心ダメージによる支援量と、主力に合わせた行動順を優先する。", relicSet: "仮想空間を漫遊するメッセンジャー ×4", planarSet: "海に沈んだルサカ ×2", mainStats: [{ slot: "胴体", value: "会心ダメ" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP% / 防御力%" }, { slot: "連結縄", value: "EP回復効率" }], targets: [{ key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 230, "目標": 200, "妥協": 170 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 161, "目標": 134, "妥協": 120 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }] },
+  "ロビン": { headline: "攻撃力から得る支援効果を優先し、必殺技循環を補助する。", relicSet: "仮想空間を漫遊するメッセンジャー ×2 / 野穂伴う快走の盗賊 ×2", planarSet: "海に沈んだルサカ ×2", mainStats: [{ slot: "胴体", value: "攻撃力%" }, { slot: "脚部", value: "攻撃力%" }, { slot: "次元界オーブ", value: "攻撃力%" }, { slot: "連結縄", value: "攻撃力%" }], targets: [{ key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 4000, "目標": 3500, "妥協": 3000 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 134, "目標": 120, "妥協": 110 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }] },
+  "クラーラ": { headline: "反撃の確実なダメージを、会心と攻撃力で優先して高める。", relicSet: "灰燼を燃やし尽くす大公 ×4 / 成り上がりチャンピオン ×4", planarSet: "自転が止まったサルソット ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "攻撃力%" }, { slot: "次元界オーブ", value: "物理属性ダメージ / 攻撃力%" }, { slot: "連結縄", value: "攻撃力%" }], targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 75, "妥協": 65 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 190, "目標": 160, "妥協": 130 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 100, "目標": 85, "妥協": 70 } }] },
+  "サフェル": { headline: "追撃と追加ダメージの回転を、会心・速度・攻撃力で整える。", relicSet: "灰燼を燃やし尽くす大公 ×4", planarSet: "奔狼の都藍王朝 ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "量子属性ダメージ" }, { slot: "連結縄", value: "攻撃力%" }], targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 75, "妥協": 65 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 200, "目標": 170, "妥協": 140 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 160, "目標": 134, "妥協": 120 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 75, "目標": 60, "妥協": 45 } }] },
+  "マダム・ヘルタ": { headline: "知恵の範囲火力を伸ばすため、会心・攻撃力・行動回数を優先する。", relicSet: "灰燼を燃やし尽くす大公 ×4", planarSet: "奔狼の都藍王朝 ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度 / 攻撃力%" }, { slot: "次元界オーブ", value: "氷属性ダメージ" }, { slot: "連結縄", value: "攻撃力%" }], targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 75, "妥協": 65 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 220, "目標": 180, "妥協": 150 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 143, "目標": 134, "妥協": 120 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 80, "目標": 65, "妥協": 50 } }] },
 });
 
 const DEFAULT_GUIDE: GuideDefinition = {
@@ -224,7 +237,9 @@ const STAT_MATCHERS: Record<StatKey, RegExp[]> = {
   breakEffect: [/break/i, /撃破特効/i],
   effectHitRate: [/effect.*hit/i, /status.*hit/i, /効果命中/i],
   effectRes: [/effect.*res/i, /status.*res/i, /効果抵抗/i],
+  hp: [/^hp$/i, /^health$/i, /^HP$/],
   hpPercent: [/hp.*ratio/i, /hp.*percent/i, /HP%/i],
+  defense: [/^defense$/i, /^defence$/i, /^def$/i, /^防御力$/],
   defPercent: [/def.*ratio/i, /def.*percent/i, /防御力%/i],
   energyRecharge: [/energy.*recharge/i, /charge.*efficiency/i, /元素チャージ/i],
   elementalMastery: [/elemental.*mastery/i, /元素熟知/i],
@@ -272,8 +287,13 @@ function statNumber(stat: RawRecord): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function guideFor(name: string, path: string): GuideDefinition {
-  return GUIDE_OVERRIDES[name] ?? ROLE_GUIDES[path] ?? DEFAULT_GUIDE;
+export function guideFor(name: string, path: string): GuideDefinition {
+  const individualGuide = GUIDE_OVERRIDES[name];
+  if (individualGuide) {
+    return { ...individualGuide, targetContext: individualGuide.targetContext ?? `${name}専用の有効ステータス目標です。編成・光円錐・戦闘中バフによる変動分は含みません。` };
+  }
+  const roleGuide = ROLE_GUIDES[path] ?? DEFAULT_GUIDE;
+  return { ...roleGuide, targetContext: `${name}の個別ガイドは未登録です。現在は「${path || "未設定"}」向けの暫定目標を表示しています。` };
 }
 
 function comparisonFor(properties: RawRecord[], target: TargetStatDefinition): StatComparison {

@@ -106,9 +106,12 @@ describe("Enkaフォールバック正規化", () => {
     expect(data.characters[0]?.relics[0]?.setName).toBe("星の如く輝く天才");
     expect(data.characters[0]?.relics[0]?.main?.display).toBe("706");
     expect(data.characters[0]?.allStats.find((stat) => stat.name === "会心率")?.display).toBe("7.9%");
-    expect(data.characters[0]?.comparisons.find((item) => item.label === "会心率")?.current).toBe(7.916);
+    expect(data.characters[0]?.comparisons.map((item) => item.key)).toEqual(["breakEffect", "speed", "attackPercent"]);
+    expect(data.characters[0]?.guide.targetContext).toContain("ホタル専用");
     expect(data.characters[0]?.comparisons.find((item) => item.label === "速度")?.current).toBe(112.9);
     expect(data.characters[1]).toMatchObject({ name: "銀狼", element: "量子", path: "虚無" });
+    expect(data.characters[1]?.comparisons.map((item) => item.key)).toEqual(["effectHitRate", "speed", "effectRes"]);
+    expect(data.characters[1]?.guide.targetContext).toContain("銀狼専用");
 
     const unresolved = normalizeEnkaPayload({ detailInfo: { avatarDetailList: [{ avatarId: 1310, level: 80, equipment: { tid: 99999, level: 80 }, relicList: [{ tid: 1, type: 1, level: 0, _flat: { setID: 99999, props: [] } }] }] } }, { characters: { "1310": { name: "ホタル", element: "Fire", path: "Warrior" } }, lightCones: {}, relicSets: {}, characterPromotions: {}, skillTrees: {} });
     expect(unresolved.characters[0]?.lightCone?.name).toBe("未解決（ID: 99999）");

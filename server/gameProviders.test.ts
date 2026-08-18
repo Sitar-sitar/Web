@@ -27,6 +27,26 @@ describe("原神公開プロフィールの正規化", () => {
     expect(result.characters[0]?.comparisons.find((comparison) => comparison.key === "critRate")?.current).toBe(72);
     expect(result.characters[0]?.comparisons.find((comparison) => comparison.key === "critDmg")?.current).toBe(155);
   });
+
+  it("キャラクターごとに異なる有効ステータスと優先度注記を選択する", () => {
+    const avatar = (avatarId: number) => ({ avatarId, propMap: { "4001": { val: 90 } }, talentIdList: [], fightPropMap: { "20": 0.6, "22": 1.8, "23": 2.0, "28": 800, "2000": 40000, "2001": 3000, "2002": 3200 }, equipList: [] });
+    const result = normalizeGenshinPayload({ uid: "618285856", playerInfo: { nickname: "テスト旅人", level: 60 }, avatarInfoList: [avatar(10000002), avatar(10000073), avatar(10000030)] }, {
+      characters: {
+        "10000002": { NameTextMapHash: 1, Element: "Ice", WeaponType: "WEAPON_SWORD_ONE_HAND", SideIconName: "UI_AvatarIcon_Side_Ayaka" },
+        "10000073": { NameTextMapHash: 2, Element: "Grass", WeaponType: "WEAPON_CATALYST", SideIconName: "UI_AvatarIcon_Side_Nahida" },
+        "10000030": { NameTextMapHash: 3, Element: "Rock", WeaponType: "WEAPON_POLE", SideIconName: "UI_AvatarIcon_Side_Zhongli" },
+      },
+      loc: { ja: { "1": "神里綾華", "2": "ナヒーダ", "3": "鍾離" } },
+    });
+
+    const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
+    expect(byName["神里綾華"]?.comparisons.map((comparison) => comparison.key)).toEqual(["critRate", "critDmg", "energyRecharge"]);
+    expect(byName["ナヒーダ"]?.comparisons.map((comparison) => comparison.key)).toEqual(["elementalMastery", "critRate", "critDmg"]);
+    expect(byName["鍾離"]?.comparisons.map((comparison) => comparison.key)).toEqual(["hp", "energyRecharge"]);
+    expect(byName["神里綾華"]?.guide.targetContext).toContain("神里綾華専用");
+    expect(byName["ナヒーダ"]?.guide.targetContext).toContain("ナヒーダ専用");
+    expect(byName["鍾離"]?.guide.targetContext).toContain("鍾離専用");
+  });
 });
 
 describe("ZZZ公開プロフィールの正規化", () => {

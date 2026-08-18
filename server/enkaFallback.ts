@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import type { BuildLookupResult, CharacterProfile } from "./buildAdvisor";
+import { guideFor, type BuildLookupResult, type CharacterProfile } from "./buildAdvisor";
 
 type RawRecord = Record<string, unknown>;
 type LookupData = Omit<BuildLookupResult, "cached" | "cacheExpiresAt" | "fetchedAt">;
@@ -20,13 +20,6 @@ const PROP_NAMES: Record<string, string> = {
 };
 const PATH_NAMES: Record<string, string> = { Knight: "存護", Mage: "知恵", Priest: "豊穣", Rogue: "巡狩", Shaman: "調和", Warlock: "虚無", Warrior: "壊滅", Memory: "記憶" };
 const ELEMENT_NAMES: Record<string, string> = { Fire: "炎", Ice: "氷", Imaginary: "虚数", Physical: "物理", Quantum: "量子", Thunder: "雷", Wind: "風" };
-
-const FALLBACK_GUIDE: CharacterProfile["guide"] = {
-  headline: "Enkaの公開生データを静的データで補完して表示しています。基礎値・解放済み軌跡・遺物を基に比較値を算出します。",
-  relicSet: "キャラクター適性に応じた属性セット", planarSet: "攻撃系 / 支援系オーナメント",
-  mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "属性ダメージ" }, { slot: "連結縄", value: "役割に応じて選択" }],
-  targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 75, "妥協": 65 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 180, "目標": 150, "妥協": 120 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 134, "目標": 134, "妥協": 120 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 70, "目標": 55, "妥協": 40 } }],
-};
 
 function record(value: unknown): RawRecord { return value && typeof value === "object" && !Array.isArray(value) ? value as RawRecord : {}; }
 function array(value: unknown): unknown[] { return Array.isArray(value) ? value : []; }
@@ -98,10 +91,10 @@ export function normalizeEnkaPayload(payload: unknown, staticData: StaticIndex =
       const flat = record(relic._flat); const props = array(flat.props).map(record).map(property); const setId = str(flat.setID);
       return { id: `${str(relic.tid, "relic")}-${str(relic.type, String(relicIndex))}`, name: `遺物 ${relicIndex + 1}`, setName: str(staticData.relicSets[setId]?.name) || `未解決（ID: ${setId || "不明"}）`, level: num(relic.level), icon: null, main: props[0] ? { name: props[0].name, display: props[0].display } : null, subs: props.slice(1).map((item) => ({ name: item.name, display: item.display })) };
     });
-    const cone = record(avatar.equipment); const coneId = str(cone.tid); const guide = FALLBACK_GUIDE;
+    const cone = record(avatar.equipment); const coneId = str(cone.tid); const path = PATH_NAMES[str(avatarMeta.path)] ?? PATH_NAMES[fallbackMeta.path ?? ""] ?? "未設定"; const guide = guideFor(metaName, path);
     return {
       id: avatarId || `enka-${index}`, name: metaName, level: num(avatar.level), rank: num(avatar.rank),
-      portrait: avatarId ? `https://enka.network/ui/hsr/SpriteOutput/AvatarRoundIcon/Avatar/${avatarId}.png` : null, element: ELEMENT_NAMES[str(avatarMeta.element)] ?? ELEMENT_NAMES[fallbackMeta.element ?? ""] ?? "未解決", elementColor: null, path: PATH_NAMES[str(avatarMeta.path)] ?? PATH_NAMES[fallbackMeta.path ?? ""] ?? "未解決",
+      portrait: avatarId ? `https://enka.network/ui/hsr/SpriteOutput/AvatarRoundIcon/Avatar/${avatarId}.png` : null, element: ELEMENT_NAMES[str(avatarMeta.element)] ?? ELEMENT_NAMES[fallbackMeta.element ?? ""] ?? "未解決", elementColor: null, path,
       lightCone: Object.keys(cone).length ? { name: str(staticData.lightCones[coneId]?.name) || `未解決（ID: ${coneId || "不明"}）`, level: num(cone.level), rank: num(cone.rank), icon: null } : null,
       relics, allStats: aggregate(propertyRecords, base), guide,
       comparisons: guide.targets.map((target) => { const current = calculatedValue(target.label, calculatedTotals); return { ...target, current, currentDisplay: current === null ? "未取得" : `算出 ${current.toFixed(target.unit === "%" ? 1 : 0)}${target.unit}`, achieved: { "厳選": current === null ? null : current >= target.targets["厳選"], "目標": current === null ? null : current >= target.targets["目標"], "妥協": current === null ? null : current >= target.targets["妥協"] } }; }),

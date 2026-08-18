@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { fetchEnkaPayload } from "./enkaFallback";
 
 export type TierName = "厳選" | "目標" | "妥協";
-export type StatKey = "critRate" | "critDmg" | "speed" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hpPercent" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
+export type StatKey = "critRate" | "critDmg" | "speed" | "attack" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hpPercent" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
 
 type RawRecord = Record<string, unknown>;
 
@@ -19,6 +19,7 @@ export type GuideDefinition = {
   planarSet: string;
   mainStats: Array<{ slot: string; value: string }>;
   targets: TargetStatDefinition[];
+  targetContext?: string;
 };
 
 export type StatComparison = TargetStatDefinition & {
@@ -218,6 +219,7 @@ const STAT_MATCHERS: Record<StatKey, RegExp[]> = {
   critRate: [/crit.*rate/i, /critical.*chance/i, /会心率/i],
   critDmg: [/crit.*dmg/i, /critical.*damage/i, /会心ダメ/i],
   speed: [/^speed$/i, /spd/i, /速度/i],
+  attack: [/^attack$/i, /^atk$/i, /攻撃力$/i],
   attackPercent: [/attack.*ratio/i, /atk.*ratio/i, /attack.*percent/i, /攻撃力%/i],
   breakEffect: [/break/i, /撃破特効/i],
   effectHitRate: [/effect.*hit/i, /status.*hit/i, /効果命中/i],

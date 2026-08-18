@@ -346,22 +346,69 @@ function finalZzzStats(catalog: ZzzCatalog, agent: Record<string, number>, weapo
   return {
     display,
     values: {
-      critRate: total("20101") + total("20103"), critDmg: total("21101") + total("21103"), attackPercent: total("12102"), hpPercent: total("11102"),
+      attack: scale("12101", "12102", "12103"), critRate: total("20101") + total("20103"), critDmg: total("21101") + total("21103"), attackPercent: total("12102"), hpPercent: total("11102"),
       impact: total("12201") * (1 + total("12202") / 100), anomalyMastery: total("31201") + total("31203"), penRatio: total("23101") + total("23103"), energyRegen: total("30501") * (1 + total("30502") / 100) + total("30503"),
     },
   };
 }
 
+const ZZZ_CHARACTER_GUIDES: Record<string, GuideDefinition> = {
+  "0号・アンビー": {
+    headline: "追加攻撃を主軸に、戦闘外の会心率を整えたうえで会心ダメージと攻撃力を伸ばす。",
+    relicSet: "シャドウハーモニー ×4 / ウッドペッカー・エレクトロ ×2", planarSet: "会心率70%前後を起点に戦闘中補正を加味",
+    mainStats: [{ slot: "IV", value: "会心率 / 会心ダメージ" }, { slot: "V", value: "電気属性ダメージ / 貫通率" }, { slot: "VI", value: "攻撃力%" }],
+    targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 80, "目標": 70, "妥協": 60 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 200, "目標": 180, "妥協": 150 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 3000, "目標": 2800, "妥協": 2500 } }],
+    targetContext: "0号・アンビー専用：会心率はステータス画面の戦闘外値です。追加能力・シャドウハーモニー4セットの戦闘中補正は判定に含めません。",
+  },
+  "ビビアン": {
+    headline: "異常ダメージの基礎となる異常マスタリーを最優先し、攻撃力で控えからの付与火力を補強する。",
+    relicSet: "パエトーンの歌 ×4", planarSet: "異常マスタリーを優先して選択",
+    mainStats: [{ slot: "IV", value: "異常マスタリー" }, { slot: "V", value: "エーテル属性ダメージ / 攻撃力%" }, { slot: "VI", value: "異常マスタリー" }],
+    targets: [{ key: "anomalyMastery", label: "異常マスタリー", unit: "", targets: { "厳選": 500, "目標": 430, "妥協": 380 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 3200, "目標": 3000, "妥協": 2800 } }],
+    targetContext: "ビビアン専用：異常マスタリーを最優先に表示します。会心系は主判定対象に含めません。",
+  },
+  "プロメイア": {
+    headline: "異常マスタリーを最優先に、攻撃力を積み上げて状態異常火力を安定させる。",
+    relicSet: "獄中の手記 ×4 / パエトーンの歌 ×2", planarSet: "異常マスタリーと攻撃力を優先",
+    mainStats: [{ slot: "IV", value: "異常マスタリー" }, { slot: "V", value: "氷属性ダメージ / 攻撃力%" }, { slot: "VI", value: "異常マスタリー" }],
+    targets: [{ key: "anomalyMastery", label: "異常マスタリー", unit: "", targets: { "厳選": 350, "目標": 325, "妥協": 300 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 2500, "目標": 2350, "妥協": 2200 } }],
+    targetContext: "プロメイア専用：異常マスタリーと攻撃力のみを主判定にし、会心系は評価対象から外します。",
+  },
+  "アストラ": {
+    headline: "支援バフの基礎となる攻撃力を最優先に、安定してバフ条件を満たす。",
+    relicSet: "スイング・ジャズ ×4", planarSet: "攻撃力の到達を優先",
+    mainStats: [{ slot: "IV", value: "攻撃力%" }, { slot: "V", value: "攻撃力%" }, { slot: "VI", value: "攻撃力%" }],
+    targets: [{ key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 3700, "目標": 3429, "妥協": 3200 } }],
+    targetContext: "アストラ専用：攻撃力を主判定にします。会心・異常系の値は支援性能の到達基準としては扱いません。",
+  },
+  "エレン": {
+    headline: "氷属性の直撃火力を支える、会心率・会心ダメージ・攻撃力のバランスを整える。",
+    relicSet: "極地のヘヴィメタル ×4", planarSet: "会心率70%以上を起点に調整",
+    mainStats: [{ slot: "IV", value: "会心率 / 会心ダメージ" }, { slot: "V", value: "氷属性ダメージ / 攻撃力%" }, { slot: "VI", value: "攻撃力%" }],
+    targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 70, "妥協": 60 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 180, "目標": 150, "妥協": 130 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 3000, "目標": 2800, "妥協": 2500 } }],
+    targetContext: "エレン専用：会心率を優先し、コアスキル由来の会心ダメージ補正を前提に会心バランスを確認します。",
+  },
+  "星見雅": {
+    headline: "霜灼・烈霜の火力を支える会心率を優先し、会心ダメージと攻撃力を補強する。",
+    relicSet: "折枝の刀歌 ×4", planarSet: "会心率68%を起点に調整",
+    mainStats: [{ slot: "IV", value: "会心率 / 会心ダメージ" }, { slot: "V", value: "氷属性ダメージ / 攻撃力%" }, { slot: "VI", value: "攻撃力%" }],
+    targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 80, "目標": 68, "妥協": 60 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 180, "目標": 150, "妥協": 130 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 3000, "目標": 2800, "妥協": 2600 } }],
+    targetContext: "星見雅専用：無凸・モチーフ音動機を想定した戦闘外の目安です。異常マスタリーは主判定ではなく補助値として扱います。",
+  },
+};
+
 function zzzGuide(name: string, profession: string): GuideDefinition {
+  const characterGuide = ZZZ_CHARACTER_GUIDES[name];
+  if (characterGuide) return characterGuide;
   const base = {
     headline: "役割に合う主ステータスと、ドライバディスクのサブステータスを両立させる。",
     relicSet: "役割に合うドライバディスクセット", planarSet: `役割：${(ZZZ_PROFESSIONS[profession] ?? profession) || "未設定"}`,
     mainStats: [{ slot: "IV", value: "会心 / 異常マスタリー" }, { slot: "V", value: "属性ダメージ / 貫通率" }, { slot: "VI", value: "攻撃力% / 異常掌握" }],
   };
-  if (profession === "Anomaly") return { ...base, headline: "異常マスタリーと異常掌握を軸に、状態異常ダメージの安定性を整える。", targets: [{ key: "anomalyMastery", label: "異常マスタリー", unit: "", targets: { "厳選": 180, "目標": 140, "妥協": 100 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 30, "目標": 20, "妥協": 12 } }, { key: "penRatio", label: "貫通率", unit: "%", targets: { "厳選": 24, "目標": 16, "妥協": 8 } }] };
-  if (profession === "Stun") return { ...base, headline: "衝撃力と攻撃系ステータスを整え、ブレイクの価値を引き上げる。", targets: [{ key: "impact", label: "衝撃力", unit: "", targets: { "厳選": 30, "目標": 20, "妥協": 12 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 30, "目標": 20, "妥協": 12 } }, { key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 35, "目標": 25, "妥協": 15 } }] };
-  if (profession === "Support" || profession === "Defense") return { ...base, headline: "エネルギーと耐久を整え、支援・防護性能を安定させる。", targets: [{ key: "energyRegen", label: "エネルギー自動回復", unit: "", targets: { "厳選": 1.5, "目標": 1.0, "妥協": 0.5 } }, { key: "hpPercent", label: "HP%", unit: "%", targets: { "厳選": 35, "目標": 25, "妥協": 15 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 25, "目標": 16, "妥協": 8 } }] };
-  return { ...base, targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 60, "目標": 50, "妥協": 40 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 120, "目標": 100, "妥協": 80 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 35, "目標": 25, "妥協": 15 } }] };
+  if (profession === "Anomaly") return { ...base, headline: "個別ガイド準備中：異常マスタリーと攻撃力を中心に確認する。", targets: [{ key: "anomalyMastery", label: "異常マスタリー", unit: "", targets: { "厳選": 180, "目標": 140, "妥協": 100 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 30, "目標": 20, "妥協": 12 } }], targetContext: "このキャラクターは個別ガイド未登録のため、ロール別の暫定表示です。" };
+  if (profession === "Stun") return { ...base, headline: "個別ガイド準備中：衝撃力と攻撃系ステータスを確認する。", targets: [{ key: "impact", label: "衝撃力", unit: "", targets: { "厳選": 30, "目標": 20, "妥協": 12 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 30, "目標": 20, "妥協": 12 } }], targetContext: "このキャラクターは個別ガイド未登録のため、ロール別の暫定表示です。" };
+  if (profession === "Support" || profession === "Defense") return { ...base, headline: "個別ガイド準備中：エネルギーと耐久を中心に確認する。", targets: [{ key: "energyRegen", label: "エネルギー自動回復", unit: "", targets: { "厳選": 1.5, "目標": 1.0, "妥協": 0.5 } }, { key: "hpPercent", label: "HP%", unit: "%", targets: { "厳選": 35, "目標": 25, "妥協": 15 } }], targetContext: "このキャラクターは個別ガイド未登録のため、ロール別の暫定表示です。" };
+  return { ...base, targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 60, "目標": 50, "妥協": 40 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 120, "目標": 100, "妥協": 80 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 35, "目標": 25, "妥協": 15 } }], targetContext: "このキャラクターは個別ガイド未登録のため、ロール別の暫定表示です。" };
 }
 
 export function normalizeZzzPayload(payload: unknown, catalog: ZzzCatalog): NormalizedBuild {

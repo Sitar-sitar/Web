@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { fetchEnkaPayload } from "./enkaFallback";
+import { generatedHsrGuide } from "./individualGuides";
+import { guideMetadataFor } from "./characterGuideMetadata";
 
 export type TierName = "厳選" | "目標" | "妥協";
 export type StatKey = "critRate" | "critDmg" | "speed" | "attack" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hp" | "hpPercent" | "defense" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
@@ -20,7 +22,32 @@ export type GuideDefinition = {
   mainStats: Array<{ slot: string; value: string }>;
   targets: TargetStatDefinition[];
   targetContext?: string;
+  dataAsOf?: string;
+  updatedAt?: string;
+  sourceLabel?: string;
+  profileId?: string;
 };
+
+export const GUIDE_DATASET_STATUS = {
+  dataAsOf: "2026-08-18",
+  updatedAt: "2026-08-18",
+  sourceLabels: {
+    hsr: "KQM・StarDB・Game8の公開ビルド情報を照合",
+    genshin: "GameWith・Game8の公開ビルド情報を照合",
+    zzz: "Prydwen・公開エージェントデータを照合",
+  },
+} as const;
+
+export function withGuideMetadata(game: "hsr" | "genshin" | "zzz", guide: GuideDefinition, characterName?: string): GuideDefinition {
+  const record = guideMetadataFor(game, characterName);
+  return {
+    ...guide,
+    dataAsOf: guide.dataAsOf ?? record.dataAsOf,
+    updatedAt: guide.updatedAt ?? record.updatedAt,
+    sourceLabel: guide.sourceLabel ?? record.sourceLabel,
+    profileId: guide.profileId ?? record.profileId ?? `curated:${characterName ?? "individual"}`,
+  };
+}
 
 export type StatComparison = TargetStatDefinition & {
   current: number | null;
@@ -290,10 +317,9 @@ function statNumber(stat: RawRecord): number | null {
 export function guideFor(name: string, path: string): GuideDefinition {
   const individualGuide = GUIDE_OVERRIDES[name];
   if (individualGuide) {
-    return { ...individualGuide, targetContext: individualGuide.targetContext ?? `${name}専用の有効ステータス目標です。編成・光円錐・戦闘中バフによる変動分は含みません。` };
+    return withGuideMetadata("hsr", { ...individualGuide, targetContext: individualGuide.targetContext ?? `${name}専用の有効ステータス目標です。編成・光円錐・戦闘中バフによる変動分は含みません。` }, name);
   }
-  const roleGuide = ROLE_GUIDES[path] ?? DEFAULT_GUIDE;
-  return { ...roleGuide, targetContext: `${name}の個別ガイドは未登録です。現在は「${path || "未設定"}」向けの暫定目標を表示しています。` };
+  return withGuideMetadata("hsr", generatedHsrGuide(name, path), name);
 }
 
 function comparisonFor(properties: RawRecord[], target: TargetStatDefinition): StatComparison {

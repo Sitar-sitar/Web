@@ -47,6 +47,26 @@ describe("原神公開プロフィールの正規化", () => {
     expect(byName["ナヒーダ"]?.guide.targetContext).toContain("ナヒーダ専用");
     expect(byName["鍾離"]?.guide.targetContext).toContain("鍾離専用");
   });
+
+  it("精密定義がない原神キャラクターにも個別プロファイルとデータ時点を付与する", () => {
+    const avatar = (avatarId: number) => ({ avatarId, propMap: { "4001": { val: 90 } }, talentIdList: [], fightPropMap: { "20": 0.6, "22": 1.8, "23": 1.8, "28": 850, "2000": 40000, "2001": 2500, "2002": 2700 }, equipList: [] });
+    const result = normalizeGenshinPayload({ uid: "618285856", playerInfo: { nickname: "テスト旅人", level: 60 }, avatarInfoList: [avatar(10000023), avatar(10000065), avatar(10000034)] }, {
+      characters: {
+        "10000023": { NameTextMapHash: 1, Element: "Fire", WeaponType: "WEAPON_POLE", SideIconName: "UI_AvatarIcon_Side_Xiangling" },
+        "10000065": { NameTextMapHash: 2, Element: "Electric", WeaponType: "WEAPON_SWORD_ONE_HAND", SideIconName: "UI_AvatarIcon_Side_Kuki" },
+        "10000034": { NameTextMapHash: 3, Element: "Rock", WeaponType: "WEAPON_CLAYMORE", SideIconName: "UI_AvatarIcon_Side_Noelle" },
+      },
+      loc: { ja: { "1": "香菱", "2": "久岐忍", "3": "ノエル" } },
+    });
+    const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
+
+    expect(byName["香菱"]?.comparisons.map((comparison) => comparison.key)).toEqual(["critRate", "critDmg", "energyRecharge"]);
+    expect(byName["久岐忍"]?.comparisons.map((comparison) => comparison.key)).toEqual(["elementalMastery", "energyRecharge"]);
+    expect(byName["ノエル"]?.comparisons.map((comparison) => comparison.key)).toEqual(["defense", "critRate", "critDmg"]);
+    expect(byName["香菱"]?.guide.targetContext).toContain("香菱用");
+    expect(byName["久岐忍"]?.guide.dataAsOf).toBe("2026-08-18");
+    expect(byName["ノエル"]?.guide.sourceLabel).toContain("GameWith");
+  });
 });
 
 describe("ZZZ公開プロフィールの正規化", () => {
@@ -103,5 +123,27 @@ describe("ZZZ公開プロフィールの正規化", () => {
     expect(byName["0号・アンビー"]?.guide.targetContext).toContain("0号・アンビー専用");
     expect(byName["ビビアン"]?.guide.targetContext).toContain("ビビアン専用");
     expect(byName["アストラ"]?.guide.targetContext).toContain("アストラ専用");
+  });
+
+  it("精密定義がないZZZエージェントにも個別プロファイルとデータ時点を付与する", () => {
+    const metadata = { ElementTypes: ["Elec"], Image: "/ui/zzz/avatar.png", BaseProps: { "11101": 100, "12101": 100, "20101": 500, "21101": 5000 }, GrowthProps: {}, PromotionProps: [{}], CoreEnhancementProps: [{}] };
+    const result = normalizeZzzPayload({ uid: "17287976", PlayerInfo: { SocialDetail: { ProfileDetail: { Nickname: "テストプロキシ", Level: 60 } }, ShowcaseDetail: { AvatarList: [
+      { Id: 1011, Level: 60, TalentLevel: 0, Weapon: { Id: 12001, Level: 60, BreakLevel: 0 }, EquippedList: [] },
+      { Id: 1101, Level: 60, TalentLevel: 0, Weapon: { Id: 12001, Level: 60, BreakLevel: 0 }, EquippedList: [] },
+      { Id: 1181, Level: 60, TalentLevel: 0, Weapon: { Id: 12001, Level: 60, BreakLevel: 0 }, EquippedList: [] },
+    ] } } }, {
+      avatars: { "1011": { ...metadata, Name: "Avatar_Anby", ProfessionType: "Stun" }, "1101": { ...metadata, Name: "Avatar_Koleda", ProfessionType: "Stun" }, "1181": { ...metadata, Name: "Avatar_Grace", ProfessionType: "Anomaly" } },
+      weapons: { "12001": { ItemName: "Weapon_Test", ImagePath: "/ui/zzz/weapon.png", MainStat: { PropertyId: 12101, PropertyValue: 50 }, SecondaryStat: {} } },
+      equipments: { Items: {}, Suits: {} },
+      locs: { ja: { Avatar_Anby: "アンビー", Avatar_Koleda: "クレタ", Avatar_Grace: "グレース", Weapon_Test: "テスト音動機" } },
+      property: { "11101": { Name: "HP", Format: "{0:0}" }, "12101": { Name: "AttackBase", Format: "{0:0}" }, "20101": { Name: "CritRateBase", Format: "{0:0.0}%" }, "21101": { Name: "CritDmgBase", Format: "{0:0.0}%" } },
+    });
+    const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
+
+    expect(byName["アンビー"]?.comparisons.map((comparison) => comparison.key)).toEqual(["impact", "attack"]);
+    expect(byName["グレース"]?.comparisons.map((comparison) => comparison.key)).toEqual(["anomalyMastery", "attack"]);
+    expect(byName["クレタ"]?.guide.targetContext).toContain("クレタ用");
+    expect(byName["グレース"]?.guide.dataAsOf).toBe("2026-08-18");
+    expect(byName["アンビー"]?.guide.sourceLabel).toContain("Prydwen");
   });
 });

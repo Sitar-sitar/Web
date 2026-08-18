@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { lookupUidBuild, lookupWithFallback, UidResponseCache, normalizeMihomoPayload } from "./buildAdvisor";
+import { guideFor, lookupUidBuild, lookupWithFallback, UidResponseCache, normalizeMihomoPayload, withGuideMetadata } from "./buildAdvisor";
 import { normalizeEnkaPayload } from "./enkaFallback";
+import { CHARACTER_GUIDE_CATALOG, HSR_RUNTIME_PATHS, ZZZ_RUNTIME_PROFESSIONS } from "./characterGuideCatalog";
+import { CHARACTER_GUIDE_METADATA } from "./characterGuideMetadata";
+import { expectedProfileFor } from "./expectedGuideProfiles";
+import { generatedGenshinGuide, generatedZzzGuide } from "./individualGuides";
 
 describe("MiHoMoデータ正規化", () => {
   it("公開キャラクターの装備と目標達成度を表示モデルに変換する", () => {
@@ -36,6 +40,22 @@ describe("MiHoMoデータ正規化", () => {
 
     expect(data.characters[0]?.guide.relicSet).toBe("死水に潜る先駆者 ×4");
     expect(data.characters[0]?.guide.mainStats.find((stat) => stat.slot === "胴体")?.value).toContain("会心率");
+  });
+
+  it("既存の精密定義がないキャラクターにも個別プロファイルとデータ時点を付与する", () => {
+    const data = normalizeMihomoPayload({
+      player: { uid: "800000003", nickname: "テスト開拓者" },
+      characters: [
+        { id: "1002", name: "丹恒", path: { name: "巡狩" }, element: { name: "風" }, properties: [], relics: [] },
+        { id: "1211", name: "白露", path: { name: "豊穣" }, element: { name: "雷" }, properties: [], relics: [] },
+      ],
+    });
+    const byName = Object.fromEntries(data.characters.map((character) => [character.name, character]));
+
+    expect(byName["丹恒"]?.guide.targetContext).toContain("丹恒用");
+    expect(byName["白露"]?.comparisons.map((comparison) => comparison.key)).toEqual(["speed", "effectRes", "hpPercent"]);
+    expect(byName["丹恒"]?.guide.dataAsOf).toBe("2026-08-18");
+    expect(byName["白露"]?.guide.sourceLabel).toContain("KQM");
   });
 });
 
@@ -116,5 +136,37 @@ describe("Enkaフォールバック正規化", () => {
     const unresolved = normalizeEnkaPayload({ detailInfo: { avatarDetailList: [{ avatarId: 1310, level: 80, equipment: { tid: 99999, level: 80 }, relicList: [{ tid: 1, type: 1, level: 0, _flat: { setID: 99999, props: [] } }] }] } }, { characters: { "1310": { name: "ホタル", element: "Fire", path: "Warrior" } }, lightCones: {}, relicSets: {}, characterPromotions: {}, skillTrees: {} });
     expect(unresolved.characters[0]?.lightCone?.name).toBe("未解決（ID: 99999）");
     expect(unresolved.characters[0]?.relics[0]?.setName).toBe("未解決（ID: 99999）");
+  });
+});
+
+describe("全キャラクターガイドの網羅性", () => {
+  it("収集済みの全キャラクター一覧に個別プロファイル・基準日・参照範囲を割り当てる", () => {
+    const hsrGuides = CHARACTER_GUIDE_CATALOG.hsr.map((name) => guideFor(name, HSR_RUNTIME_PATHS[name] ?? ""));
+    const genshinGuides = CHARACTER_GUIDE_CATALOG.genshin.map((name) => withGuideMetadata("genshin", generatedGenshinGuide(name), name));
+    const zzzGuides = CHARACTER_GUIDE_CATALOG.zzz.map((name) => withGuideMetadata("zzz", generatedZzzGuide(name, ZZZ_RUNTIME_PROFESSIONS[name] ?? ""), name));
+
+    expect(CHARACTER_GUIDE_CATALOG.dataAsOf).toBe("2026-08-18");
+    expect(Object.keys(HSR_RUNTIME_PATHS)).toHaveLength(CHARACTER_GUIDE_CATALOG.hsr.length);
+    expect(Object.keys(ZZZ_RUNTIME_PROFESSIONS)).toHaveLength(CHARACTER_GUIDE_CATALOG.zzz.length);
+    expect(hsrGuides).toHaveLength(CHARACTER_GUIDE_CATALOG.hsr.length);
+    expect(genshinGuides).toHaveLength(CHARACTER_GUIDE_CATALOG.genshin.length);
+    expect(zzzGuides).toHaveLength(CHARACTER_GUIDE_CATALOG.zzz.length);
+    [...hsrGuides, ...genshinGuides, ...zzzGuides].forEach((guide) => {
+      expect(guide.targets.length).toBeGreaterThan(0);
+      expect(guide.profileId).toBeTruthy();
+      expect(guide.dataAsOf).toBe("2026-08-18");
+      expect(guide.updatedAt).toBe("2026-08-18");
+      expect(guide.sourceLabel).toBeTruthy();
+      expect(guide.targetContext).not.toContain("未登録");
+    });
+    (Object.keys(CHARACTER_GUIDE_METADATA) as Array<keyof typeof CHARACTER_GUIDE_METADATA>).forEach((game) => {
+      expect(Object.keys(CHARACTER_GUIDE_METADATA[game])).toHaveLength(CHARACTER_GUIDE_CATALOG[game].length);
+      CHARACTER_GUIDE_CATALOG[game].forEach((name) => {
+        expect(CHARACTER_GUIDE_METADATA[game][name]).toMatchObject({ profileId: expect.any(String), dataAsOf: "2026-08-18", updatedAt: "2026-08-18" });
+      });
+    });
+    CHARACTER_GUIDE_CATALOG.hsr.forEach((name, index) => expect(hsrGuides[index]?.profileId).toBe(expectedProfileFor("hsr", name)));
+    CHARACTER_GUIDE_CATALOG.genshin.forEach((name, index) => expect(genshinGuides[index]?.profileId).toBe(expectedProfileFor("genshin", name)));
+    CHARACTER_GUIDE_CATALOG.zzz.forEach((name, index) => expect(zzzGuides[index]?.profileId).toBe(expectedProfileFor("zzz", name)));
   });
 });

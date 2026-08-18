@@ -7,7 +7,9 @@ import {
   TargetStatDefinition,
   UidResponseCache,
   lookupUidBuild,
+  withGuideMetadata,
 } from "./buildAdvisor";
+import { generatedGenshinGuide, generatedZzzGuide } from "./individualGuides";
 
 export type GameId = "hsr" | "genshin" | "zzz";
 
@@ -177,13 +179,8 @@ Object.assign(GI_GUIDE_OVERRIDES, {
 
 function genshinGuide(name: string): GuideDefinition {
   const individualGuide = GI_GUIDE_OVERRIDES[name];
-  if (individualGuide) return { ...individualGuide, targetContext: individualGuide.targetContext ?? `${name}専用の有効ステータス目標です。武器・編成・元素反応・戦闘中バフにより必要値は変動します。` };
-  return {
-    headline: "会心・元素チャージ・元素熟知の優先度を、チーム内での役割に合わせて調整する。",
-    relicSet: "キャラクター適性に応じた聖遺物 ×4", planarSet: "主ステータスとサブステータスを役割に合わせて選択",
-    mainStats: [{ slot: "時計", value: "攻撃力% / HP% / 元素熟知" }, { slot: "杯", value: "元素ダメージ / 攻撃力%" }, { slot: "冠", value: "会心率 / 会心ダメージ" }], targets: GI_DEFAULT_TARGETS,
-    targetContext: `${name}の個別ガイドは未登録です。現在は汎用の暫定目標を表示しています。`,
-  };
+  if (individualGuide) return withGuideMetadata("genshin", { ...individualGuide, targetContext: individualGuide.targetContext ?? `${name}専用の有効ステータス目標です。武器・編成・元素反応・戦闘中バフにより必要値は変動します。` }, name);
+  return withGuideMetadata("genshin", generatedGenshinGuide(name), name);
 }
 
 function comparisonsFromStats(targets: TargetStatDefinition[], values: Record<string, number>) {
@@ -427,16 +424,8 @@ const ZZZ_CHARACTER_GUIDES: Record<string, GuideDefinition> = {
 
 function zzzGuide(name: string, profession: string): GuideDefinition {
   const characterGuide = ZZZ_CHARACTER_GUIDES[name];
-  if (characterGuide) return characterGuide;
-  const base = {
-    headline: "役割に合う主ステータスと、ドライバディスクのサブステータスを両立させる。",
-    relicSet: "役割に合うドライバディスクセット", planarSet: `役割：${(ZZZ_PROFESSIONS[profession] ?? profession) || "未設定"}`,
-    mainStats: [{ slot: "IV", value: "会心 / 異常マスタリー" }, { slot: "V", value: "属性ダメージ / 貫通率" }, { slot: "VI", value: "攻撃力% / 異常掌握" }],
-  };
-  if (profession === "Anomaly") return { ...base, headline: "個別ガイド準備中：異常マスタリーと攻撃力を中心に確認する。", targets: [{ key: "anomalyMastery", label: "異常マスタリー", unit: "", targets: { "厳選": 180, "目標": 140, "妥協": 100 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 30, "目標": 20, "妥協": 12 } }], targetContext: "このキャラクターは個別ガイド未登録のため、ロール別の暫定表示です。" };
-  if (profession === "Stun") return { ...base, headline: "個別ガイド準備中：衝撃力と攻撃系ステータスを確認する。", targets: [{ key: "impact", label: "衝撃力", unit: "", targets: { "厳選": 30, "目標": 20, "妥協": 12 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 30, "目標": 20, "妥協": 12 } }], targetContext: "このキャラクターは個別ガイド未登録のため、ロール別の暫定表示です。" };
-  if (profession === "Support" || profession === "Defense") return { ...base, headline: "個別ガイド準備中：エネルギーと耐久を中心に確認する。", targets: [{ key: "energyRegen", label: "エネルギー自動回復", unit: "", targets: { "厳選": 1.5, "目標": 1.0, "妥協": 0.5 } }, { key: "hpPercent", label: "HP%", unit: "%", targets: { "厳選": 35, "目標": 25, "妥協": 15 } }], targetContext: "このキャラクターは個別ガイド未登録のため、ロール別の暫定表示です。" };
-  return { ...base, targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 60, "目標": 50, "妥協": 40 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 120, "目標": 100, "妥協": 80 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 35, "目標": 25, "妥協": 15 } }], targetContext: "このキャラクターは個別ガイド未登録のため、ロール別の暫定表示です。" };
+  if (characterGuide) return withGuideMetadata("zzz", characterGuide, name);
+  return withGuideMetadata("zzz", generatedZzzGuide(name, profession), name);
 }
 
 export function normalizeZzzPayload(payload: unknown, catalog: ZzzCatalog): NormalizedBuild {

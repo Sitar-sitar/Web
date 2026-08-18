@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { fetchEnkaPayload } from "./enkaFallback";
 
 export type TierName = "厳選" | "目標" | "妥協";
 type StatKey = "critRate" | "critDmg" | "speed" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hpPercent" | "defPercent";
@@ -58,6 +59,7 @@ export type CharacterProfile = {
 export type BuildLookupResult = {
   player: { uid: string; name: string; level: number | null };
   characters: CharacterProfile[];
+  dataSource?: "MiHoMo" | "Enka";
   cached: boolean;
   cacheExpiresAt: string;
   fetchedAt: string;
@@ -400,13 +402,20 @@ async function requestMihomo(uid: string): Promise<BuildLookupResult> {
     }
     const expiresAt = lookupCache.set(uid, normalized, ttlFromPayload(payload));
     const fetchedAt = new Date().toISOString();
-    return { ...normalized, cached: false, fetchedAt, cacheExpiresAt: new Date(expiresAt).toISOString() };
+    return { ...normalized, dataSource: "MiHoMo", cached: false, fetchedAt, cacheExpiresAt: new Date(expiresAt).toISOString() };
   } catch (error) {
     if (error instanceof TRPCError) throw error;
     throw new TRPCError({ code: "BAD_GATEWAY", message: "外部データサービスへ接続できませんでした。少し時間を置いて再試行してください。", cause: error });
   } finally {
     clearTimeout(timeout);
   }
+}
+
+async function requestEnka(uid: string): Promise<BuildLookupResult> {
+  const fallback = await fetchEnkaPayload(uid);
+  const expiresAt = lookupCache.set(uid, fallback.data, fallback.ttlSeconds === null ? FALLBACK_TTL_MS : Math.max(60_000, Math.min(fallback.ttlSeconds * 1000, 10 * 60 * 1000)));
+  const fetchedAt = new Date().toISOString();
+  return { ...fallback.data, dataSource: "Enka", cached: false, fetchedAt, cacheExpiresAt: new Date(expiresAt).toISOString() };
 }
 
 export async function lookupUidBuild(uid: string): Promise<BuildLookupResult> {
@@ -417,7 +426,15 @@ export async function lookupUidBuild(uid: string): Promise<BuildLookupResult> {
   }
   const pending = inFlightLookups.get(uid);
   if (pending) return pending;
-  const request = requestMihomo(uid).finally(() => inFlightLookups.delete(uid));
+  const request = lookupWithFallback(() => requestMihomo(uid), () => requestEnka(uid)).finally(() => inFlightLookups.delete(uid));
   inFlightLookups.set(uid, request);
   return request;
+}
+
+export async function lookupWithFallback<T>(primary: () => Promise<T>, fallback: () => Promise<T>): Promise<T> {
+  try {
+    return await primary();
+  } catch {
+    return fallback();
+  }
 }

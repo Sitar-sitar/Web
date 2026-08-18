@@ -25,6 +25,7 @@ describe("原神公開プロフィールの正規化", () => {
     expect(result.characters[0]?.lightCone?.name).toBe("テスト武器");
     expect(result.characters[0]?.relics[0]?.setName).toBe("氷風を彷徨う勇士");
     expect(result.characters[0]?.comparisons.find((comparison) => comparison.key === "critRate")?.current).toBe(72);
+    expect(result.characters[0]?.comparisons.find((comparison) => comparison.key === "critDmg")?.current).toBe(155);
   });
 });
 

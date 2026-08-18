@@ -380,10 +380,18 @@ async function requestMihomo(uid: string): Promise<BuildLookupResult> {
       headers: { "User-Agent": "Star-Rail-Build-Advisor/1.0 (personal-use)" },
       signal: controller.signal,
     });
-    const payload: unknown = await response.json().catch(() => ({}));
-    if (!response.ok || asRecord(payload).detail) {
+    const contentType = response.headers.get("content-type") ?? "";
+    const rawBody = await response.text();
+    const payload: unknown = contentType.toLowerCase().includes("application/json")
+      ? JSON.parse(rawBody || "{}")
+      : {};
+    if (!response.ok || !contentType.toLowerCase().includes("application/json") || asRecord(payload).detail) {
       const detail = text(asRecord(payload).detail, "データを取得できませんでした。");
-      const message = response.status === 429 ? "照会が集中しています。数分後に再度お試しください。" : detail;
+      const message = response.status === 429
+        ? "照会が集中しています。数分後に再度お試しください。"
+        : response.status >= 500 || !contentType.toLowerCase().includes("application/json")
+          ? "外部データサービスが一時的に応答していません。数分後に再度お試しください。"
+          : detail;
       throw new TRPCError({ code: response.status === 404 ? "NOT_FOUND" : "BAD_GATEWAY", message });
     }
     const normalized = normalizeMihomoPayload(payload);

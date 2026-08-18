@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 export type TierName = "厳選" | "目標" | "妥協";
-type StatKey = "critRate" | "critDmg" | "speed" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hpPercent" | "defPercent";
+export type StatKey = "critRate" | "critDmg" | "speed" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hpPercent" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
 
 type RawRecord = Record<string, unknown>;
 
@@ -221,6 +221,12 @@ const STAT_MATCHERS: Record<StatKey, RegExp[]> = {
   effectRes: [/effect.*res/i, /status.*res/i, /効果抵抗/i],
   hpPercent: [/hp.*ratio/i, /hp.*percent/i, /HP%/i],
   defPercent: [/def.*ratio/i, /def.*percent/i, /防御力%/i],
+  energyRecharge: [/energy.*recharge/i, /charge.*efficiency/i, /元素チャージ/i],
+  elementalMastery: [/elemental.*mastery/i, /元素熟知/i],
+  anomalyMastery: [/anomaly.*mastery/i, /異常マスタリー/i],
+  impact: [/impact/i, /衝撃力/i],
+  penRatio: [/pen.*ratio/i, /貫通率/i],
+  energyRegen: [/energy.*regen/i, /energy.*recovery/i, /エネルギー自動回復/i],
 };
 
 function asRecord(value: unknown): RawRecord {

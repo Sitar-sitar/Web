@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -54,6 +54,9 @@ export const lookupAnalyticsEvents = mysqlTable("lookup_analytics_events", {
   game: mysqlEnum("game", ["hsr", "genshin", "zzz"]).notNull(),
   cacheHit: int("cacheHit").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, (table) => [
+  index("lookup_analytics_created_at_idx").on(table.createdAt),
+  index("lookup_analytics_game_created_at_idx").on(table.game, table.createdAt),
+]);
 
 export type InsertLookupAnalyticsEvent = typeof lookupAnalyticsEvents.$inferInsert;

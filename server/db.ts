@@ -1,4 +1,4 @@
-import { count, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertTranslationFeedback, InsertUser, lookupAnalyticsEvents, translationFeedback, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -135,7 +135,8 @@ export async function updateTranslationFeedbackStatus(id: number, status: Transl
   return true;
 }
 
-type LookupGame = "hsr" | "genshin" | "zzz";
+export type LookupGame = "hsr" | "genshin" | "zzz";
+export type LookupAnalyticsFilter = { game?: LookupGame; startAt?: Date; endAt?: Date };
 
 export async function recordLookupAnalyticsEvent(game: LookupGame, cacheHit: boolean): Promise<void> {
   const db = await getDb();
@@ -143,20 +144,29 @@ export async function recordLookupAnalyticsEvent(game: LookupGame, cacheHit: boo
   await db.insert(lookupAnalyticsEvents).values({ game, cacheHit: cacheHit ? 1 : 0 });
 }
 
-export async function getLookupAnalyticsDashboard() {
+export async function getLookupAnalyticsDashboard(filters: LookupAnalyticsFilter = {}) {
   const db = await getDb();
   if (!db) throw new Error("Lookup analytics storage is unavailable");
 
-  const [total] = await db.select({
+  const conditions = [
+    filters.game ? eq(lookupAnalyticsEvents.game, filters.game) : undefined,
+    filters.startAt ? gte(lookupAnalyticsEvents.createdAt, filters.startAt) : undefined,
+    filters.endAt ? lte(lookupAnalyticsEvents.createdAt, filters.endAt) : undefined,
+  ].filter((condition): condition is NonNullable<typeof condition> => Boolean(condition));
+  const where = conditions.length ? and(...conditions) : undefined;
+  const aggregateFields = {
     totalLookups: count(lookupAnalyticsEvents.id),
     cacheHits: sql<number>`coalesce(sum(${lookupAnalyticsEvents.cacheHit}), 0)`,
-  }).from(lookupAnalyticsEvents);
+  };
 
-  const grouped = await db.select({
-    game: lookupAnalyticsEvents.game,
-    totalLookups: count(lookupAnalyticsEvents.id),
-    cacheHits: sql<number>`coalesce(sum(${lookupAnalyticsEvents.cacheHit}), 0)`,
-  }).from(lookupAnalyticsEvents).groupBy(lookupAnalyticsEvents.game);
+  const [total] = where
+    ? await db.select(aggregateFields).from(lookupAnalyticsEvents).where(where)
+    : await db.select(aggregateFields).from(lookupAnalyticsEvents);
+
+  const groupedFields = { game: lookupAnalyticsEvents.game, ...aggregateFields };
+  const grouped = where
+    ? await db.select(groupedFields).from(lookupAnalyticsEvents).where(where).groupBy(lookupAnalyticsEvents.game)
+    : await db.select(groupedFields).from(lookupAnalyticsEvents).groupBy(lookupAnalyticsEvents.game);
 
   const normalize = (row: { totalLookups: number | string; cacheHits: number | string }) => {
     const totalLookups = Number(row.totalLookups ?? 0);
@@ -164,5 +174,5 @@ export async function getLookupAnalyticsDashboard() {
     return { totalLookups, cacheHits, cacheMisses: Math.max(0, totalLookups - cacheHits), cacheHitRate: totalLookups ? Math.round((cacheHits / totalLookups) * 1000) / 10 : 0 };
   };
   const byGame = (["hsr", "genshin", "zzz"] as const).map((game) => ({ game, ...normalize(grouped.find((row) => row.game === game) ?? { totalLookups: 0, cacheHits: 0 }) }));
-  return { ...normalize(total ?? { totalLookups: 0, cacheHits: 0 }), byGame };
+  return { filters: { game: filters.game ?? null, startDate: filters.startAt?.toISOString().slice(0, 10) ?? null, endDate: filters.endAt?.toISOString().slice(0, 10) ?? null }, ...normalize(total ?? { totalLookups: 0, cacheHits: 0 }), byGame };
 }

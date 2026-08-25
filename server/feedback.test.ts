@@ -108,4 +108,24 @@ describe("translation feedback submission", () => {
     const admin = appRouter.createCaller(adminContext);
     await expect(admin.analytics.lookupDashboard()).resolves.toEqual(dashboard);
   });
+
+  it("filters lookup analytics by JST date range and game, and rejects reversed dates", async () => {
+    const dashboard = { totalLookups: 2, cacheHits: 1, cacheMisses: 1, cacheHitRate: 50, byGame: [] };
+    mocks.getLookupAnalyticsDashboard.mockResolvedValue(dashboard);
+    const admin = appRouter.createCaller(adminContext);
+
+    await expect(admin.analytics.lookupDashboard({ game: "zzz", startDate: "2026-08-01", endDate: "2026-08-25" })).resolves.toEqual(dashboard);
+    expect(mocks.getLookupAnalyticsDashboard).toHaveBeenCalledWith({
+      game: "zzz",
+      startAt: new Date("2026-07-31T15:00:00.000Z"),
+      endAt: new Date("2026-08-25T14:59:59.999Z"),
+    });
+
+    mocks.getLookupAnalyticsDashboard.mockClear();
+    await expect(admin.analytics.lookupDashboard({ startDate: "2026-08-26", endDate: "2026-08-25" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(mocks.getLookupAnalyticsDashboard).not.toHaveBeenCalled();
+
+    await expect(admin.analytics.lookupDashboard({ startDate: "2026-02-30" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(mocks.getLookupAnalyticsDashboard).not.toHaveBeenCalled();
+  });
 });

@@ -1,0 +1,2 @@
+CREATE INDEX `lookup_analytics_created_at_idx` ON `lookup_analytics_events` (`createdAt`);--> statement-breakpoint
+CREATE INDEX `lookup_analytics_game_created_at_idx` ON `lookup_analytics_events` (`game`,`createdAt`);

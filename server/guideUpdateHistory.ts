@@ -1,5 +1,6 @@
 import { CHARACTER_GUIDE_CATALOG, type CatalogGameId } from "./characterGuideCatalog";
 import { CHARACTER_GUIDE_METADATA } from "./characterGuideMetadata";
+import { characterUpdateLedger } from "./characterUpdateLedger";
 
 export type GuideUpdateEvent = {
   date: string;
@@ -138,5 +139,5 @@ export function guideUpdateHistory() {
       }],
     };
   }));
-  return { currentBaseline: CURRENT_BASELINE, siteEvents: SITE_EVENTS, characters };
+  return { currentBaseline: CURRENT_BASELINE, siteEvents: SITE_EVENTS, characters, updateLedger: characterUpdateLedger() };
 }

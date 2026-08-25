@@ -43,6 +43,26 @@ describe("MiHoMoデータ正規化", () => {
     expect(data.characters[0]?.guide.mainStats.find((stat) => stat.slot === "胴体")?.value).toContain("会心率");
   });
 
+  it("第1バッチHSR4名は最新の個別目標を返し、ロール共通値へ戻らない", () => {
+    const guides = Object.fromEntries([
+      ["ホタル", guideFor("ホタル", "壊滅")],
+      ["アグライア", guideFor("アグライア", "記憶")],
+      ["アナイクス", guideFor("アナイクス", "知恵")],
+      ["キャストリス", guideFor("キャストリス", "記憶")],
+    ]);
+
+    expect(guides["ホタル"]?.targets.map((target) => target.key)).toEqual(["breakEffect", "speed", "attackPercent"]);
+    expect(guides["アグライア"]?.targets.map((target) => target.key)).toEqual(["critRate", "critDmg", "speed"]);
+    expect(guides["アナイクス"]?.targets.map((target) => target.key)).toEqual(["critRate", "critDmg", "speed", "attack"]);
+    expect(guides["アナイクス"]?.targets.find((target) => target.key === "critRate")?.targets["目標"]).toBe(80);
+    expect(guides["キャストリス"]?.mainStats.find((stat) => stat.slot === "脚部")?.value).toBe("HP%");
+    Object.values(guides).forEach((guide) => {
+      expect(guide?.dataAsOf).toBe("2026-08-25");
+      expect(guide?.sourceLabel).toContain("Game8");
+      expect(guide?.targetContext).toBeTruthy();
+    });
+  });
+
   it("HSR取得元の開拓者名称マクロをID別実装ラベルへ正規化する", () => {
     const data = normalizeMihomoPayload({
       player: { uid: "800000004", nickname: "テスト開拓者" },

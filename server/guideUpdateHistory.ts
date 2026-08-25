@@ -80,6 +80,12 @@ const BATCH_2_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["月城柳", "アストラ", "ライト", "レミエール"],
 };
 
+const BATCH_1_REVIEWED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["アグライア", "アナイクス", "キャストリス", "ホタル"],
+  genshin: ["フリーナ", "楓原万葉", "ベネット", "シロネン"],
+  zzz: ["星見雅", "浮波柚葉"],
+};
+
 function batch2UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
   if (!BATCH_2_UPDATED_NAMES[game].includes(name)) return undefined;
   return {
@@ -89,6 +95,19 @@ function batch2UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent 
     summary: `${name}の公開プロフィールで比較する目標値、全6段階の凸効果、最大3案の推奨PTを更新日付き個別ガイドで照合しました。`,
     changes: ["ロール共通の目標値を個別ビルドへ置換", "全6段階の凸効果を追加", "条件付きの戦闘内効果を公開値から分離", "最新の個別根拠で推奨PTを更新"],
     rationale: "ビルド・凸・編成の前提をキャラクターごとに明確化し、公開プロフィールと混同しない比較にするため。",
+    games: [game],
+  };
+}
+
+function batch1ReviewEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
+  if (!BATCH_1_REVIEWED_NAMES[game].includes(name)) return undefined;
+  return {
+    date: "2026-08-25T12:35:00+09:00",
+    scope: "character",
+    title: "第1バッチ：個別ビルド・凸・推奨PTを再監査",
+    summary: `${name}の初回バッチを、最新の更新日付き個別ガイドで再照合し、公開値・戦闘内補正・推奨PTの分離を見直しました。`,
+    changes: ["個別ビルドの目標値・主ステータス・条件注記を再確認", "全6段階の凸効果を更新日付き根拠と照合", "戦闘中・条件付きの効果を公開プロフィール値から分離", "最大3案の推奨PTを個別ガイドと照合"],
+    rationale: "初回適用データも同一基準で再点検し、キャラクター固有の条件が汎用目標へ混入しないようにするため。",
     games: [game],
   };
 }
@@ -107,6 +126,7 @@ export function guideUpdateHistory() {
       events: [
         ...(CHARACTER_CHANGE_EVENTS[game]?.[name] ?? []),
         ...(batch2UpdateEvent(game, name) ? [batch2UpdateEvent(game, name)!] : []),
+        ...(batch1ReviewEvent(game, name) ? [batch1ReviewEvent(game, name)!] : []),
         {
         date: metadata.updatedAt,
         scope: "character" as const,

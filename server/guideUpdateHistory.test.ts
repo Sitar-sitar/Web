@@ -14,5 +14,9 @@ describe("ガイド更新履歴", () => {
       expect.objectContaining({ title: "第2バッチ：個別ビルド・凸・推奨PTを再精査", date: "2026-08-25T12:14:00+09:00" }),
     ]));
     expect(history.characters.find((item) => item.name === "飛霄")?.updatedAt).toBe("2026-08-25");
+    expect(history.characters.find((item) => item.name === "ホタル")?.events).toEqual(expect.arrayContaining([
+      expect.objectContaining({ title: "第1バッチ：個別ビルド・凸・推奨PTを再監査", date: "2026-08-25T12:35:00+09:00" }),
+    ]));
+    expect(history.characters.find((item) => item.name === "星見雅")?.updatedAt).toBe("2026-08-25");
   });
 });

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { equipmentActionsFor, guideFor, priorityRecommendations, type BuildLookupResult, type CharacterProfile } from "./buildAdvisor";
 import { partyRecommendationsFor } from "./partyRecommendations";
 import { resolveCharacterIdentity } from "./characterIdentity";
+import { constellationProfileFor } from "./characterConstellations";
 
 type RawRecord = Record<string, unknown>;
 type LookupData = Omit<BuildLookupResult, "cached" | "cacheExpiresAt" | "fetchedAt">;
@@ -107,6 +108,7 @@ export function normalizeEnkaPayload(payload: unknown, staticData: StaticIndex =
       recommendations,
       equipmentActions: equipmentActionsFor(guide, relics, recommendations),
       partyRecommendations: partyRecommendationsFor("hsr", metaName),
+      constellations: constellationProfileFor(identity, num(avatar.rank)),
     } satisfies CharacterProfile;
   });
   return { player: { uid: str(root.uid ?? detail.uid), name: str(detail.nickname, "開拓者"), level: num(detail.level) }, characters };

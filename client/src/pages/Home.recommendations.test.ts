@@ -44,6 +44,35 @@ function lookupWithPartySelection(gameVersion: string, change: { key: string; la
   return result;
 }
 
+function lookupWithMiyabiMindscape() {
+  const result = structuredClone(lookupResult);
+  const character = result.characters[0];
+  character.id = "miyabi";
+  character.name = "星見雅";
+  character.rank = 2;
+  character.identity = { game: "zzz", sourceId: "1191", key: "zzz:1191", displayName: "星見雅", variantOf: null, resolved: true, resolution: "provider" };
+  character.constellations = {
+    rankLabel: { ja: "心象映画", en: "Mindscape Cinema", "zh-CN": "心象电影" },
+    acquiredRank: 2,
+    dataStatus: "curated",
+    gameVersion: "3.1",
+    dataAsOf: "2026-08-25",
+    updatedAt: "2026-08-25",
+    sourceLabel: { ja: "公開ガイド", en: "Public guide", "zh-CN": "公开指南" },
+    sourceUrl: "https://example.com/miyabi",
+    effects: [
+      { level: 1, name: { ja: "霜雪の頂", en: "Frost Atop the Snow", "zh-CN": "霜雪之巅" }, description: { ja: "M1の効果。", en: "M1 effect.", "zh-CN": "M1效果。" } },
+      { level: 2, name: { ja: "呼吸法", en: "Breath Technique", "zh-CN": "呼吸法" }, description: { ja: "入場時に会心率を15%上げる。", en: "Gains 15% CRIT Rate on entry.", "zh-CN": "入场时暴击率提高15%。" }, targetChanges: [{ key: "critRate", label: { ja: "会心率", en: "CRIT Rate", "zh-CN": "暴击率" }, unit: "%", targets: { "厳選": 65, "目標": 55, "妥協": 45 }, reason: { ja: "M2の戦闘中会心率+15%を反映。", en: "Applies M2's 15% in-combat CRIT Rate.", "zh-CN": "反映M2战斗内15%暴击率。" } }] },
+      { level: 3, name: { ja: "武芸", en: "Martial Discipline", "zh-CN": "武艺" }, description: { ja: "M3の効果。", en: "M3 effect.", "zh-CN": "M3效果。" } },
+      { level: 4, name: { ja: "断裂", en: "Rupture", "zh-CN": "断裂" }, description: { ja: "M4の効果。", en: "M4 effect.", "zh-CN": "M4效果。" } },
+      { level: 5, name: { ja: "記念日", en: "Anniversary", "zh-CN": "纪念日" }, description: { ja: "M5の効果。", en: "M5 effect.", "zh-CN": "M5效果。" } },
+      { level: 6, name: { ja: "天賦", en: "Prodigious Talent", "zh-CN": "天赋" }, description: { ja: "M6の効果。", en: "M6 effect.", "zh-CN": "M6效果。" } },
+    ],
+    activeTargetChanges: [{ key: "critRate", label: { ja: "会心率", en: "CRIT Rate", "zh-CN": "暴击率" }, unit: "%", targets: { "厳選": 65, "目標": 55, "妥協": 45 }, reason: { ja: "M2の戦闘中会心率+15%を反映。", en: "Applies M2's 15% in-combat CRIT Rate.", "zh-CN": "反映M2战斗内15%暴击率。" } }],
+  };
+  return result;
+}
+
 const mocks = vi.hoisted(() => ({ queryEnabled: [] as boolean[] }));
 vi.mock("@/lib/trpc", () => ({ trpc: { build: { lookup: { useQuery: (_input: unknown, options: { enabled?: boolean }) => { mocks.queryEnabled.push(Boolean(options.enabled)); return { data: options.enabled ? activeLookupResult : undefined, isFetching: false, error: null }; } } } } }));
 vi.mock("@/lib/uidHistory", () => ({ isValidUidForGame: () => true, loadLastUid: () => "", saveLastUid: () => undefined }));
@@ -77,6 +106,33 @@ describe("優先強化項目の画面統合", () => {
     fireEvent.click(screen.getByRole("button", { name: "照会する" }));
     expect(screen.getByText("SOURCE ID / zzz:eren")).toBeTruthy();
     expect(screen.getByText("エレン（別実装）とは別実装として識別しています。")).toBeTruthy();
+  });
+
+  it("凸データが未収集のキャラクターには、効果を推測せず収集中表示を出す", () => {
+    render(createElement(LanguageProvider, null, createElement(Home)));
+    fireEvent.click(screen.getByRole("button", { name: "照会する" }));
+    expect(screen.getByRole("heading", { name: "凸効果・目標補正" })).toBeTruthy();
+    expect(screen.getByText("このキャラクターの凸効果データは収集中です。表示対象は10キャラクター単位で検証・適用します。")).toBeTruthy();
+  });
+
+  it("星見雅M2では解放済み効果を既定表示し、未解放効果を折り畳み、会心率目標を再計算する", () => {
+    activeLookupResult = lookupWithMiyabiMindscape();
+    window.history.replaceState({}, "", "/?game=zzz&uid=1300622089&character=miyabi");
+    render(createElement(LanguageProvider, null, createElement(Home)));
+    fireEvent.click(screen.getByRole("button", { name: "照会する" }));
+
+    expect(screen.getByText("解放済み / 心象映画 1")).toBeTruthy();
+    expect(screen.getByText("解放済み / 心象映画 2")).toBeTruthy();
+    expect(screen.getByText("呼吸法")).toBeTruthy();
+    expect(screen.getByText("凸による目標変更 / 会心率 55%")).toBeTruthy();
+    expect(screen.getAllByText("55%").length).toBeGreaterThan(0);
+
+    const locked = screen.getByText("未解放の効果を表示").closest("details");
+    expect(locked).toBeTruthy();
+    expect(locked?.open).toBe(false);
+    fireEvent.click(screen.getByText("未解放の効果を表示"));
+    expect(locked?.open).toBe(true);
+    expect(screen.getByText("武芸")).toBeTruthy();
   });
 
   it("ゲーム切替だけでは照会を開始しない", () => {

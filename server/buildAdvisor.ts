@@ -4,6 +4,7 @@ import { generatedHsrGuide } from "./individualGuides";
 import { guideMetadataFor } from "./characterGuideMetadata";
 import { partyRecommendationsFor, type PartyRecommendationSet } from "./partyRecommendations";
 import { resolveCharacterIdentity, type CharacterIdentity } from "./characterIdentity";
+import { constellationProfileFor, type ConstellationProfile } from "./characterConstellations";
 
 export type TierName = "厳選" | "目標" | "妥協";
 export type StatKey = "critRate" | "critDmg" | "speed" | "attack" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hp" | "hpPercent" | "defense" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
@@ -200,6 +201,7 @@ export type CharacterProfile = {
   recommendations: PriorityRecommendation[];
   equipmentActions: EquipmentAction[];
   partyRecommendations: PartyRecommendationSet;
+  constellations: ConstellationProfile;
 };
 
 export type BuildLookupResult = {
@@ -506,6 +508,7 @@ function parseCharacter(source: RawRecord): CharacterProfile {
     recommendations,
     equipmentActions: equipmentActionsFor(guide, relics, recommendations),
     partyRecommendations: partyRecommendationsFor("hsr", name),
+    constellations: constellationProfileFor(identity, nullableNumber(source.rank)),
   };
 }
 

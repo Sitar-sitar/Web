@@ -19,6 +19,9 @@ vi.mock("@/lib/trpc", () => ({
       list: { useQuery: () => ({ isLoading: false, error: null, data: [{ id: 1, feedbackType: "mistranslation", locale: "ja", pagePath: "/", originalText: "CURRENT", suggestedText: "現在", notes: null, status: "new", createdAt: "2026-08-18T13:34:34.000Z" }] }) },
       updateStatus: { useMutation: (options: { onSuccess?: (result: unknown) => void }) => ({ mutate: (input: unknown) => mocks.mutate(input, options), isPending: false }) },
     },
+    analytics: {
+      lookupDashboard: { useQuery: () => ({ isLoading: false, error: null, data: { totalLookups: 3, cacheHits: 2, cacheMisses: 1, cacheHitRate: 66.7, byGame: [{ game: "hsr", totalLookups: 1, cacheHits: 1, cacheMisses: 0, cacheHitRate: 100 }, { game: "genshin", totalLookups: 1, cacheHits: 0, cacheMisses: 1, cacheHitRate: 0 }, { game: "zzz", totalLookups: 1, cacheHits: 1, cacheMisses: 0, cacheHitRate: 100 }] } }) },
+    },
     useUtils: () => ({ feedback: { list: { invalidate: mocks.invalidate } } }),
   },
 }));
@@ -37,6 +40,8 @@ describe("フィードバック管理画面", () => {
   it("管理者は報告一覧を確認し、対応状況を更新できる", async () => {
     render(<LanguageProvider><FeedbackAdmin /></LanguageProvider>);
     expect(screen.getAllByRole("heading", { name: "フィードバック管理" }).length).toBeGreaterThan(0);
+    expect(screen.getByRole("heading", { name: "照会ダッシュボード" })).toBeTruthy();
+    expect(screen.getByText("キャッシュ利用率")).toBeTruthy();
     expect(screen.getByText("現在")).toBeTruthy();
     fireEvent.change(screen.getByLabelText("対応状況"), { target: { value: "resolved" } });
     expect(mocks.mutate).toHaveBeenCalledWith({ id: 1, status: "resolved" }, expect.any(Object));

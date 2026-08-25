@@ -44,3 +44,16 @@ export const translationFeedback = mysqlTable("translation_feedback", {
 
 export type TranslationFeedback = typeof translationFeedback.$inferSelect;
 export type InsertTranslationFeedback = typeof translationFeedback.$inferInsert;
+
+/**
+ * Anonymous successful public-profile lookup events for administrator metrics.
+ * UID and user information are intentionally not persisted.
+ */
+export const lookupAnalyticsEvents = mysqlTable("lookup_analytics_events", {
+  id: int("id").autoincrement().primaryKey(),
+  game: mysqlEnum("game", ["hsr", "genshin", "zzz"]).notNull(),
+  cacheHit: int("cacheHit").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type InsertLookupAnalyticsEvent = typeof lookupAnalyticsEvents.$inferInsert;

@@ -2,15 +2,22 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   createTranslationFeedback: vi.fn(),
+  getLookupAnalyticsDashboard: vi.fn(),
   listTranslationFeedback: vi.fn(),
+  lookupGameBuild: vi.fn(),
+  recordLookupAnalyticsEvent: vi.fn(),
   updateTranslationFeedbackStatus: vi.fn(),
 }));
 
 vi.mock("./db", () => ({
   createTranslationFeedback: mocks.createTranslationFeedback,
+  getLookupAnalyticsDashboard: mocks.getLookupAnalyticsDashboard,
   listTranslationFeedback: mocks.listTranslationFeedback,
+  recordLookupAnalyticsEvent: mocks.recordLookupAnalyticsEvent,
   updateTranslationFeedbackStatus: mocks.updateTranslationFeedbackStatus,
 }));
+
+vi.mock("./gameProviders", () => ({ lookupGameBuild: mocks.lookupGameBuild }));
 
 import { appRouter } from "./routers";
 
@@ -31,6 +38,9 @@ describe("translation feedback submission", () => {
     mocks.createTranslationFeedback.mockReset();
     mocks.createTranslationFeedback.mockResolvedValue(undefined);
     mocks.listTranslationFeedback.mockReset();
+    mocks.getLookupAnalyticsDashboard.mockReset();
+    mocks.lookupGameBuild.mockReset();
+    mocks.recordLookupAnalyticsEvent.mockReset();
     mocks.updateTranslationFeedbackStatus.mockReset();
   });
 
@@ -77,5 +87,25 @@ describe("translation feedback submission", () => {
     await expect(admin.feedback.list()).resolves.toEqual([{ id: 7, status: "new", suggestedText: "Clarify this label" }]);
     await expect(admin.feedback.updateStatus({ id: 7, status: "in_progress" })).resolves.toEqual({ success: true });
     expect(mocks.updateTranslationFeedbackStatus).toHaveBeenCalledWith(7, "in_progress");
+  });
+
+  it("records successful lookups anonymously with the game and cache result", async () => {
+    mocks.lookupGameBuild.mockResolvedValue({ cached: true, player: { uid: "802643469" }, characters: [] });
+    mocks.recordLookupAnalyticsEvent.mockResolvedValue(undefined);
+    const caller = appRouter.createCaller(context);
+
+    await expect(caller.build.lookup({ game: "hsr", uid: "802643469" })).resolves.toMatchObject({ cached: true });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(mocks.recordLookupAnalyticsEvent).toHaveBeenCalledWith("hsr", true);
+  });
+
+  it("allows only admins to view lookup analytics", async () => {
+    const nonAdmin = appRouter.createCaller(context);
+    await expect(nonAdmin.analytics.lookupDashboard()).rejects.toMatchObject({ code: "FORBIDDEN" });
+
+    const dashboard = { totalLookups: 3, cacheHits: 2, cacheMisses: 1, cacheHitRate: 66.7, byGame: [] };
+    mocks.getLookupAnalyticsDashboard.mockResolvedValue(dashboard);
+    const admin = appRouter.createCaller(adminContext);
+    await expect(admin.analytics.lookupDashboard()).resolves.toEqual(dashboard);
   });
 });

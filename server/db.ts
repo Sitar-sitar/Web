@@ -1,6 +1,6 @@
-import { desc, eq } from "drizzle-orm";
+import { count, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertTranslationFeedback, InsertUser, translationFeedback, users } from "../drizzle/schema";
+import { InsertTranslationFeedback, InsertUser, lookupAnalyticsEvents, translationFeedback, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -133,4 +133,36 @@ export async function updateTranslationFeedbackStatus(id: number, status: Transl
 
   await db.update(translationFeedback).set({ status }).where(eq(translationFeedback.id, id));
   return true;
+}
+
+type LookupGame = "hsr" | "genshin" | "zzz";
+
+export async function recordLookupAnalyticsEvent(game: LookupGame, cacheHit: boolean): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Lookup analytics storage is unavailable");
+  await db.insert(lookupAnalyticsEvents).values({ game, cacheHit: cacheHit ? 1 : 0 });
+}
+
+export async function getLookupAnalyticsDashboard() {
+  const db = await getDb();
+  if (!db) throw new Error("Lookup analytics storage is unavailable");
+
+  const [total] = await db.select({
+    totalLookups: count(lookupAnalyticsEvents.id),
+    cacheHits: sql<number>`coalesce(sum(${lookupAnalyticsEvents.cacheHit}), 0)`,
+  }).from(lookupAnalyticsEvents);
+
+  const grouped = await db.select({
+    game: lookupAnalyticsEvents.game,
+    totalLookups: count(lookupAnalyticsEvents.id),
+    cacheHits: sql<number>`coalesce(sum(${lookupAnalyticsEvents.cacheHit}), 0)`,
+  }).from(lookupAnalyticsEvents).groupBy(lookupAnalyticsEvents.game);
+
+  const normalize = (row: { totalLookups: number | string; cacheHits: number | string }) => {
+    const totalLookups = Number(row.totalLookups ?? 0);
+    const cacheHits = Number(row.cacheHits ?? 0);
+    return { totalLookups, cacheHits, cacheMisses: Math.max(0, totalLookups - cacheHits), cacheHitRate: totalLookups ? Math.round((cacheHits / totalLookups) * 1000) / 10 : 0 };
+  };
+  const byGame = (["hsr", "genshin", "zzz"] as const).map((game) => ({ game, ...normalize(grouped.find((row) => row.game === game) ?? { totalLookups: 0, cacheHits: 0 }) }));
+  return { ...normalize(total ?? { totalLookups: 0, cacheHits: 0 }), byGame };
 }

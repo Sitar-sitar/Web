@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createTranslationFeedback, listTranslationFeedback, updateTranslationFeedbackStatus } from "./db";
+import { createTranslationFeedback, getLookupAnalyticsDashboard, listTranslationFeedback, recordLookupAnalyticsEvent, updateTranslationFeedbackStatus } from "./db";
 import { lookupGameBuild } from "./gameProviders";
 import { guideUpdateHistory } from "./guideUpdateHistory";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -30,7 +30,27 @@ export const appRouter = router({
           ctx.addIssue({ code: "custom", path: ["uid"], message: "このゲームのUIDは9〜10桁の数字で入力してください。" });
         }
       }))
-      .query(({ input }) => lookupGameBuild(input.game, input.uid)),
+      .query(async ({ input }) => {
+        const result = await lookupGameBuild(input.game, input.uid);
+        // Analytics are anonymous and must not turn a successful lookup into a failure.
+        try {
+          await recordLookupAnalyticsEvent(input.game, result.cached);
+        } catch (error) {
+          console.error("[Analytics] Failed to record lookup:", error);
+        }
+        return result;
+      }),
+  }),
+
+  analytics: router({
+    lookupDashboard: adminProcedure.query(async () => {
+      try {
+        return await getLookupAnalyticsDashboard();
+      } catch (error) {
+        console.error("[Analytics] Failed to load lookup dashboard:", error);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Unable to load lookup analytics" });
+      }
+    }),
   }),
 
   feedback: router({

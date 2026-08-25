@@ -1,12 +1,12 @@
 import { COOKIE_NAME } from "@shared/const";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createTranslationFeedback } from "./db";
+import { createTranslationFeedback, listTranslationFeedback, updateTranslationFeedbackStatus } from "./db";
 import { lookupGameBuild } from "./gameProviders";
 import { guideUpdateHistory } from "./guideUpdateHistory";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -57,6 +57,27 @@ export const appRouter = router({
         } catch (error) {
           console.error("[Feedback] Failed to store translation feedback:", error);
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Unable to save feedback" });
+        }
+      }),
+    list: adminProcedure.query(async () => {
+      try {
+        return await listTranslationFeedback();
+      } catch (error) {
+        console.error("[Feedback] Failed to list translation feedback:", error);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Unable to load feedback" });
+      }
+    }),
+    updateStatus: adminProcedure
+      .input(z.object({ id: z.number().int().positive(), status: z.enum(["new", "in_progress", "resolved"]) }))
+      .mutation(async ({ input }) => {
+        try {
+          const updated = await updateTranslationFeedbackStatus(input.id, input.status);
+          if (!updated) throw new TRPCError({ code: "NOT_FOUND", message: "Feedback not found" });
+          return { success: true } as const;
+        } catch (error) {
+          if (error instanceof TRPCError) throw error;
+          console.error("[Feedback] Failed to update feedback status:", error);
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Unable to update feedback" });
         }
       }),
   }),

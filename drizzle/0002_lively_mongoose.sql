@@ -1,0 +1,1 @@
+ALTER TABLE `translation_feedback` MODIFY COLUMN `status` enum('new','in_progress','resolved','reviewed') NOT NULL DEFAULT 'new';

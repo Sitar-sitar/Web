@@ -37,7 +37,8 @@ export const translationFeedback = mysqlTable("translation_feedback", {
   originalText: text("originalText"),
   suggestedText: text("suggestedText").notNull(),
   notes: text("notes"),
-  status: mysqlEnum("status", ["new", "reviewed", "resolved"]).default("new").notNull(),
+  // Keep legacy "reviewed" values readable while new operations use the three states below.
+  status: mysqlEnum("status", ["new", "in_progress", "resolved", "reviewed"]).default("new").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

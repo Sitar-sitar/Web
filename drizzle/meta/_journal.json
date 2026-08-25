@@ -15,6 +15,13 @@
       "when": 1787059476924,
       "tag": "0001_solid_lockjaw",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1787629389193,
+      "tag": "0002_lively_mongoose",
+      "breakpoints": true
     }
   ]
 }

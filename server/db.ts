@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertTranslationFeedback, InsertUser, translationFeedback, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -101,4 +101,36 @@ export async function createTranslationFeedback(feedback: InsertTranslationFeedb
     console.error("[Database] Failed to save translation feedback:", error);
     throw error;
   }
+}
+
+export type TranslationFeedbackStatus = "new" | "in_progress" | "resolved";
+
+export async function listTranslationFeedback() {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Translation feedback storage is unavailable");
+  }
+
+  return db
+    .select()
+    .from(translationFeedback)
+    .orderBy(desc(translationFeedback.createdAt), desc(translationFeedback.id))
+    .limit(250);
+}
+
+export async function updateTranslationFeedbackStatus(id: number, status: TranslationFeedbackStatus): Promise<boolean> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Translation feedback storage is unavailable");
+  }
+
+  const existing = await db
+    .select({ id: translationFeedback.id })
+    .from(translationFeedback)
+    .where(eq(translationFeedback.id, id))
+    .limit(1);
+  if (!existing.length) return false;
+
+  await db.update(translationFeedback).set({ status }).where(eq(translationFeedback.id, id));
+  return true;
 }

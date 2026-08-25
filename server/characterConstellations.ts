@@ -112,7 +112,7 @@ const CURATED: Record<string, CuratedEntry> = {
       effect(6, "さあ、愛の杯を掲げよう", "Hear Me — Raise the Chalice", "听我颂歌，为爱举杯", "元素スキル後に通常・重撃・落下攻撃へ水元素付与と最大HP参照の追加ダメージを得る。", "After Skill, gains Hydro Infusion and Max-HP-scaling bonus damage for Normal, Charged, and Plunging Attacks.", "施放战技后，普攻、重击和下落攻击获得水元素附魔与基于最大生命值的额外伤害。"),
     ],
   },
-  "genshin:シロネン": {
+  "genshin:10000103": {
     ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/461997", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
       effect(1, "休日の句", "Sabbatical Phrase", "休假的韵律", "夜魂の加護状態の消費を30%下げ、継続時間を延ばす。", "Reduces Nightsoul Blessing consumption by 30% and extends its uptime.", "夜魂加持状态的消耗降低30%，并延长持续时间。"),
       effect(2, "千年的祭礼", "Chiucue Mix", "千年的祭礼", "元素に応じてチームを強化する。炎は攻撃力、 水は最大HP、雷は元素エネルギー、氷は会心率・会心ダメージ、岩は与ダメージを上げる。", "Grants element-dependent team buffs: ATK for Pyro, Max HP for Hydro, Energy for Electro, CRIT for Cryo, and DMG for Geo.", "按元素给予队伍增益：火提高攻击力，水提高生命上限，雷回复能量，冰提高双暴，岩提高伤害。"),
@@ -132,7 +132,7 @@ const CURATED: Record<string, CuratedEntry> = {
       effect(6, "天賦", "Prodigious Talent", "天赋", "霜月の型中に通常攻撃・霜月のダメージを30%上げ、落霜消費に連動した追加斬撃を行う。", "In Shimotsuki Stance, increases Basic Attack: Shimotsuki DMG by 30% and enables extra slashes tied to Fallen Frost use.", "霜月姿态中，霜月普攻伤害提高30%，并随落霜消耗追加斩击。"),
     ],
   },
-  "zzz:浮波柚葉": {
+  "zzz:1411": {
     ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/527726", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
       effect(1, "幸運体質", "Lucky Constitution", "幸运体质", "入場時にエネルギー30を回復し、スイートスケア対象の全属性耐性を10%下げ、異常・混沌ダメージ支援を強化する。", "Restores 30 Energy on entry, reduces Sweet Scare targets' All-Attribute RES by 10%, and strengthens Anomaly/Disorder support.", "入场回复30能量，降低甜蜜惊吓目标10%全属性抗性，并强化异常与紊乱增益。"),
       effect(2, "色とりどりの仲間", "Full of Colorful Company", "五彩斑斓的伙伴", "EX特殊または終結技命中で、チームの与ダメージと異常蓄積効率を40秒間15%上げる。", "EX Special or Ultimate hit grants the squad 15% DMG and Anomaly Buildup Rate for 40s.", "强化特殊技或终结技命中后，全队伤害和异常积蓄效率提高15%，持续40秒。"),

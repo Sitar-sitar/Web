@@ -43,6 +43,20 @@ describe("MiHoMoデータ正規化", () => {
     expect(data.characters[0]?.guide.mainStats.find((stat) => stat.slot === "胴体")?.value).toContain("会心率");
   });
 
+  it("HSR取得元の開拓者名称マクロをID別実装ラベルへ正規化する", () => {
+    const data = normalizeMihomoPayload({
+      player: { uid: "800000004", nickname: "テスト開拓者" },
+      characters: [{ id: "8005", name: "{NICKNAME}", portrait: "https://example.com/trailblazer.png", path: { name: "調和" }, element: { name: "虚数" }, properties: [], relics: [] }],
+    });
+
+    expect(data.characters[0]).toMatchObject({
+      name: "開拓者（虚数・調和）",
+      identity: { key: "hsr:8005", variantOf: "開拓者", resolution: "curated-id-map" },
+      portrait: "https://example.com/trailblazer.png",
+    });
+    expect(data.characters[0]?.guide.targetContext).toContain("開拓者（虚数・調和）");
+  });
+
   it("既存の精密定義がないキャラクターにも個別プロファイルとデータ時点を付与する", () => {
     const data = normalizeMihomoPayload({
       player: { uid: "800000003", nickname: "テスト開拓者" },

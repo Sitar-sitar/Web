@@ -22,9 +22,9 @@ describe("constellationProfileFor", () => {
       [identity("genshin", "10000089", "フリーナ"), "命ノ星座"],
       [identity("genshin", "10000047", "楓原万葉"), "命ノ星座"],
       [identity("genshin", "10000032", "ベネット"), "命ノ星座"],
-      [identity("genshin", "10000110", "シロネン"), "命ノ星座"],
+      [identity("genshin", "10000103", "シロネン"), "命ノ星座"],
       [identity("zzz", "1091", "星見雅"), "心象映画"],
-      [identity("zzz", "141", "浮波柚葉"), "心象映画"],
+      [identity("zzz", "1411", "浮波柚葉"), "心象映画"],
     ];
 
     for (const [character, label] of entries) {
@@ -40,14 +40,20 @@ describe("constellationProfileFor", () => {
     const aboveSix = constellationProfileFor(identity("hsr", "1407", "キャストリス"), 9);
     const firefly = constellationProfileFor(identity("hsr", "1310", "ホタル"), 6);
     const anaxa = constellationProfileFor(identity("hsr", "1405", "アナイクス"), 6);
-    const xilonen = constellationProfileFor(identity("genshin", "10000110", "シロネン"), 6);
-    const yuzuha = constellationProfileFor(identity("zzz", "141", "浮波柚葉"), 6);
+    const xilonen = constellationProfileFor(identity("genshin", "10000103", "シロネン"), 6);
+    const yuzuha = constellationProfileFor(identity("zzz", "1411", "浮波柚葉"), 6);
 
     expect(belowZero.acquiredRank).toBe(0);
     expect(aboveSix.acquiredRank).toBe(6);
     for (const profile of [firefly, anaxa, xilonen, yuzuha]) {
       expect(profile.activeTargetChanges).toEqual([]);
     }
+  });
+
+  it("uses the verified source IDs for Xilonen and Yuzuha without mapping a neighboring implementation by name", () => {
+    expect(constellationProfileFor(identity("genshin", "10000103", "シロネン"), 6).dataStatus).toBe("curated");
+    expect(constellationProfileFor(identity("zzz", "1411", "浮波柚葉"), 6).dataStatus).toBe("curated");
+    expect(constellationProfileFor(identity("genshin", "10000110", "イアンサ"), 6).dataStatus).toBe("preparing");
   });
 
   it("returns all six reviewed Firefly Eidolons while showing only unlocked effects as active", () => {

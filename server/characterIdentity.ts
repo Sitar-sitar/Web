@@ -28,6 +28,17 @@ const CURATED_IDENTITIES: Partial<Record<CharacterGameId, Record<string, Curated
     "1506": { displayName: "銀狼Lv.999", variantOf: "銀狼" },
     "1508": { displayName: "遠坂凛", variantOf: null },
     "1509": { displayName: "ギルガメッシュ", variantOf: null },
+    // 取得元の {NICKNAME} はユーザー名マクロであり、キャラクター名としては表示しない。
+    "8001": { displayName: "開拓者（物理・壊滅）", variantOf: "開拓者" },
+    "8002": { displayName: "開拓者（物理・壊滅）", variantOf: "開拓者" },
+    "8003": { displayName: "開拓者（炎・存護）", variantOf: "開拓者" },
+    "8004": { displayName: "開拓者（炎・存護）", variantOf: "開拓者" },
+    "8005": { displayName: "開拓者（虚数・調和）", variantOf: "開拓者" },
+    "8006": { displayName: "開拓者（虚数・調和）", variantOf: "開拓者" },
+    "8007": { displayName: "開拓者（氷・記憶）", variantOf: "開拓者" },
+    "8008": { displayName: "開拓者（氷・記憶）", variantOf: "開拓者" },
+    "8009": { displayName: "開拓者（雷・歓楽）", variantOf: "開拓者" },
+    "8010": { displayName: "開拓者（雷・歓楽）", variantOf: "開拓者" },
   },
   genshin: {
     // HoYoVerse 公開のキャラクターID一覧に基づく現在の表示名。
@@ -40,6 +51,7 @@ function isUsableProviderName(value: string) {
   return Boolean(normalized)
     && !/^#?\d+$/.test(normalized)
     && !/^(?:キャラクター|エージェント|avatar)\s*#?\d+$/i.test(normalized)
+    && !/^\{[A-Z_]+\}$/.test(normalized)
     && !/^unknown$/i.test(normalized);
 }
 

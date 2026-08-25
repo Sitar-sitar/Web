@@ -16,12 +16,13 @@ export type PlayStyle =
 
 export type Rubber = {
   id: string;
-  brand: "Butterfly" | "Nittaku" | "VICTAS" | "Yasaka" | "TIBHAR" | "XIOM" | "STIGA" | "DONIC" | "andro" | "JOOLA";
+  brand: "Butterfly" | "Nittaku" | "VICTAS" | "Yasaka" | "TIBHAR" | "XIOM" | "STIGA" | "DONIC" | "andro" | "JOOLA" | "JUIC";
   name: string;
   type: RubberType;
   price: number | null;
   priceLabel: string;
   hardness: "軟" | "中" | "中硬" | "硬" | "—";
+  country?: string;
   speed: number;
   spin: number;
   control: number;
@@ -145,7 +146,9 @@ export const rubbers: Rubber[] = [
   { id: "ventus-limber", brand: "VICTAS", name: "ヴェンタス リンバー", type: "裏ソフト", price: 5610, priceLabel: "5,610円（税込）", hardness: "中", speed: 4, spin: 4, control: 4, styles: ["control", "beginner"], suitableFor: "扱いやすい攻撃型ラバーを求める人", source: "https://www.victas.com/products/?cat=3", officialNote: "裏ソフトラバー" },
   { id: "ventus-regular-alpha", brand: "VICTAS", name: "ヴェンタス レギュラー アルファ", type: "裏ソフト", price: 3520, priceLabel: "3,520円（税込）", hardness: "軟", speed: 3, spin: 3, control: 5, styles: ["beginner"], suitableFor: "基本技術とコントロールを優先する人", source: "https://www.victas.com/products/?cat=3", officialNote: "裏ソフトラバー" },
   { id: "vj-next", brand: "VICTAS", name: "VJ>ネクスト", type: "裏ソフト", price: 3080, priceLabel: "3,080円（税込）", hardness: "中", speed: 3, spin: 3, control: 4, styles: ["beginner"], suitableFor: "無理のない価格で攻撃技術を練習したい人", source: "https://www.victas.com/products/?cat=3", officialNote: "裏ソフトラバー" },
-  { id: "triple-extra", brand: "VICTAS", name: "トリプル エキストラ", type: "裏ソフト", price: 5500, priceLabel: "5,500円（税込）", hardness: "硬", speed: 4, spin: 5, control: 3, styles: ["sticky", "spin"], suitableFor: "粘着系の強回転を軸に組み立てる人", source: "https://www.victas.com/products/?cat=3", officialNote: "裏ソフトラバー" },
+  { id: "triple-extra", brand: "VICTAS", name: "トリプル エキストラ", type: "裏ソフト", price: 5500, priceLabel: "5,500円（税込）", hardness: "硬", country: "中国", speed: 4, spin: 5, control: 3, styles: ["sticky", "spin"], suitableFor: "強粘着の回転と球威を生かして、粘着ドライブを軸に組み立てる人", source: "https://www.victas.com/products/detail.html?id=54", officialNote: "中国製強粘着裏ソフト／硬度55.0±3" },
+  { id: "triple-double-extra", brand: "VICTAS", name: "トリプル ダブルエキストラ", type: "裏ソフト", price: 5940, priceLabel: "5,940円（税込）", hardness: "硬", country: "中国", speed: 5, spin: 5, control: 2, styles: ["sticky", "spin", "counter"], suitableFor: "高い打球威力と強烈な粘着回転を引き出せる上級攻撃型の人", source: "https://www.victas.com/products/detail.html?id=53", officialNote: "中国製強粘着裏ソフト／硬度57.5±3" },
+  { id: "triple-regular", brand: "VICTAS", name: "トリプル レギュラー", type: "裏ソフト", price: 4400, priceLabel: "4,400円（税込）", hardness: "中", country: "中国", speed: 3, spin: 5, control: 4, styles: ["sticky", "spin", "control", "beginner"], suitableFor: "中国製強粘着を初中級者向けの扱いやすさで試したい人", source: "https://www.victas.com/products/detail.html?id=55", officialNote: "中国製強粘着裏ソフト／硬度42.5±3" },
   { id: "vs401", brand: "VICTAS", name: "VS>401", type: "裏ソフト", price: 5720, priceLabel: "5,720円（税込）", hardness: "中硬", speed: 2, spin: 5, control: 5, styles: ["defense"], suitableFor: "切れたカットと守備の安定を求める人", source: "https://www.victas.com/products/?cat=3", officialNote: "裏ソフトラバー" },
   { id: "curl-p1v", brand: "VICTAS", name: "カール P1V", type: "粒高", price: 4620, priceLabel: "4,620円（税込）", hardness: "—", speed: 1, spin: 5, control: 4, styles: ["defense"], suitableFor: "粒高の切れたカットと変化を使いたい人", source: "https://www.victas.com/products/?cat=3", officialNote: "粒高ラバー" },
   { id: "curl-p3v", brand: "VICTAS", name: "カール P3V", type: "粒高", price: 4620, priceLabel: "4,620円（税込）", hardness: "—", speed: 1, spin: 4, control: 5, styles: ["defense"], suitableFor: "粒高で守備の安定性を求める人", source: "https://www.victas.com/products/?cat=3", officialNote: "粒高ラバー" },
@@ -162,7 +165,8 @@ export const rubbers: Rubber[] = [
   { id: "rakza-9", brand: "Yasaka", name: "ラクザ 9", type: "裏ソフト", price: 6380, priceLabel: "6,380円（税込）", hardness: "中硬", speed: 5, spin: 4, control: 3, styles: ["counter"], suitableFor: "スピードのあるドライブとカウンターを重視する人", source: "https://www.yasakajp.com/goods/rub/", officialNote: "ハイブリッドエナジー型" },
   { id: "rigan", brand: "Yasaka", name: "ライガン", type: "裏ソフト", price: 4620, priceLabel: "4,620円（税込）", hardness: "中", speed: 3, spin: 4, control: 5, styles: ["control", "beginner"], suitableFor: "安定感を保ちながら攻撃技術を覚えたい人", source: "https://www.yasakajp.com/goods/rub/", officialNote: "ハイブリッドエナジー型" },
   { id: "rigan-spin", brand: "Yasaka", name: "ライガンスピン", type: "裏ソフト", price: 4840, priceLabel: "4,840円（税込）", hardness: "中", speed: 3, spin: 5, control: 4, styles: ["spin", "control"], suitableFor: "扱いやすさを保って回転量を高めたい人", source: "https://www.yasakajp.com/goods/rub/", officialNote: "ハイブリッドエナジー型" },
-  { id: "shining-dragon-2", brand: "Yasaka", name: "輝龍II", type: "裏ソフト", price: 5500, priceLabel: "5,500円（税込）", hardness: "中硬", speed: 4, spin: 5, control: 3, styles: ["sticky", "spin"], suitableFor: "粘着性と回転の両立を求める人", source: "https://www.yasakajp.com/goods/rub/", officialNote: "裏ソフトラバー" },
+  { id: "shining-dragon-2", brand: "Yasaka", name: "輝龍II", type: "裏ソフト", price: 5500, priceLabel: "5,500円（税込）", hardness: "中硬", country: "中国", speed: 4, spin: 5, control: 4, styles: ["sticky", "spin", "control"], suitableFor: "粘着の回転を保ちながら、扱いやすさも重視する人", source: "https://www.yasakajp.com/items/shining-dragon2/", officialNote: "中国製テンション系粘着裏ソフト／硬度45〜50°" },
+  { id: "rising-dragon-2", brand: "Yasaka", name: "翔龍II", type: "裏ソフト", price: 5500, priceLabel: "5,500円（税込）", hardness: "硬", country: "中国", speed: 5, spin: 5, control: 3, styles: ["sticky", "spin", "counter"], suitableFor: "強いスピンとパワードライブで、粘着系の威力を高めたい人", source: "https://www.yasakajp.com/items/rising-dragon2/", officialNote: "中国製テンション系粘着裏ソフト／硬度47〜52°" },
   { id: "mark-v", brand: "Yasaka", name: "マーク V", type: "裏ソフト", price: 3520, priceLabel: "3,520円（税込）", hardness: "中", speed: 3, spin: 3, control: 5, styles: ["beginner"], suitableFor: "基本打法を丁寧に身につけたい人", source: "https://www.yasakajp.com/items/markv/", officialNote: "高弾性裏ソフト" },
   { id: "original-extra", brand: "Yasaka", name: "オリジナルエクストラ", type: "裏ソフト", price: 2970, priceLabel: "2,970円（税込）", hardness: "軟", speed: 2, spin: 3, control: 5, styles: ["beginner"], suitableFor: "最初の一枚で基本技術を練習する人", source: "https://www.yasakajp.com/goods/rub/", officialNote: "コントロール系裏ソフト" },
   { id: "anti-power", brand: "Yasaka", name: "アンチパワー", type: "アンチ", price: 3080, priceLabel: "3,080円（税込）", hardness: "—", speed: 1, spin: 1, control: 5, styles: ["defense"], suitableFor: "アンチで相手の回転を抑えて変化を出す人", source: "https://www.yasakajp.com/goods/rub/", officialNote: "アンチスピン裏ソフト" },
@@ -245,6 +249,8 @@ export const rubbers: Rubber[] = [
   { id: "allegro-s", brand: "JOOLA", name: "アレグロ S", type: "表ソフト", price: 7150, priceLabel: "7,150円（税込）", hardness: "中", speed: 4, spin: 3, control: 4, styles: ["shortPips", "control"], suitableFor: "表ソフトで反発とコントロールを両立したい人", source: "https://joola.co.jp/collections/table-tennis-rubbers-pimples-out-rubbers", officialNote: "JOOLA公式の表ラバーカテゴリ掲載モデル" },
   { id: "adagio", brand: "JOOLA", name: "アダジオ", type: "表ソフト", price: 4807, priceLabel: "4,807円（税込）", hardness: "中", speed: 3, spin: 3, control: 5, styles: ["shortPips", "beginner"], suitableFor: "表ソフトの基本技術と安定感を身につけたい人", source: "https://joola.co.jp/collections/table-tennis-rubbers-pimples-out-rubbers", officialNote: "JOOLA公式の表ラバーカテゴリ掲載モデル" },
   { id: "scordato", brand: "JOOLA", name: "スコルダート", type: "表ソフト", price: 5693, priceLabel: "5,693円（税込）", hardness: "中", speed: 4, spin: 3, control: 4, styles: ["shortPips"], suitableFor: "表ソフトで攻撃と安定をバランスよく使いたい人", source: "https://joola.co.jp/collections/table-tennis-rubbers-pimples-out-rubbers", officialNote: "JOOLA公式の表ラバーカテゴリ掲載モデル" },
+  { id: "juic-999-elite", brand: "JUIC", name: "JUIC999エリート", type: "裏ソフト", price: 4290, priceLabel: "4,290円（税込）", hardness: "中", country: "日本", speed: 3, spin: 5, control: 4, styles: ["sticky", "spin", "control"], suitableFor: "粘着系の高回転と軽量性を両立したい人", source: "https://www.juic.co.jp/view/item/000000000083", officialNote: "日本製粘着ゴムシート＋日本製スポンジ／硬度M" },
+  { id: "spin-spiel", brand: "JUIC", name: "スピンスピール", type: "裏ソフト", price: 4290, priceLabel: "4,290円（税込）", hardness: "中", country: "日本", speed: 3, spin: 5, control: 5, styles: ["sticky", "spin", "control", "beginner"], suitableFor: "軽量な粘着ラバーで、回転と安定性を両立したい人", source: "https://www.juic.co.jp/view/item/000000000067", officialNote: "日本製粘着裏ソフト／硬度M" },
 ];
 
 export function getRecommendedRubbers(style: PlayStyle) {
@@ -269,4 +275,5 @@ export const sources = [
   { name: "DONIC-JAPAN ラバーカタログ", url: "https://www.donic.jp/home/download.php?pg=Catalogue" },
   { name: "andro ラバー製品情報", url: "https://www.andro.de/ja/raha" },
   { name: "JOOLA JAPAN ラバー製品情報", url: "https://joola.co.jp/collections/table-tennis-rubbers-1" },
+  { name: "JUIC 粘着ラバー製品情報", url: "https://www.juic.co.jp/view/category/ct65" },
 ];

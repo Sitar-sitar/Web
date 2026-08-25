@@ -26,7 +26,7 @@ const backOptions: Array<{ id: Role; number: string; label: string; detail: stri
   { id: "spin", number: "03", label: "回転でつなぐ", detail: "両ハンドでドライブしたい" },
 ];
 const brandTint: Record<Rubber["brand"], string> = {
-  Butterfly: "bg-[#fff0ec] text-[#a53d30]", Nittaku: "bg-[#fceded] text-[#a63d3d]", VICTAS: "bg-[#edf4ff] text-[#28588f]", Yasaka: "bg-[#eff9fb] text-[#26718a]", TIBHAR: "bg-[#eef8f2] text-[#2e7554]", XIOM: "bg-[#fff6e8] text-[#805b20]", STIGA: "bg-[#edf4ff] text-[#245aaa]", DONIC: "bg-[#eef2ff] text-[#2e4d94]", andro: "bg-[#f6efff] text-[#704b9e]", JOOLA: "bg-[#f2f4e9] text-[#4f6428]",
+  Butterfly: "bg-[#fff0ec] text-[#a53d30]", Nittaku: "bg-[#fceded] text-[#a63d3d]", VICTAS: "bg-[#edf4ff] text-[#28588f]", Yasaka: "bg-[#eff9fb] text-[#26718a]", TIBHAR: "bg-[#eef8f2] text-[#2e7554]", XIOM: "bg-[#fff6e8] text-[#805b20]", STIGA: "bg-[#edf4ff] text-[#245aaa]", DONIC: "bg-[#eef2ff] text-[#2e4d94]", andro: "bg-[#f6efff] text-[#704b9e]", JOOLA: "bg-[#f2f4e9] text-[#4f6428]", JUIC: "bg-[#fff4df] text-[#8a5a18]",
 };
 
 function priceOf(rubber: Rubber) { return rubber.price ?? 12000; }
@@ -61,7 +61,7 @@ export default function Home() {
   const catalogResults = useMemo(() => {
     const normalized = catalogQuery.trim().toLowerCase();
     return rubbers.filter((rubber) => {
-      const searchable = `${rubber.name} ${rubber.brand} ${rubber.type} ${rubber.officialNote} ${rubber.suitableFor}`.toLowerCase();
+      const searchable = `${rubber.name} ${rubber.brand} ${rubber.type} ${rubber.country ?? ""} ${rubber.officialNote} ${rubber.suitableFor}`.toLowerCase();
       return (!normalized || searchable.includes(normalized)) && (catalogType === "すべて" || rubber.type === catalogType) && (catalogBrand === "すべて" || rubber.brand === catalogBrand);
     });
   }, [catalogBrand, catalogQuery, catalogType]);

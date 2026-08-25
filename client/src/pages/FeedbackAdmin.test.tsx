@@ -6,14 +6,15 @@ import FeedbackAdmin from "./FeedbackAdmin";
 import React from "react";
 
 const mocks = vi.hoisted(() => ({
-  authState: { user: { id: 1, role: "admin" }, loading: false, isAuthenticated: true },
+  authState: { user: { id: 1, role: "admin" } as { id: number; role: string } | null, loading: false, isAuthenticated: true },
   dashboardInput: vi.fn(),
+  startLogin: vi.fn(),
   mutate: vi.fn(),
   invalidate: vi.fn(),
 }));
 
 vi.mock("@/_core/hooks/useAuth", () => ({ useAuth: () => mocks.authState }));
-vi.mock("@/const", () => ({ startLogin: vi.fn() }));
+vi.mock("@/const", () => ({ startLogin: mocks.startLogin }));
 vi.mock("@/lib/trpc", () => ({
   trpc: {
     feedback: {
@@ -36,6 +37,7 @@ describe("フィードバック管理画面", () => {
     mocks.mutate.mockReset();
     mocks.invalidate.mockReset();
     mocks.dashboardInput.mockReset();
+    mocks.startLogin.mockReset();
     mocks.mutate.mockImplementation((_input, options) => options?.onSuccess?.({ success: true }));
   });
 
@@ -64,5 +66,14 @@ describe("フィードバック管理画面", () => {
     render(<LanguageProvider><FeedbackAdmin /></LanguageProvider>);
     expect(screen.getByText("この画面は管理者のみ利用できます。")).toBeTruthy();
     expect(screen.queryByText("現在")).toBeNull();
+  });
+
+  it("未ログインではモバイルでも管理者ログイン案内と操作を表示する", () => {
+    mocks.authState = { user: null, loading: false, isAuthenticated: false };
+    render(<LanguageProvider><FeedbackAdmin /></LanguageProvider>);
+    expect(screen.getByRole("heading", { name: "管理者ログイン" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "管理者としてログイン" }));
+    expect(mocks.startLogin).toHaveBeenCalledWith("/admin/feedback");
+    expect(screen.queryByRole("heading", { name: "照会ダッシュボード" })).toBeNull();
   });
 });

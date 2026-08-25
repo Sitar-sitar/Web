@@ -35,6 +35,7 @@ describe("優先強化項目の画面統合", () => {
     render(createElement(LanguageProvider, null, createElement(Home)));
     expect(mocks.queryEnabled).toEqual([false]);
     expect(screen.queryByRole("heading", { name: "優先して強化する項目" })).toBeNull();
+    expect(screen.getByRole("link", { name: "管理者" }).getAttribute("href")).toBe("/admin/feedback");
     fireEvent.click(screen.getByRole("button", { name: "照会する" }));
     expect(mocks.queryEnabled.at(-1)).toBe(true);
     expect(screen.getByRole("heading", { name: "優先して強化する項目" })).toBeTruthy();

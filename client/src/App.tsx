@@ -1,7 +1,10 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { consumeLoginReturnPath } from "@/lib/loginReturnPath";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
+import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -11,6 +14,17 @@ import TranslationFeedback from "./pages/TranslationFeedback";
 import FeedbackAdmin from "./pages/FeedbackAdmin";
 
 function Router() {
+  const [, setLocation] = useLocation();
+  const { isAuthenticated, loading } = useAuth();
+
+  useEffect(() => {
+    if (loading || !isAuthenticated) return;
+    const returnTo = consumeLoginReturnPath();
+    if (returnTo && window.location.pathname !== returnTo) {
+      setLocation(returnTo);
+    }
+  }, [isAuthenticated, loading, setLocation]);
+
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>

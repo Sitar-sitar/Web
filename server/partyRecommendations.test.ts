@@ -47,4 +47,20 @@ describe("推奨パーティー編成カタログ", () => {
       expect(options.every((option) => option.communitySources.some((source) => source.checkedAt === "2026-08-25" && source.url.startsWith("https://")))).toBe(true);
     });
   });
+
+  it("高使用優先の20キャラクターは自動生成ではない手動精査済み編成を優先する", () => {
+    const curated = [
+      ["hsr", "アグライア"], ["hsr", "アナイクス"], ["hsr", "キャストリス"], ["hsr", "ホタル"], ["hsr", "ロビン"], ["hsr", "ルアン・メェイ"], ["hsr", "飛霄"],
+      ["genshin", "フリーナ"], ["genshin", "シロネン"], ["genshin", "楓原万葉"], ["genshin", "ベネット"], ["genshin", "アルレッキーノ"], ["genshin", "ヌヴィレット"], ["genshin", "夜蘭"],
+      ["zzz", "星見雅"], ["zzz", "浮波柚葉"], ["zzz", "月城柳"], ["zzz", "アストラ"], ["zzz", "ライト"], ["zzz", "レミエール"],
+    ] as const;
+    expect(curated).toHaveLength(20);
+    curated.forEach(([game, name]) => {
+      const options = partyRecommendationsFor(game, name).options;
+      expect(options).toHaveLength(MAX_PARTY_OPTIONS);
+      expect(options[0]?.id.startsWith("generated-")).toBe(false);
+      expect(options.every((option) => option.members.some((partyMember) => partyMember.name.ja === name))).toBe(true);
+      expect(options.every((option) => option.sourceUrl.startsWith("https://") && option.communitySources.length > 0)).toBe(true);
+    });
+  });
 });

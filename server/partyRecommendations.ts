@@ -115,6 +115,136 @@ const PARTY_CATALOG: Record<string, PartyRecommendation[]> = {
   ],
 };
 
+type ManualPlan = { members: string[]; synergy: LocalizedText; targetChanges?: PartyTargetChange[] };
+
+const manualMember = (name: string, index: number, selectedRole: LocalizedText): PartyMember => index === 0
+  ? { name: t(name, name, name), role: selectedRole }
+  : member(name, name, name, index === 1 ? "主力・副火力" : index === 2 ? "支援・反応" : "耐久・補助", index === 1 ? "DPS / Sub DPS" : index === 2 ? "Support / Reaction" : "Sustain / utility", index === 1 ? "主C/副C" : index === 2 ? "辅助/反应" : "生存/功能位");
+
+function manualOptions(game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: [ManualPlan, ManualPlan, ManualPlan]): PartyRecommendation[] {
+  const planTitles = [t("実戦・高相性", "Curated High Synergy", "实战高协同"), t("実戦・代替編成", "Curated Alternative", "实战替代队"), t("実戦・所持対応", "Curated Roster Option", "实战配队适配")];
+  const profile = genericProfileFor(game, name);
+  return plans.map((plan, index) => {
+    const rank = (index + 1) as 1 | 2 | 3;
+    const recommendation = option(game, {
+      id: `curated-${game}-${name}-${rank}`,
+      rank,
+      title: planTitles[index],
+      members: plan.members.map((partyMember, memberIndex) => manualMember(partyMember, memberIndex, selectedRole)),
+      synergy: [plan.synergy],
+      targetChanges: plan.targetChanges ?? (rank === 1
+        ? (game === "genshin" && name === "アルレッキーノ"
+          ? [change("elementalMastery", "元素熟知", "Elemental Mastery", "元素精通", "", 220, 160, 100, "蒸発を主軸にする手動精査済み編成では、元素熟知を追加の比較対象にする。", "For the curated Vaporize team, add Elemental Mastery as an additional comparison target.", "手动精查的蒸发队将元素精通作为附加比较属性。")]
+          : genericTargetChanges(game, profile))
+        : []),
+      targetSummary: t(`${name}の現行エンドコンテンツ向けに手動精査した編成。戦闘中バフは公開プロフィールの現在値へ加算しない。`, `Manually curated for ${name} in the current endgame environment. In-combat buffs are not added to public-profile stats.`, `针对${name}当前终局环境手动精查的配队。战斗内增益不会计入公开面板。`),
+    });
+    return { ...recommendation, sourceLabel: t("手動精査：個別・総合チームガイド", "Manually curated: individual and general team guides", "手动精查：角色与综合配队指南"), sourceUrl };
+  });
+}
+
+const plan = (members: string[], ja: string, en: string, zh: string, targetChanges?: PartyTargetChange[]): ManualPlan => ({ members, synergy: t(ja, en, zh), targetChanges });
+const mainDps = t("主力", "Main DPS", "主C");
+const support = t("支援", "Support", "辅助");
+const anomaly = t("異常", "Anomaly", "异常");
+
+/**
+ * 公開使用率・現行エンドコンテンツ・更新日付きチームガイドを照合した上位20の手動精査データ。
+ * 既存の PARTY_CATALOG は代表6名を保持し、この表が同名キーを優先して上書きする。
+ */
+const MANUALLY_CURATED_HIGH_USAGE_CATALOG: Record<string, PartyRecommendation[]> = {
+  "hsr:アグライア": manualOptions("hsr", "アグライア", "https://game8.co/games/Honkai-Star-Rail/archives/409824", mainDps, [
+    plan(["アグライア", "サンデー", "ロビン", "フォフォ"], "サンデーの行動支援とロビンの全体火力支援で、記憶主力の手数と火力窓を重ねる。", "Sunday's action support and Robin's team buffs stack turns and burst windows for the Remembrance carry.", "星期日的行动辅助与知更鸟的全队增益叠加记忆主C的行动和爆发窗口。"),
+    plan(["アグライア", "サンデー", "トリビー", "アベンチュリン"], "単体火力と耐久を重視する代替案。支援2枠で主力の行動価値を高める。", "A durable single-target alternative that uses two supports to raise the carry's turn value.", "重视单体输出与生存的替代队，以双辅助提高主C的行动价值。"),
+    plan(["アグライア", "開拓者（記憶）", "ロビン", "ギャラガー"], "記憶開拓者を活かし、限定支援の所持状況に対応する実用案。", "A practical roster option built around Remembrance Trailblazer when premium supports vary.", "利用记忆开拓者、适应限定辅助持有情况的实用方案。"),
+  ]),
+  "hsr:アナイクス": manualOptions("hsr", "アナイクス", "https://game8.co/games/Honkai-Star-Rail/archives/409824", mainDps, [
+    plan(["アナイクス", "ロビン", "サンデー", "フォフォ"], "行動支援と全体バフを重ね、知恵主力のスキル・必殺技回転を安定させる。", "Action support and team buffs stabilize the Erudition carry's skill and Ultimate rotation.", "叠加行动辅助和全队增益，稳定智识主C的技能与终结技循环。"),
+    plan(["アナイクス", "トリビー", "ルアン・メェイ", "アベンチュリン"], "範囲火力と弱点撃破補助を両立する、複数敵向けの編成。", "A multi-target setup that combines AoE output with Weakness Break assistance.", "兼顾范围输出和弱点击破辅助的多目标配队。"),
+    plan(["アナイクス", "ペラ", "アスター", "ギャラガー"], "防御低下と速度支援を使う低コスト代替案。", "A lower-cost alternative using DEF shred and SPD support.", "利用减防与速度辅助的低成本替代队。"),
+  ]),
+  "hsr:キャストリス": manualOptions("hsr", "キャストリス", "https://game8.co/games/Honkai-Star-Rail/archives/486305", mainDps, [
+    plan(["キャストリス", "永夜", "キュレネ", "ヒアンシー"], "記憶・HP消費の相性を最大化し、主力と召喚物の火力を一体で伸ばす。", "Maximizes Remembrance and HP-consumption synergy to raise both carry and memosprite damage.", "最大化记忆与生命消耗协同，同时提高主C和忆灵伤害。"),
+    plan(["キャストリス", "開拓者（記憶）", "トリビー", "霊砂"], "記憶開拓者の行動補助と範囲支援を重ねる実戦代替案。", "A practical alternative that combines Remembrance Trailblazer action support with AoE buffs.", "结合记忆开拓者行动辅助与范围增益的实战替代队。"),
+    plan(["キャストリス", "開拓者（記憶）", "ペラ", "リンクス"], "公式ガイド掲載の低コスト軸。会心・HPを公開値で整え、速度は過度に積まない。", "The guide's accessible core; tune public CRIT and HP without over-investing in SPD.", "指南中的易获取核心；公开面板调整暴击与生命，不宜过度堆速度。"),
+  ]),
+  "hsr:ホタル": PARTY_CATALOG["hsr:ホタル"],
+  "hsr:ロビン": manualOptions("hsr", "ロビン", "https://game8.co/games/Honkai-Star-Rail/archives/409824", support, [
+    plan(["ロビン", "飛霄", "トパーズ&カブ", "アベンチュリン"], "追加攻撃の頻度を全体支援へ変換し、飛霄の蓄積と決定打を同時に伸ばす。", "Converts Follow-Up frequency into team value while accelerating Feixiao's stacks and finishers.", "将追击频率转化为全队收益，同时加快飞霄叠层与终结爆发。"),
+    plan(["ロビン", "アグライア", "サンデー", "フォフォ"], "行動支援を重ねる記憶主力編成。ロビンは主力でなく全体火力の軸として扱う。", "A Remembrance-carry setup with stacked action support; Robin remains the team-wide damage core.", "叠加行动辅助的记忆主C队，知更鸟作为全队伤害核心。"),
+    plan(["ロビン", "景元", "トパーズ&カブ", "ギャラガー"], "追加攻撃主力を所持している場合の実用的な代替枠。", "A practical alternative for rosters centered on Follow-Up carries.", "适合拥有追击主C阵容的实用替代队。"),
+  ]),
+  "hsr:ルアン・メェイ": manualOptions("hsr", "ルアン・メェイ", "https://game8.co/games/Honkai-Star-Rail/archives/431762", support, [
+    plan(["ルアン・メェイ", "ホタル", "開拓者（調和）", "霊砂"], "撃破効率・耐性貫通・超撃破を重ねる完成度の高い超撃破軸。", "A premium Super Break core stacking Break Efficiency, RES PEN, and Super Break.", "叠加击破效率、减抗与超击破的高完成度核心队。"),
+    plan(["ルアン・メェイ", "ブートヒル", "帰忘の流離人", "ギャラガー"], "単体撃破主力の行動価値と弱点撃破ダメージを高める案。", "Raises a single-target Break carry's action value and Weakness Break damage.", "提高单体击破主C的行动价值与弱点击破伤害。"),
+    plan(["ルアン・メェイ", "乱破", "開拓者（調和）", "霊砂"], "複数敵向けの超撃破代替。速度は戦闘中補正と混同せず公開値で確認する。", "An AoE Super Break alternative; check public SPD separately from combat modifiers.", "面向群怪的超击破替代队，速度需与战斗内修正分开查看。"),
+  ]),
+  "hsr:飛霄": PARTY_CATALOG["hsr:飛霄"],
+
+  "genshin:フリーナ": manualOptions("genshin", "フリーナ", "https://game8.co/games/Genshin-Impact/archives/301819", support, [
+    plan(["フリーナ", "ヌヴィレット", "楓原万葉", "シロネン"], "HP変動を活かす主力と耐性低下・回復支援を組み、全体バフの稼働を安定させる。", "Pairs an HP-fluctuation carry with RES shred and healing support to stabilize team buffs.", "搭配生命波动主C与减抗、治疗辅助，稳定全队增益。"),
+    plan(["フリーナ", "アルレッキーノ", "シロネン", "ベネット"], "炎主力の直接火力と全体バフを組み合わせる高火力軸。", "A high-damage core combining a Pyro carry's direct output with team buffs.", "结合火系主C直伤与全队增益的高伤核心队。"),
+    plan(["フリーナ", "胡桃", "閑雲", "夜蘭"], "HP変動と蒸発を両立する代替案。元素爆発を回すための元素チャージ効率を優先する。", "A Vaporize alternative built around HP fluctuation; prioritize ER to maintain Bursts.", "兼顾生命波动与蒸发的替代队，优先元素充能以维持爆发。"),
+  ]),
+  "genshin:シロネン": manualOptions("genshin", "シロネン", "https://game8.co/games/Genshin-Impact/archives/301819", support, [
+    plan(["シロネン", "ヌヴィレット", "フリーナ", "楓原万葉"], "耐性低下・回復・バフを水主力へ集中させる現行の高採用軸。", "A high-adoption current core focusing RES shred, healing, and buffs on a Hydro carry.", "将减抗、治疗与增益集中给水系主C的高使用核心队。"),
+    plan(["シロネン", "アルレッキーノ", "夜蘭", "ベネット"], "蒸発補助と攻撃支援を組み合わせ、炎主力の安定した火力窓を作る。", "Combines Vaporize enabling and ATK support for reliable Pyro carry damage windows.", "组合蒸发辅助与攻击增益，为火系主C创造稳定输出窗口。"),
+    plan(["シロネン", "ナヴィア", "フリーナ", "ベネット"], "結晶反応を利用する岩主力向けの実戦代替。", "A practical alternative for a Geo carry that leverages Crystallize.", "利用结晶反应的岩系主C实战替代队。"),
+  ]),
+  "genshin:楓原万葉": manualOptions("genshin", "楓原万葉", "https://game8.co/games/Genshin-Impact/archives/332826", support, [
+    plan(["楓原万葉", "ヌヴィレット", "フリーナ", "シロネン"], "拡散による耐性低下と元素ダメージ支援をHP変動主力へ合わせる。", "Matches Swirl RES shred and elemental support to an HP-fluctuation carry.", "将扩散减抗与元素增益配合生命波动主C。"),
+    plan(["楓原万葉", "アルレッキーノ", "シトラリ", "ベネット"], "炎耐性低下と溶解補助を組み、短時間火力を高める。", "Combines Pyro RES shred and Melt enabling for stronger short damage windows.", "结合火抗降低与融化辅助，提高短时间爆发。"),
+    plan(["楓原万葉", "マーヴィカ", "シロネン", "ベネット"], "元素ダメージ支援を主力へ集約する代替案。", "An alternative that concentrates elemental damage support on the carry.", "将元素伤害增益集中给主C的替代队。"),
+  ]),
+  "genshin:ベネット": manualOptions("genshin", "ベネット", "https://game8.co/games/Genshin-Impact/archives/301819", support, [
+    plan(["ベネット", "アルレッキーノ", "夜蘭", "シロネン"], "攻撃バフ・水付着・耐性低下で蒸発主力の実戦火力を伸ばす。", "ATK buffs, Hydro application, and RES shred raise a Vaporize carry's practical damage.", "攻击增益、挂水与减抗提高蒸发主C的实战伤害。"),
+    plan(["ベネット", "マーヴィカ", "楓原万葉", "シロネン"], "炎主力の元素ダメージと攻撃力を同時に伸ばす軸。", "A Pyro core that raises both elemental damage and ATK.", "同时提高火系主C元素伤害与攻击的核心队。"),
+    plan(["ベネット", "ナヴィア", "フリーナ", "シロネン"], "攻撃力を参照する岩主力の火力窓を補助する代替案。", "An alternative that supports an ATK-scaling Geo carry's damage window.", "辅助攻击力收益岩系主C输出窗口的替代队。"),
+  ]),
+  "genshin:アルレッキーノ": manualOptions("genshin", "アルレッキーノ", "https://game8.co/games/Genshin-Impact/archives/382103", mainDps, [
+    plan(["アルレッキーノ", "夜蘭", "シロネン", "ベネット"], "水付着、耐性低下、攻撃支援を重ねる蒸発の実戦完成形。", "A practical premium Vaporize team stacking Hydro application, RES shred, and ATK support.", "叠加挂水、减抗与攻击增益的实战蒸发完成队。"),
+    plan(["アルレッキーノ", "シトラリ", "シロネン", "ベネット"], "氷付着を使い、一撃の溶解を重視する選択肢。", "A Melt option that uses Cryo application to emphasize larger individual hits.", "利用挂冰、重视单次融化伤害的方案。"),
+    plan(["アルレッキーノ", "シュヴルーズ", "フィッシュル", "ベネット"], "炎・雷限定で耐性低下を活かす過負荷代替。", "An Overload alternative using a Pyro-Electro-only RES-shred core.", "利用火雷限定减抗核心的超载替代队。"),
+  ]),
+  "genshin:ヌヴィレット": manualOptions("genshin", "ヌヴィレット", "https://game8.co/games/Genshin-Impact/archives/Neuvillette-Best-Builds", mainDps, [
+    plan(["ヌヴィレット", "フリーナ", "楓原万葉", "シロネン"], "HP変動、耐性低下、回復・バフを重ねる現行の高相性軸。", "A high-synergy current core stacking HP fluctuation, RES shred, healing, and buffs.", "叠加生命波动、减抗、治疗与增益的高协同当前核心队。"),
+    plan(["ヌヴィレット", "フリーナ", "楓原万葉", "白朮"], "継続回復を優先する耐久寄りの代替案。", "A more durable alternative prioritizing sustained healing.", "优先持续治疗的更稳健替代队。"),
+    plan(["ヌヴィレット", "シロネン", "フィッシュル", "楓原万葉"], "フリーナ不在時に元素反応と耐性低下を確保する案。", "Secures reactions and RES shred when Furina is unavailable.", "芙宁娜不在时确保元素反应与减抗的方案。"),
+  ]),
+  "genshin:夜蘭": manualOptions("genshin", "夜蘭", "https://game8.co/games/Genshin-Impact/archives/372781", support, [
+    plan(["夜蘭", "胡桃", "行秋", "鍾離"], "水付着を厚くし、蒸発主力の通常攻撃連動と耐久を両立する定番軸。", "A classic core with dense Hydro application, Normal Attack synergy, and sustain for a Vaporize carry.", "兼顾高频挂水、普攻联动与生存的经典蒸发核心队。"),
+    plan(["夜蘭", "アルレッキーノ", "シロネン", "ベネット"], "炎主力の蒸発と攻撃支援を一体化する現行代替。", "A current alternative unifying Vaporize enabling and ATK support for a Pyro carry.", "整合火系主C蒸发与攻击增益的当前替代队。"),
+    plan(["夜蘭", "クロリンデ", "フィッシュル", "楓原万葉"], "控え水付着と雷副火力を組む感電系の選択肢。", "An Electro-Charged option pairing off-field Hydro with an Electro sub-DPS.", "结合后台挂水与雷系副C的感电选择。"),
+  ]),
+
+  "zzz:星見雅": PARTY_CATALOG["zzz:星見雅"],
+  "zzz:浮波柚葉": manualOptions("zzz", "浮波柚葉", "https://game8.co/games/Zenless-Zone-Zero/archives/458656", support, [
+    plan(["浮波柚葉", "星見雅", "月城柳"], "異常・混沌の発生を支援し、星見雅の落霜蓄積と主力火力を補助する。", "Supports Anomaly and Disorder triggers to help Miyabi's Fallen Frost stacks and carry damage.", "辅助异常与紊乱触发，帮助星见雅积累落霜并提高主C伤害。"),
+    plan(["浮波柚葉", "星見雅", "蒼角"], "月城柳不在時に氷支援へ置き換える実用案。", "A practical Ice-support alternative when Yanagi is unavailable.", "月城柳不在时替换为冰系辅助的实用方案。"),
+    plan(["浮波柚葉", "アリス", "ビビアン"], "異常2枠を活かして混沌と控え火力を両立する代替。", "An alternative that uses two Anomaly slots for Disorder and off-field damage.", "利用双异常位兼顾紊乱与后台输出的替代队。"),
+  ]),
+  "zzz:月城柳": manualOptions("zzz", "月城柳", "https://game8.co/games/Zenless-Zone-Zero/archives/458656", anomaly, [
+    plan(["月城柳", "星見雅", "浮波柚葉"], "星見雅の異常蓄積を助けつつ、月城柳側の異常・混沌ダメージも活かす完成形。", "A premium Disorder core that helps Miyabi's buildup while enabling Yanagi's own Anomaly damage.", "协助星见雅积累异常，同时发挥月城柳自身异常伤害的完成队。"),
+    plan(["月城柳", "バーニス", "シーザー"], "異常2枠と防護支援で継続ダメージを安定させる代替案。", "An alternative stabilizing sustained Anomaly damage through a second Anomaly slot and Defense support.", "以第二异常位和防护辅助稳定持续异常伤害的替代队。"),
+    plan(["月城柳", "グレース", "リナ"], "感電軸で異常付与と属性支援を重ねる所持対応案。", "A roster-friendly Shock core stacking Anomaly application and elemental support.", "叠加异常附着与属性增益的感电持有适配队。"),
+  ]),
+  "zzz:アストラ": manualOptions("zzz", "アストラ", "https://game8.co/games/Zenless-Zone-Zero/archives/490842", support, [
+    plan(["アストラ", "イヴリン", "ライト"], "ライトのブレイクと炎支援、アストラの火力バフをイヴリンの短時間火力へ集中する。", "Lighter's stun and Fire support plus Astra's buffs concentrate Evelyn's short burst window.", "莱特的失衡与火系辅助、耀嘉音的增益集中强化伊芙琳的短爆发窗口。"),
+    plan(["アストラ", "エレン", "ライト"], "氷主力のブレイク時間に支援バフを重ねる実用案。", "A practical setup layering support buffs into an Ice carry's stun window.", "将辅助增益叠加到冰系主C失衡窗口的实用方案。"),
+    plan(["アストラ", "朱鳶", "青衣"], "エーテル主力のブレイクとバフを組む代替編成。", "An alternative pairing an Ether carry with stun and buffs.", "搭配以太主C、失衡与增益的替代队。"),
+  ]),
+  "zzz:ライト": manualOptions("zzz", "ライト", "https://game8.co/games/Zenless-Zone-Zero/archives/474509", t("撃破", "Stun", "击破"), [
+    plan(["ライト", "イヴリン", "アストラ"], "炎主力の火力窓をブレイクと支援で伸ばす、個別ガイドの高相性軸。", "The individual guide's high-synergy core for extending a Fire carry's damage window with stun and buffs.", "个别指南推荐的高协同核心，以失衡与增益延长火系主C输出窗口。"),
+    plan(["ライト", "エレン", "アストラ"], "氷主力向けにブレイク時間と全体バフを合わせる代替案。", "An Ice-carry alternative that pairs a stun window with team buffs.", "为冰系主C搭配失衡窗口与全队增益的替代队。"),
+    plan(["ライト", "「11号」", "ルーシー"], "炎属性の所持状況に対応する、ブレイク・攻撃支援軸。", "A Fire roster option built around stun and ATK support.", "基于失衡与攻击辅助的火系持有适配队。"),
+  ]),
+  "zzz:レミエール": manualOptions("zzz", "レミエール", "https://game8.co/games/Zenless-Zone-Zero/archives/458656", anomaly, [
+    plan(["レミエール", "ビビアン", "浮波柚葉"], "異常3名の条件を満たし、控え火力・バフ・状態異常を一体で回す高相性案。", "A high-synergy three-Anomaly team combining off-field damage, buffs, and status application.", "满足三异常条件、兼顾后台输出、增益与异常附着的高协同队。"),
+    plan(["レミエール", "星見雅", "月城柳"], "強力な異常主力2名と組み、混沌を連続して発生させる選択肢。", "An option with two powerful Anomaly carries that enables repeated Disorder triggers.", "搭配两名强力异常主C、连续触发紊乱的选择。"),
+    plan(["レミエール", "ジェーン", "バーニス"], "既存の異常主力を活用し、役割重複を異常連携へ変える代替案。", "An alternative using existing Anomaly carries to turn role overlap into Anomaly synergy.", "利用既有异常主C，将角色重叠转化为异常协同的替代队。"),
+  ]),
+};
+
 type GenericProfile = "crit" | "dot" | "break" | "support" | "sustain" | "tank" | "hp" | "def" | "em" | "anomaly" | "stun" | "rupture";
 
 const ownMember = (name: string, roleJa: string, roleEn: string, roleZh: string) => member(name, name, name, roleJa, roleEn, roleZh);
@@ -175,7 +305,8 @@ function genericOptionsFor(game: PartyGameId, name: string): PartyRecommendation
 export const PARTY_CATALOG_CHARACTER_COUNT = Object.values(CHARACTER_GUIDE_CATALOG).filter(Array.isArray).reduce((total, names) => total + names.length, 0);
 
 export function partyRecommendationsFor(game: PartyGameId, characterName: string): PartyRecommendationSet {
-  const options = (PARTY_CATALOG[`${game}:${characterName}`] ?? genericOptionsFor(game, characterName)).slice(0, MAX_PARTY_OPTIONS);
+  const key = `${game}:${characterName}`;
+  const options = (MANUALLY_CURATED_HIGH_USAGE_CATALOG[key] ?? PARTY_CATALOG[key] ?? genericOptionsFor(game, characterName)).slice(0, MAX_PARTY_OPTIONS);
   const dataset = GAME_PARTY_DATASET[game];
   return { ...dataset, options };
 }

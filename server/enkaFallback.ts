@@ -95,7 +95,7 @@ export function normalizeEnkaPayload(payload: unknown, staticData: StaticIndex =
       const slots = ["頭部", "手部", "胴体", "脚部", "次元界オーブ", "連結縄"];
       return { id: `${str(relic.tid, "relic")}-${str(relic.type, String(relicIndex))}`, name: `遺物 ${relicIndex + 1}`, slot: slots[relicIndex], setName: str(staticData.relicSets[setId]?.name) || `未解決（ID: ${setId || "不明"}）`, level: num(relic.level), icon: null, main: props[0] ? { name: props[0].name, display: props[0].display } : null, subs: props.slice(1).map((item) => ({ name: item.name, display: item.display })) };
     });
-    const cone = record(avatar.equipment); const coneId = str(cone.tid); const path = PATH_NAMES[str(avatarMeta.path)] ?? PATH_NAMES[fallbackMeta.path ?? ""] ?? "未設定"; const guide = guideFor(metaName, path);
+    const cone = record(avatar.equipment); const coneId = str(cone.tid); const path = PATH_NAMES[str(avatarMeta.path)] ?? PATH_NAMES[fallbackMeta.path ?? ""] ?? "未設定"; const guide = guideFor(metaName, path, identity);
     const comparisons = guide.targets.map((target) => { const current = calculatedValue(target.label, calculatedTotals); return { ...target, current, currentDisplay: current === null ? "未取得" : `算出 ${current.toFixed(target.unit === "%" ? 1 : 0)}${target.unit}`, achieved: { "厳選": current === null ? null : current >= target.targets["厳選"], "目標": current === null ? null : current >= target.targets["目標"], "妥協": current === null ? null : current >= target.targets["妥協"] } }; });
     const recommendations = priorityRecommendations(comparisons);
     return {

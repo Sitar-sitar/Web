@@ -431,8 +431,8 @@ function statNumber(stat: RawRecord): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-export function guideFor(name: string, path: string): GuideDefinition {
-  const individualGuide = GUIDE_OVERRIDES[name];
+export function guideFor(name: string, path: string, identity?: Pick<CharacterIdentity, "variantOf">): GuideDefinition {
+  const individualGuide = identity?.variantOf ? undefined : GUIDE_OVERRIDES[name];
   if (individualGuide) {
     return withGuideMetadata("hsr", { ...individualGuide, targetContext: individualGuide.targetContext ?? `${name}専用の有効ステータス目標です。編成・光円錐・戦闘中バフによる変動分は含みません。` }, name);
   }
@@ -464,7 +464,7 @@ function parseCharacter(source: RawRecord): CharacterProfile {
   const properties = asArray(source.properties).map(asRecord);
   const identity = resolveCharacterIdentity("hsr", text(source.id, "unknown"), text(source.name));
   const name = identity.displayName;
-  const guide = guideFor(name, text(path.name));
+  const guide = guideFor(name, text(path.name), identity);
   const hsrSlots = ["頭部", "手部", "胴体", "脚部", "次元界オーブ", "連結縄"];
   const relics = asArray(source.relics).map((entry, index) => {
     const relic = asRecord(entry);
@@ -548,6 +548,8 @@ export class UidResponseCache<T> {
 const lookupCache = new UidResponseCache<Omit<BuildLookupResult, "cached" | "cacheExpiresAt" | "fetchedAt">>();
 const inFlightLookups = new Map<string, Promise<BuildLookupResult>>();
 const FALLBACK_TTL_MS = 4 * 60 * 1000;
+// リバースプロキシの要求上限内で Enka フォールバックを必ず試行できるよう、主取得には短い予算を割り当てる。
+const MIHOMO_PRIMARY_TIMEOUT_MS = 6_000;
 
 function ttlFromPayload(payload: unknown): number {
   const ttlSeconds = nullableNumber(asRecord(payload).ttl);
@@ -557,7 +559,7 @@ function ttlFromPayload(payload: unknown): number {
 
 async function requestMihomo(uid: string): Promise<BuildLookupResult> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 14_000);
+  const timeout = setTimeout(() => controller.abort(), MIHOMO_PRIMARY_TIMEOUT_MS);
   try {
     const response = await fetch(`https://api.mihomo.me/sr_info_parsed/${encodeURIComponent(uid)}?lang=jp`, {
       headers: { "User-Agent": "Star-Rail-Build-Advisor/1.0 (personal-use)" },

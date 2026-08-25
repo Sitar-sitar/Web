@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { createElement } from "react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Home from "./Home";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
@@ -18,17 +18,25 @@ const lookupResult = {
   }],
 };
 
-vi.mock("@/lib/trpc", () => ({ trpc: { build: { lookup: { useQuery: () => ({ data: lookupResult, isFetching: false, error: null }) } } } }));
+const mocks = vi.hoisted(() => ({ queryEnabled: [] as boolean[] }));
+vi.mock("@/lib/trpc", () => ({ trpc: { build: { lookup: { useQuery: (_input: unknown, options: { enabled?: boolean }) => { mocks.queryEnabled.push(Boolean(options.enabled)); return { data: options.enabled ? lookupResult : undefined, isFetching: false, error: null }; } } } } }));
 vi.mock("@/lib/uidHistory", () => ({ isValidUidForGame: () => true, loadLastUid: () => "", saveLastUid: () => undefined }));
 
 describe("優先強化項目の画面統合", () => {
+  afterEach(() => cleanup());
+
   beforeEach(() => {
     window.localStorage.setItem("starrail-build-advisor.language", "ja");
     window.history.replaceState({}, "", "/?game=zzz&uid=1300622089&character=eren");
+    mocks.queryEnabled.length = 0;
   });
 
-  it("未達キャラクターを初期選択すると、優先強化カードと不足量を描画する", () => {
+  it("保存済みUIDやURLのUIDだけでは照会せず、照会ボタン実行後に優先強化カードを描画する", () => {
     render(createElement(LanguageProvider, null, createElement(Home)));
+    expect(mocks.queryEnabled).toEqual([false]);
+    expect(screen.queryByRole("heading", { name: "優先して強化する項目" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "照会する" }));
+    expect(mocks.queryEnabled.at(-1)).toBe(true);
     expect(screen.getByRole("heading", { name: "優先して強化する項目" })).toBeTruthy();
     expect(screen.getByText("目標 150% まであと 18.4%")).toBeTruthy();
     expect(screen.getByText("-18.4%", { exact: true })).toBeTruthy();
@@ -36,9 +44,17 @@ describe("優先強化項目の画面統合", () => {
     expect(screen.getByText("IV：会心ダメ")).toBeTruthy();
   });
 
+  it("ゲーム切替だけでは照会を開始しない", () => {
+    render(createElement(LanguageProvider, null, createElement(Home)));
+    fireEvent.click(screen.getByRole("button", { name: "GI" }));
+    expect(mocks.queryEnabled.at(-1)).toBe(false);
+    expect(screen.queryByRole("heading", { name: "公開キャラクター" })).toBeNull();
+  });
+
   it("保存済みの英語設定で、優先強化提案と装備アクションを英語表示する", () => {
     window.localStorage.setItem("starrail-build-advisor.language", "en");
     render(createElement(LanguageProvider, null, createElement(Home)));
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
     expect(screen.getByRole("heading", { name: "Priority Upgrades" })).toBeTruthy();
     expect(screen.getByText("EQUIPMENT ACTION / Change Main Stat")).toBeTruthy();
     expect(screen.getByText("CURRENT 131.6%", { exact: false })).toBeTruthy();

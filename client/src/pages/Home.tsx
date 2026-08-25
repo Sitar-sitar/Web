@@ -57,10 +57,10 @@ export default function Home() {
   const requestedUid = (initialParams.get("uid") ?? "").replace(/\D/g, "");
   const requestedCharacterId = initialParams.get("character") ?? "";
   const initialUid = isValidUidForGame(initialGame, requestedUid) ? requestedUid : loadLastUid(initialGame);
-  const initialUidValid = isValidUidForGame(initialGame, initialUid);
   const [game, setGame] = useState<GameId>(initialGame);
   const [uid, setUid] = useState(initialUid);
-  const [lookupUid, setLookupUid] = useState(initialUidValid ? initialUid : "");
+  // A remembered UID is only prefilled. Never start a remote lookup until the user submits the form.
+  const [lookupUid, setLookupUid] = useState("");
   const [selectedId, setSelectedId] = useState(requestedCharacterId);
   const activeGame = GAMES[game];
   const gameDescription = t(game === "hsr" ? "hsrDescription" : game === "genshin" ? "genshinDescription" : "zzzDescription");

@@ -3,6 +3,7 @@ import { fetchEnkaPayload } from "./enkaFallback";
 import { generatedHsrGuide } from "./individualGuides";
 import { guideMetadataFor } from "./characterGuideMetadata";
 import { partyRecommendationsFor, type PartyRecommendationSet } from "./partyRecommendations";
+import { resolveCharacterIdentity, type CharacterIdentity } from "./characterIdentity";
 
 export type TierName = "厳選" | "目標" | "妥協";
 export type StatKey = "critRate" | "critDmg" | "speed" | "attack" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hp" | "hpPercent" | "defense" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
@@ -168,6 +169,7 @@ export function equipmentActionsFor(guide: GuideDefinition, relics: RelicForActi
 
 export type CharacterProfile = {
   id: string;
+  identity: CharacterIdentity;
   name: string;
   level: number | null;
   rank: number | null;
@@ -460,7 +462,8 @@ function parseCharacter(source: RawRecord): CharacterProfile {
   const element = asRecord(source.element);
   const lightCone = asRecord(source.light_cone ?? source.lightCone);
   const properties = asArray(source.properties).map(asRecord);
-  const name = text(source.name, "名称不明");
+  const identity = resolveCharacterIdentity("hsr", text(source.id, "unknown"), text(source.name));
+  const name = identity.displayName;
   const guide = guideFor(name, text(path.name));
   const hsrSlots = ["頭部", "手部", "胴体", "脚部", "次元界オーブ", "連結縄"];
   const relics = asArray(source.relics).map((entry, index) => {
@@ -481,7 +484,8 @@ function parseCharacter(source: RawRecord): CharacterProfile {
   const comparisons = guide.targets.map((target) => comparisonFor(properties, target));
   const recommendations = priorityRecommendations(comparisons);
   return {
-    id: text(source.id, name),
+    id: identity.sourceId,
+    identity,
     name,
     level: nullableNumber(source.level),
     rank: nullableNumber(source.rank),

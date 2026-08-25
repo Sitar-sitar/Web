@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { equipmentActionsFor, guideFor, priorityRecommendations, type BuildLookupResult, type CharacterProfile } from "./buildAdvisor";
 import { partyRecommendationsFor } from "./partyRecommendations";
+import { resolveCharacterIdentity } from "./characterIdentity";
 
 type RawRecord = Record<string, unknown>;
 type LookupData = Omit<BuildLookupResult, "cached" | "cacheExpiresAt" | "fetchedAt">;
@@ -11,7 +12,7 @@ const STATIC_TTL_MS = 24 * 60 * 60 * 1000;
 let staticCache: { value: StaticIndex; expiresAt: number } | null = null;
 
 const FALLBACK_META: Record<string, { name: string; element?: string; path?: string }> = {
-  "1014": { name: "セイバー" }, "1310": { name: "ホタル" }, "1407": { name: "キャストリス" }, "1506": { name: "銀狼", element: "Quantum", path: "Warlock" }, "1508": { name: "遠坂凛" }, "1509": { name: "ギルガメッシュ" },
+  "1014": { name: "セイバー" }, "1310": { name: "ホタル" }, "1407": { name: "キャストリス" }, "1506": { name: "銀狼Lv.999" }, "1508": { name: "遠坂凛" }, "1509": { name: "ギルガメッシュ" },
 };
 const PROP_NAMES: Record<string, string> = {
   BaseHP: "HP", HPDelta: "HP", HPAddedRatio: "HP%", BaseAttack: "攻撃力", AttackDelta: "攻撃力", AttackAddedRatio: "攻撃力%",
@@ -19,7 +20,7 @@ const PROP_NAMES: Record<string, string> = {
   CriticalChanceBase: "会心率", CriticalDamage: "会心ダメ", CriticalDamageBase: "会心ダメ", BreakDamageAddedRatio: "撃破特効",
   StatusProbability: "効果命中", StatusProbabilityBase: "効果命中", StatusResistance: "効果抵抗", StatusResistanceBase: "効果抵抗", BaseSpeed: "速度",
 };
-const PATH_NAMES: Record<string, string> = { Knight: "存護", Mage: "知恵", Priest: "豊穣", Rogue: "巡狩", Shaman: "調和", Warlock: "虚無", Warrior: "壊滅", Memory: "記憶" };
+const PATH_NAMES: Record<string, string> = { Knight: "存護", Mage: "知恵", Priest: "豊穣", Rogue: "巡狩", Shaman: "調和", Warlock: "虚無", Warrior: "壊滅", Memory: "記憶", Elation: "歓楽" };
 const ELEMENT_NAMES: Record<string, string> = { Fire: "炎", Ice: "氷", Imaginary: "虚数", Physical: "物理", Quantum: "量子", Thunder: "雷", Wind: "風" };
 
 function record(value: unknown): RawRecord { return value && typeof value === "object" && !Array.isArray(value) ? value as RawRecord : {}; }
@@ -84,8 +85,9 @@ function calculatedValue(label: string, totals: Map<string, number>): number | n
 export function normalizeEnkaPayload(payload: unknown, staticData: StaticIndex = { characters: {}, lightCones: {}, relicSets: {}, characterPromotions: {}, skillTrees: {} }): LookupData {
   const root = record(payload); const detail = record(root.detailInfo);
   const characters = array(detail.avatarDetailList).map(record).map((avatar, index) => {
-    const avatarId = str(avatar.avatarId); const avatarMeta = staticData.characters[avatarId] ?? {}; const fallbackMeta = FALLBACK_META[avatarId] ?? { name: `キャラクター #${avatarId}` };
-    const rawName = str(avatarMeta.name); const metaName = rawName && !/LV\.\d+/i.test(rawName) ? rawName : fallbackMeta.name;
+    const avatarId = str(avatar.avatarId); const avatarMeta = staticData.characters[avatarId] ?? {}; const fallbackMeta = FALLBACK_META[avatarId] ?? { name: "" };
+    const rawName = str(avatarMeta.name); const identity = resolveCharacterIdentity("hsr", avatarId, rawName);
+    const metaName = identity.displayName;
     const propertyRecords = [...array(avatar.relicList).map(record).flatMap((relic) => array(record(relic._flat).props).map(record)), ...traceProperties(avatar, staticData)];
     const base = characterBase(avatarId, num(avatar.promotion), staticData); const calculatedTotals = totalsFrom(propertyRecords, base);
     const relics = array(avatar.relicList).map(record).map((relic, relicIndex) => {
@@ -97,7 +99,7 @@ export function normalizeEnkaPayload(payload: unknown, staticData: StaticIndex =
     const comparisons = guide.targets.map((target) => { const current = calculatedValue(target.label, calculatedTotals); return { ...target, current, currentDisplay: current === null ? "未取得" : `算出 ${current.toFixed(target.unit === "%" ? 1 : 0)}${target.unit}`, achieved: { "厳選": current === null ? null : current >= target.targets["厳選"], "目標": current === null ? null : current >= target.targets["目標"], "妥協": current === null ? null : current >= target.targets["妥協"] } }; });
     const recommendations = priorityRecommendations(comparisons);
     return {
-      id: avatarId || `enka-${index}`, name: metaName, level: num(avatar.level), rank: num(avatar.rank),
+      id: identity.sourceId, identity, name: metaName, level: num(avatar.level), rank: num(avatar.rank),
       portrait: avatarId ? `https://enka.network/ui/hsr/SpriteOutput/AvatarRoundIcon/Avatar/${avatarId}.png` : null, element: ELEMENT_NAMES[str(avatarMeta.element)] ?? ELEMENT_NAMES[fallbackMeta.element ?? ""] ?? "未解決", elementColor: null, path,
       lightCone: Object.keys(cone).length ? { name: str(staticData.lightCones[coneId]?.name) || `未解決（ID: ${coneId || "不明"}）`, level: num(cone.level), rank: num(cone.rank), icon: null } : null,
       relics, allStats: aggregate(propertyRecords, base), guide,

@@ -10,7 +10,7 @@ const lookupResult = {
   cached: false,
   fetchedAt: "2026-08-18T10:00:00.000Z",
   characters: [{
-    id: "eren", name: "エレン", level: 60, rank: 0, portrait: null, element: "氷", elementColor: "#76c8dc", path: "強攻", lightCone: null, relics: [], allStats: [{ name: "会心率", display: "68.0%", icon: null }],
+    id: "eren", identity: { game: "zzz", sourceId: "eren", key: "zzz:eren", displayName: "エレン", variantOf: "エレン（別実装）", resolved: true, resolution: "provider" }, name: "エレン", level: 60, rank: 0, portrait: null, element: "氷", elementColor: "#76c8dc", path: "強攻", lightCone: null, relics: [], allStats: [{ name: "会心率", display: "68.0%", icon: null }],
     guide: { headline: "会心ダメージを強化する。", relicSet: "極地のヘヴィメタル ×4", planarSet: "会心率を優先", mainStats: [] },
     comparisons: [{ key: "critDmg", label: "会心ダメージ", unit: "%", current: 131.6, currentDisplay: "131.6%", targets: { "厳選": 180, "目標": 150, "妥協": 130 }, achieved: { "厳選": false, "目標": false, "妥協": true } }],
     recommendations: [{ key: "critDmg", label: "会心ダメージ", unit: "%", current: 131.6, target: 150, deficit: 18.4, priority: "優先", rationale: "目標 150% まであと 18.4%" }],
@@ -70,6 +70,13 @@ describe("優先強化項目の画面統合", () => {
     expect(screen.getByText("-18.4%", { exact: true })).toBeTruthy();
     expect(screen.getByText("装備アクション / 主ステータスを変更")).toBeTruthy();
     expect(screen.getByText("IV：会心ダメ")).toBeTruthy();
+  });
+
+  it("IDと派生実装の識別情報を詳細画面へ表示する", () => {
+    render(createElement(LanguageProvider, null, createElement(Home)));
+    fireEvent.click(screen.getByRole("button", { name: "照会する" }));
+    expect(screen.getByText("SOURCE ID / zzz:eren")).toBeTruthy();
+    expect(screen.getByText("エレン（別実装）とは別実装として識別しています。")).toBeTruthy();
   });
 
   it("ゲーム切替だけでは照会を開始しない", () => {

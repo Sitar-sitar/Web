@@ -22,6 +22,7 @@ describe("原神公開プロフィールの正規化", () => {
 
     expect(result.player.name).toBe("テスト旅人");
     expect(result.characters[0]?.name).toBe("神里綾華");
+    expect(result.characters[0]?.identity).toMatchObject({ key: "genshin:10000002", displayName: "神里綾華", resolution: "provider" });
     expect(result.characters[0]?.lightCone?.name).toBe("テスト武器");
     expect(result.characters[0]?.relics[0]?.setName).toBe("氷風を彷徨う勇士");
     expect(result.characters[0]?.comparisons.find((comparison) => comparison.key === "critRate")?.current).toBe(72);
@@ -91,6 +92,7 @@ describe("ZZZ公開プロフィールの正規化", () => {
 
     expect(result.player.name).toBe("テストプロキシ");
     expect(result.characters[0]?.name).toBe("0号・アンビー");
+    expect(result.characters[0]?.identity).toMatchObject({ key: "zzz:1011", displayName: "0号・アンビー", resolution: "provider" });
     expect(result.characters[0]?.lightCone?.name).toBe("テスト音動機");
     expect(result.characters[0]?.relics[0]?.setName).toBe("テストディスク");
     expect(result.characters[0]?.comparisons.find((comparison) => comparison.key === "critRate")?.current).toBe(17.8);

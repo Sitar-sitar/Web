@@ -13,6 +13,7 @@ import {
 } from "./buildAdvisor";
 import { generatedGenshinGuide, generatedZzzGuide } from "./individualGuides";
 import { partyRecommendationsFor } from "./partyRecommendations";
+import { resolveCharacterIdentity } from "./characterIdentity";
 
 export type GameId = "hsr" | "genshin" | "zzz";
 
@@ -214,7 +215,8 @@ export function normalizeGenshinPayload(payload: unknown, catalog: GenshinCatalo
   const characters = asArray(root.avatarInfoList).map(asRecord).map((avatar): CharacterProfile => {
     const id = text(avatar.avatarId);
     const metadata = asRecord(catalog.characters[id]);
-    const name = localized(catalog.loc, metadata.NameTextMapHash, `キャラクター #${id}`);
+    const identity = resolveCharacterIdentity("genshin", id, localized(catalog.loc, metadata.NameTextMapHash));
+    const name = identity.displayName;
     const elementMeta = GI_ELEMENTS[text(metadata.Element)] ?? { label: "元素", color: "#c28a42" };
     const fightProps = asRecord(avatar.fightPropMap);
     const statDefs = [
@@ -253,7 +255,7 @@ export function normalizeGenshinPayload(payload: unknown, catalog: GenshinCatalo
     const comparisons = comparisonsFromStats(guide.targets, statValues);
     const recommendations = priorityRecommendations(comparisons);
     return {
-      id, name, level: number(asRecord(avatar.propMap)["4001"] && asRecord(asRecord(avatar.propMap)["4001"]).val, null as unknown as number),
+      id: identity.sourceId, identity, name, level: number(asRecord(avatar.propMap)["4001"] && asRecord(asRecord(avatar.propMap)["4001"]).val, null as unknown as number),
       rank: asArray(avatar.talentIdList).length, portrait: iconUrl(text(metadata.SideIconName)) ?? null,
       element: elementMeta.label, elementColor: elementMeta.color, path: GI_WEAPONS[text(metadata.WeaponType)] ?? "武器",
       lightCone: weapon ? { name: localized(catalog.loc, weaponFlat.nameTextMapHash, "武器"), level: number(weaponInfo.level, null as unknown as number), rank: number(Object.values(asRecord(weaponInfo.affixMap))[0], -1) + 1, icon: iconUrl(text(weaponFlat.icon)) ?? null } : null,
@@ -445,7 +447,8 @@ export function normalizeZzzPayload(payload: unknown, catalog: ZzzCatalog): Norm
     const metadata = asRecord(catalog.avatars[id]);
     const elements = asArray(metadata.ElementTypes).map((value) => text(value)).map((key) => ZZZ_ELEMENTS[key]).filter(Boolean);
     const profession = text(metadata.ProfessionType);
-    const name = zzzName(catalog, metadata.Name, `エージェント #${id}`);
+    const identity = resolveCharacterIdentity("zzz", id, zzzName(catalog, metadata.Name, ""));
+    const name = identity.displayName;
     const aggregate: Record<string, number> = {};
     const equipmentByProperty: Record<string, number> = {};
     const suitCounts: Record<string, number> = {};
@@ -483,7 +486,7 @@ export function normalizeZzzPayload(payload: unknown, catalog: ZzzCatalog): Norm
     const comparisons = comparisonsFromStats(guide.targets, finalStats.values);
     const recommendations = priorityRecommendations(comparisons);
     return {
-      id, name, level: number(avatar.Level, null as unknown as number), rank: number(avatar.TalentLevel, null as unknown as number), portrait: iconUrl(text(metadata.Image)) ?? null,
+      id: identity.sourceId, identity, name, level: number(avatar.Level, null as unknown as number), rank: number(avatar.TalentLevel, null as unknown as number), portrait: iconUrl(text(metadata.Image)) ?? null,
       element: elements.map((element) => element?.label).filter(Boolean).join(" / ") || "属性", elementColor: elements[0]?.color ?? "#c28a42", path: (ZZZ_PROFESSIONS[profession] ?? profession) || "役割",
       lightCone: weaponId ? { name: zzzName(catalog, weaponMeta.ItemName, "音動機"), level: number(rawWeapon.Level, null as unknown as number), rank: number(rawWeapon.BreakLevel, null as unknown as number), icon: iconUrl(text(weaponMeta.ImagePath)) ?? null } : null,
       relics, allStats: finalStats.display, statsNote: "エージェント・音動機・コア強化・ドライバディスクを合算した戦闘外の推定最終値です。戦闘中・条件付き効果は含みません。", guide, comparisons, recommendations, equipmentActions: equipmentActionsFor(guide, relics, recommendations), partyRecommendations: partyRecommendationsFor("zzz", name),

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { fetchEnkaPayload } from "./enkaFallback";
 import { generatedHsrGuide } from "./individualGuides";
 import { guideMetadataFor } from "./characterGuideMetadata";
+import { partyRecommendationsFor, type PartyRecommendationSet } from "./partyRecommendations";
 
 export type TierName = "厳選" | "目標" | "妥協";
 export type StatKey = "critRate" | "critDmg" | "speed" | "attack" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hp" | "hpPercent" | "defense" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
@@ -196,6 +197,7 @@ export type CharacterProfile = {
   comparisons: StatComparison[];
   recommendations: PriorityRecommendation[];
   equipmentActions: EquipmentAction[];
+  partyRecommendations: PartyRecommendationSet;
 };
 
 export type BuildLookupResult = {
@@ -499,6 +501,7 @@ function parseCharacter(source: RawRecord): CharacterProfile {
     comparisons,
     recommendations,
     equipmentActions: equipmentActionsFor(guide, relics, recommendations),
+    partyRecommendations: partyRecommendationsFor("hsr", name),
   };
 }
 

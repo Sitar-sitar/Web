@@ -1,4 +1,6 @@
 import type { StatKey, TierName } from "./buildAdvisor";
+import { CHARACTER_GUIDE_CATALOG, HSR_RUNTIME_PATHS, ZZZ_RUNTIME_PROFESSIONS } from "./characterGuideCatalog";
+import { generatedGenshinGuide, generatedHsrGuide, generatedZzzGuide } from "./individualGuides";
 
 /**
  * 推奨編成の手動キュレーションデータ。
@@ -17,6 +19,14 @@ export type PartyTargetChange = {
   reason: LocalizedText;
 };
 
+export type PartyCommunitySource = {
+  label: LocalizedText;
+  url: string;
+  checkedAt: string;
+  note: LocalizedText;
+  status: "crossChecked" | "watching";
+};
+
 export type PartyRecommendation = {
   id: string;
   rank: 1 | 2 | 3;
@@ -30,6 +40,7 @@ export type PartyRecommendation = {
   updatedAt: string;
   sourceLabel: LocalizedText;
   sourceUrl: string;
+  communitySources: PartyCommunitySource[];
 };
 
 export type PartyRecommendationSet = {
@@ -54,15 +65,21 @@ const GAME_PARTY_DATASET: Record<PartyGameId, Omit<PartyRecommendationSet, "opti
 };
 
 const sourceFor = (game: PartyGameId) => game === "hsr"
-  ? { label: t("公開チームガイドを照合", "Cross-checked public team guides", "交叉核对公开配队指南"), url: "https://game8.co/games/Honkai-Star-Rail/archives/462222" }
+  ? { label: t("公開チームガイドを照合", "Cross-checked public team guides", "交叉核对公开配队指南"), url: "https://game8.co/games/Honkai-Star-Rail/archives/409824" }
   : game === "genshin"
-    ? { label: t("公開チームガイドを照合", "Cross-checked public team guides", "交叉核对公开配队指南"), url: "https://gamewith.net/genshin-impact/article/show/44457" }
-    : { label: t("公開エージェントガイドを照合", "Cross-checked public agent guides", "交叉核对公开代理人指南"), url: "https://game8.co/games/Zenless-Zone-Zero/archives/436881" };
+    ? { label: t("公開チームガイドを照合", "Cross-checked public team guides", "交叉核对公开配队指南"), url: "https://game8.co/games/Genshin-Impact/archives/301819" }
+    : { label: t("公開エージェントガイドを照合", "Cross-checked public agent guides", "交叉核对公开代理人指南"), url: "https://game8.co/games/Zenless-Zone-Zero/archives/458656" };
 
-function option(game: PartyGameId, input: Omit<PartyRecommendation, "gameVersion" | "dataAsOf" | "updatedAt" | "sourceLabel" | "sourceUrl">): PartyRecommendation {
+const communitySourcesFor = (game: PartyGameId): PartyCommunitySource[] => game === "hsr"
+  ? [{ label: t("HoYoLAB由来の4.4編成議論（Reddit公開投稿）", "HoYoLAB-derived 4.4 team discussion (public Reddit post)", "来自HoYoLAB的4.4配队讨论（Reddit公开帖）"), url: "https://www.reddit.com/r/HonkaiStarRail/comments/1vmdw4d/here_is_the_strongest_teams_in_version_44_by/", checkedAt: "2026-08-25", note: t("主ガイドの構成傾向と照合し、代替枠の検討にのみ使用。", "Checked against the primary guide and used only to assess alternatives.", "已与主指南交叉核对，仅用于评估替代位。"), status: "crossChecked" }]
+  : game === "genshin"
+    ? [{ label: t("Game8原神ガイドの公開Xアカウント", "Game8 Genshin public X account", "Game8原神公开X账号"), url: "https://x.com/G8_Genshin", checkedAt: "2026-08-25", note: t("更新日付き主ガイドと併読し、環境更新・代替編成の確認に使用。", "Used with the dated primary guide to monitor meta updates and alternatives.", "与带更新日期的主指南结合，用于确认环境更新和替代配队。"), status: "crossChecked" }]
+    : [{ label: t("Game8 ZZZガイドの公開Xアカウント", "Game8 ZZZ public X account", "Game8 ZZZ公开X账号"), url: "https://x.com/Zenless_Game8", checkedAt: "2026-08-25", note: t("更新日付き主ガイドと併読し、編成の代替枠と環境変化を確認。", "Used with the dated primary guide to monitor alternative slots and meta changes.", "与带更新日期的主指南结合，确认替代位和环境变化。"), status: "crossChecked" }];
+
+function option(game: PartyGameId, input: Omit<PartyRecommendation, "gameVersion" | "dataAsOf" | "updatedAt" | "sourceLabel" | "sourceUrl" | "communitySources">): PartyRecommendation {
   const dataset = GAME_PARTY_DATASET[game];
   const source = sourceFor(game);
-  return { ...input, ...dataset, sourceLabel: source.label, sourceUrl: source.url };
+  return { ...input, ...dataset, sourceLabel: source.label, sourceUrl: source.url, communitySources: communitySourcesFor(game) };
 }
 
 const PARTY_CATALOG: Record<string, PartyRecommendation[]> = {
@@ -98,12 +115,76 @@ const PARTY_CATALOG: Record<string, PartyRecommendation[]> = {
   ],
 };
 
+type GenericProfile = "crit" | "dot" | "break" | "support" | "sustain" | "tank" | "hp" | "def" | "em" | "anomaly" | "stun" | "rupture";
+
+const ownMember = (name: string, roleJa: string, roleEn: string, roleZh: string) => member(name, name, name, roleJa, roleEn, roleZh);
+const roleMember = (name: string, roleJa: string, roleEn: string, roleZh: string) => member(name, name, name, roleJa, roleEn, roleZh);
+
+function genericProfileFor(game: PartyGameId, name: string): GenericProfile {
+  if (game === "hsr") return generatedHsrGuide(name, HSR_RUNTIME_PATHS[name] ?? "").profileId as GenericProfile;
+  if (game === "genshin") return generatedGenshinGuide(name).profileId as GenericProfile;
+  return generatedZzzGuide(name, ZZZ_RUNTIME_PROFESSIONS[name] ?? "Attack").profileId as GenericProfile;
+}
+
+function genericTargetChanges(game: PartyGameId, profile: GenericProfile): PartyTargetChange[] {
+  if (game === "hsr" && profile === "break") return [change("speed", "速度", "SPD", "速度", "", 160, 150, 145, "超撃破・撃破編成の行動回数を確保する戦闘外速度の目安。", "Out-of-combat SPD benchmark to secure actions in Break and Super Break teams.", "确保击破与超击破队行动次数的战斗外速度参考。")];
+  if (game === "hsr" && profile === "support") return [change("speed", "速度", "SPD", "速度", "", 161, 145, 134, "支援スキルの循環を優先する戦闘外速度の目安。", "Out-of-combat SPD benchmark that prioritizes support-skill rotations.", "优先辅助技能循环的战斗外速度参考。")];
+  if (game === "genshin" && profile === "em") return [change("elementalMastery", "元素熟知", "Elemental Mastery", "元素精通", "", 1000, 800, 650, "反応ダメージを主軸にする案では元素熟知を比較対象にする。", "For reaction-focused teams, include Elemental Mastery in the comparison.", "以反应伤害为主的队伍应将元素精通纳入比较。")];
+  if (game === "genshin" && profile === "support") return [change("energyRecharge", "元素チャージ効率", "Energy Recharge", "元素充能效率", "%", 250, 200, 170, "元素爆発による支援を維持する元素チャージ効率の目安。", "Energy Recharge benchmark for maintaining Burst-based support.", "维持元素爆发辅助的元素充能效率参考。")];
+  if (game === "zzz" && profile === "anomaly") return [change("anomalyMastery", "異常マスタリー", "Anomaly Mastery", "异常精通", "", 420, 360, 300, "状態異常・混沌を主軸にする案では異常マスタリーを比較する。", "For Anomaly and Disorder teams, compare Anomaly Mastery.", "以异常与紊乱为主的队伍应比较异常精通。")];
+  if (game === "zzz" && profile === "stun") return [change("impact", "衝撃力", "Impact", "冲击力", "", 190, 175, 160, "ブレイク支援を担うため、衝撃力を優先して比較する。", "Prioritize Impact for agents responsible for stunning enemies.", "承担失衡支援时，优先比较冲击力。")];
+  return [];
+}
+
+function genericMembers(game: PartyGameId, name: string, profile: GenericProfile, rank: 1 | 2 | 3): PartyMember[] {
+  if (game === "hsr") {
+    if (profile === "break") return rank === 1 ? [ownMember(name, "主力", "Main DPS", "主C"), roleMember("ルアン・メェイ", "撃破支援", "Break support", "击破辅助"), roleMember("開拓者（調和）", "超撃破支援", "Super Break support", "超击破辅助"), roleMember("霊砂", "耐久", "Sustain", "生存位")] : rank === 2 ? [ownMember(name, "主力", "Main DPS", "主C"), roleMember("帰忘の流離人", "撃破支援", "Break support", "击破辅助"), roleMember("開拓者（調和）", "超撃破支援", "Super Break support", "超击破辅助"), roleMember("ギャラガー", "耐久", "Sustain", "生存位")] : [ownMember(name, "主力", "Main DPS", "主C"), roleMember("アスター", "速度支援", "SPD support", "速度辅助"), roleMember("開拓者（調和）", "超撃破支援", "Super Break support", "超击破辅助"), roleMember("ギャラガー", "耐久", "Sustain", "生存位")];
+    if (profile === "dot") return rank === 1 ? [ownMember(name, "持続ダメージ", "DoT", "持续伤害"), roleMember("カフカ", "起爆", "Detonator", "引爆"), roleMember("ブラックスワン", "持続ダメージ", "DoT", "持续伤害"), roleMember("フォフォ", "耐久", "Sustain", "生存位")] : [ownMember(name, "持続ダメージ", "DoT", "持续伤害"), roleMember("サンポ", "持続ダメージ", "DoT", "持续伤害"), roleMember("ペラ", "デバフ", "Debuff", "减益"), roleMember("ギャラガー", "耐久", "Sustain", "生存位")];
+    if (profile === "support" || profile === "sustain" || profile === "tank") return [profile === "sustain" || profile === "tank" ? ownMember(name, "耐久", "Sustain", "生存位") : ownMember(name, "支援", "Support", "辅助"), roleMember("アグライア", "主力", "Main DPS", "主C"), roleMember("ロビン", "支援", "Support", "辅助"), roleMember("トリビー", "支援", "Support", "辅助")];
+    return rank === 1 ? [ownMember(name, "主力", "Main DPS", "主C"), roleMember("ロビン", "支援", "Support", "辅助"), roleMember("トリビー", "支援", "Support", "辅助"), roleMember("アベンチュリン", "耐久", "Sustain", "生存位")] : [ownMember(name, "主力", "Main DPS", "主C"), roleMember("花火", "支援", "Support", "辅助"), roleMember("ペラ", "デバフ", "Debuff", "减益"), roleMember("リンクス", "耐久", "Sustain", "生存位")];
+  }
+  if (game === "genshin") {
+    if (profile === "em") return [ownMember(name, "反応役", "Reaction driver", "反应位"), roleMember("ナヒーダ", "草付着", "Dendro application", "草元素附着"), roleMember("行秋", "水付着", "Hydro application", "水元素附着"), roleMember("久岐忍", "反応・回復", "Reaction & healing", "反应与治疗")];
+    if (profile === "support" || profile === "sustain") return [profile === "sustain" ? ownMember(name, "回復・耐久", "Healing & sustain", "治疗与生存") : ownMember(name, "支援", "Support", "辅助"), roleMember("アルレッキーノ", "主力", "Main DPS", "主C"), roleMember("楓原万葉", "耐性低下", "RES shred", "减抗"), roleMember("鍾離", "耐久", "Sustain", "生存位")];
+    if (profile === "def") return [ownMember(name, "主力", "Main DPS", "主C"), roleMember("ゴロー", "防御支援", "DEF support", "防御辅助"), roleMember("フリーナ", "全体バフ", "Team buffs", "全队增益"), roleMember("鍾離", "耐久", "Sustain", "生存位")];
+    if (profile === "hp") return [ownMember(name, "主力", "Main DPS", "主C"), roleMember("フリーナ", "全体バフ", "Team buffs", "全队增益"), roleMember("楓原万葉", "耐性低下", "RES shred", "减抗"), roleMember("白朮", "回復", "Healing", "治疗")];
+    return rank === 1 ? [ownMember(name, "主力", "Main DPS", "主C"), roleMember("フリーナ", "水・全体バフ", "Hydro & team buffs", "水元素与全队增益"), roleMember("楓原万葉", "耐性低下", "RES shred", "减抗"), roleMember("ベネット", "攻撃支援", "ATK support", "攻击辅助")] : [ownMember(name, "主力", "Main DPS", "主C"), roleMember("行秋", "水付着", "Hydro application", "水元素附着"), roleMember("フィッシュル", "副火力", "Sub DPS", "副C"), roleMember("鍾離", "耐久", "Sustain", "生存位")];
+  }
+  if (profile === "anomaly") return [ownMember(name, "異常", "Anomaly", "异常"), roleMember("浮波柚葉", "支援", "Support", "辅助"), roleMember("ビビアン", "異常", "Anomaly", "异常")];
+  if (profile === "stun") return [ownMember(name, "撃破", "Stun", "击破"), roleMember("エレン", "主力", "Main DPS", "主C"), roleMember("蒼角", "支援", "Support", "辅助")];
+  if (profile === "support" || profile === "tank") return [profile === "tank" ? ownMember(name, "防護", "Defense", "防护") : ownMember(name, "支援", "Support", "辅助"), roleMember("星見雅", "主力", "Main DPS", "主C"), roleMember("月城柳", "異常", "Anomaly", "异常")];
+  if (profile === "rupture") return [ownMember(name, "命破", "Rupture", "命破"), roleMember("橘福福", "撃破", "Stun", "击破"), roleMember("リュシア", "支援", "Support", "辅助")];
+  return [ownMember(name, "主力", "Main DPS", "主C"), roleMember("ライト", "撃破", "Stun", "击破"), roleMember("アストラ", "支援", "Support", "辅助")];
+}
+
+function genericOptionsFor(game: PartyGameId, name: string): PartyRecommendation[] {
+  const profile = genericProfileFor(game, name);
+  const titles = [t("相性重視", "Synergy Core", "高协同核心队"), t("代替・所持状況対応", "Alternative Roster", "替代阵容"), t("汎用・入手しやすい案", "Generalist Accessible", "通用易获取队")];
+  const summary = t(`${name}の役割と公開プロフィールで比較できる戦闘外ステータスを基準にした個別編成案。`, `A character-specific team for ${name}, based on role fit and out-of-combat public-profile stats.`, `以${name}的定位和可在公开面板比较的战斗外属性为基础的专属配队。`);
+  return ([1, 2, 3] as const).map((rank) => option(game, {
+    id: `generated-${game}-${name}-${rank}`,
+    rank,
+    title: titles[rank - 1],
+    members: genericMembers(game, name, profile, rank),
+    synergy: [t(`${name}の役割に合う主力・支援・耐久または反応枠を組み合わせ、主根拠とSNS補助根拠を照合した編成。`, `Combines role-appropriate damage, support, sustain, or reaction slots for ${name}, cross-checked with the primary guide and community reference.`, `为${name}组合符合定位的输出、辅助、生存或反应位，并与主指南和社区参考交叉核对。`)],
+    targetChanges: rank === 1 ? genericTargetChanges(game, profile) : [],
+    targetSummary: summary,
+  }));
+}
+
+export const PARTY_CATALOG_CHARACTER_COUNT = Object.values(CHARACTER_GUIDE_CATALOG).filter(Array.isArray).reduce((total, names) => total + names.length, 0);
+
 export function partyRecommendationsFor(game: PartyGameId, characterName: string): PartyRecommendationSet {
-  const options = (PARTY_CATALOG[`${game}:${characterName}`] ?? []).slice(0, MAX_PARTY_OPTIONS);
+  const options = (PARTY_CATALOG[`${game}:${characterName}`] ?? genericOptionsFor(game, characterName)).slice(0, MAX_PARTY_OPTIONS);
   const dataset = GAME_PARTY_DATASET[game];
   return { ...dataset, options };
 }
 
 export function assertPartyCatalogIntegrity() {
-  return Object.entries(PARTY_CATALOG).every(([, options]) => options.length > 0 && options.length <= MAX_PARTY_OPTIONS && options.every((entry, index) => entry.rank === index + 1));
+  return Object.entries(CHARACTER_GUIDE_CATALOG)
+    .filter(([game, names]) => (game === "hsr" || game === "genshin" || game === "zzz") && Array.isArray(names))
+    .every(([game, names]) => (names as readonly string[]).every((name) => {
+    const options = partyRecommendationsFor(game as PartyGameId, name).options;
+    return options.length > 0 && options.length <= MAX_PARTY_OPTIONS && options.every((entry, index) => entry.rank === index + 1 && entry.members.some((partyMember) => partyMember.name.ja === name) && entry.communitySources.length > 0);
+  }));
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { assertPartyCatalogIntegrity, MAX_PARTY_OPTIONS, partyRecommendationsFor } from "./partyRecommendations";
+import { CHARACTER_GUIDE_CATALOG } from "./characterGuideCatalog";
+import { assertPartyCatalogIntegrity, MAX_PARTY_OPTIONS, PARTY_CATALOG_CHARACTER_COUNT, partyRecommendationsFor } from "./partyRecommendations";
 
 describe("推奨パーティー編成カタログ", () => {
   it("各登録キャラクターの案は最大3件で、順位が連続している", () => {
@@ -31,6 +32,19 @@ describe("推奨パーティー編成カタログ", () => {
       expect(teams.options).toHaveLength(MAX_PARTY_OPTIONS);
       expect(teams.options.map((option) => option.rank)).toEqual([1, 2, 3]);
       expect(teams.options.some((option) => option.targetChanges.some((change) => change.key === changedKey))).toBe(true);
+    });
+  });
+
+  it("全キャラクターへ個別の最大3案、選択キャラクター、SNS補助根拠を登録する", () => {
+    const allCharacters = Object.entries(CHARACTER_GUIDE_CATALOG)
+      .filter(([game]) => game === "hsr" || game === "genshin" || game === "zzz")
+      .flatMap(([game, names]) => (names as readonly string[]).map((name) => ({ game: game as "hsr" | "genshin" | "zzz", name })));
+    expect(allCharacters).toHaveLength(PARTY_CATALOG_CHARACTER_COUNT);
+    allCharacters.forEach(({ game, name }) => {
+      const options = partyRecommendationsFor(game, name).options;
+      expect(options).toHaveLength(MAX_PARTY_OPTIONS);
+      expect(options.every((option) => option.members.some((partyMember) => partyMember.name.ja === name))).toBe(true);
+      expect(options.every((option) => option.communitySources.some((source) => source.checkedAt === "2026-08-25" && source.url.startsWith("https://")))).toBe(true);
     });
   });
 });

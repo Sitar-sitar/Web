@@ -63,4 +63,33 @@ describe("推奨パーティー編成カタログ", () => {
       expect(options.every((option) => option.sourceUrl.startsWith("https://") && option.communitySources.length > 0)).toBe(true);
     });
   });
+
+  it("第2バッチは個別ガイドの構成を採用し、汎用の目標補正を自動追加しない", () => {
+    const robin = partyRecommendationsFor("hsr", "ロビン").options;
+    const ruanMei = partyRecommendationsFor("hsr", "ルアン・メェイ").options;
+    const feixiao = partyRecommendationsFor("hsr", "飛霄").options;
+    const arlecchino = partyRecommendationsFor("genshin", "アルレッキーノ").options;
+    const neuvillette = partyRecommendationsFor("genshin", "ヌヴィレット").options;
+    const yelan = partyRecommendationsFor("genshin", "夜蘭").options;
+    const yanagi = partyRecommendationsFor("zzz", "月城柳").options;
+    const astra = partyRecommendationsFor("zzz", "アストラ").options;
+    const lighter = partyRecommendationsFor("zzz", "ライト").options;
+    const remielle = partyRecommendationsFor("zzz", "レミエール").options;
+
+    expect(robin[0]?.members.map((item) => item.name.ja)).toEqual(["ロビン", "飛霄", "トパーズ&カブ", "アベンチュリン"]);
+    expect(ruanMei[0]?.members.map((item) => item.name.ja)).toEqual(["ルアン・メェイ", "ホタル", "帰忘の流離人", "ダリア"]);
+    expect(feixiao[0]?.members.map((item) => item.name.ja)).toEqual(["飛霄", "サフェル", "サンデー", "丹恒・騰荒"]);
+    expect(arlecchino[0]?.members.map((item) => item.name.ja)).toEqual(["アルレッキーノ", "ベネット", "シロネン", "シトラリ"]);
+    expect(arlecchino[0]?.targetChanges).toContainEqual(expect.objectContaining({ key: "elementalMastery" }));
+    expect(arlecchino[2]?.targetChanges).toEqual([]);
+    expect(neuvillette[0]?.members.map((item) => item.name.ja)).toEqual(["ヌヴィレット", "コロンビーナ", "イネファ", "シロネン"]);
+    expect(yelan[2]?.members.map((item) => item.name.ja)).toEqual(["夜蘭", "ナヒーダ", "ニィロウ", "白朮"]);
+    expect(yanagi[1]?.members.map((item) => item.name.ja)).toEqual(["月城柳", "ビビアン", "アストラ"]);
+    expect(astra[1]?.members.map((item) => item.name.ja)).toEqual(["アストラ", "星見雅", "月城柳"]);
+    expect(lighter[1]?.members.map((item) => item.name.ja)).toEqual(["ライト", "エレン", "蒼角"]);
+    expect(remielle[0]?.members.map((item) => item.name.ja)).toEqual(["レミエール", "ヴェリナ", "プロメイア"]);
+    [robin, ruanMei, feixiao, neuvillette, yelan, yanagi, astra, lighter, remielle].forEach((options) => {
+      expect(options.every((option) => option.targetChanges.length === 0)).toBe(true);
+    });
+  });
 });

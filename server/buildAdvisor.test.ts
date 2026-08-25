@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { equipmentActionsFor, guideFor, lookupUidBuild, lookupWithFallback, UidResponseCache, normalizeMihomoPayload, priorityRecommendations, withGuideMetadata } from "./buildAdvisor";
 import { normalizeEnkaPayload } from "./enkaFallback";
 import { CHARACTER_GUIDE_CATALOG, HSR_RUNTIME_PATHS, ZZZ_RUNTIME_PROFESSIONS } from "./characterGuideCatalog";
-import { CHARACTER_GUIDE_METADATA } from "./characterGuideMetadata";
+import { CHARACTER_GUIDE_METADATA, guideMetadataFor } from "./characterGuideMetadata";
 import { expectedProfileFor } from "./expectedGuideProfiles";
 import { generatedGenshinGuide, generatedZzzGuide } from "./individualGuides";
 
@@ -166,18 +166,24 @@ describe("全キャラクターガイドの網羅性", () => {
     expect(hsrGuides).toHaveLength(CHARACTER_GUIDE_CATALOG.hsr.length);
     expect(genshinGuides).toHaveLength(CHARACTER_GUIDE_CATALOG.genshin.length);
     expect(zzzGuides).toHaveLength(CHARACTER_GUIDE_CATALOG.zzz.length);
-    [...hsrGuides, ...genshinGuides, ...zzzGuides].forEach((guide) => {
+    const guideRecords = [
+      ...CHARACTER_GUIDE_CATALOG.hsr.map((name, index) => ({ game: "hsr" as const, name, guide: hsrGuides[index]! })),
+      ...CHARACTER_GUIDE_CATALOG.genshin.map((name, index) => ({ game: "genshin" as const, name, guide: genshinGuides[index]! })),
+      ...CHARACTER_GUIDE_CATALOG.zzz.map((name, index) => ({ game: "zzz" as const, name, guide: zzzGuides[index]! })),
+    ];
+    guideRecords.forEach(({ game, name, guide }) => {
+      const metadata = guideMetadataFor(game, name);
       expect(guide.targets.length).toBeGreaterThan(0);
       expect(guide.profileId).toBeTruthy();
-      expect(guide.dataAsOf).toBe("2026-08-18");
-      expect(guide.updatedAt).toBe("2026-08-18");
+      expect(guide.dataAsOf).toBe(metadata.dataAsOf);
+      expect(guide.updatedAt).toBe(metadata.updatedAt);
       expect(guide.sourceLabel).toBeTruthy();
       expect(guide.targetContext).not.toContain("未登録");
     });
     (Object.keys(CHARACTER_GUIDE_METADATA) as Array<keyof typeof CHARACTER_GUIDE_METADATA>).forEach((game) => {
       expect(Object.keys(CHARACTER_GUIDE_METADATA[game])).toHaveLength(CHARACTER_GUIDE_CATALOG[game].length);
       CHARACTER_GUIDE_CATALOG[game].forEach((name) => {
-        expect(CHARACTER_GUIDE_METADATA[game][name]).toMatchObject({ profileId: expect.any(String), dataAsOf: "2026-08-18", updatedAt: "2026-08-18" });
+        expect(CHARACTER_GUIDE_METADATA[game][name]).toMatchObject({ profileId: expect.any(String), dataAsOf: expect.stringMatching(/^2026-08-(18|25)$/), updatedAt: expect.stringMatching(/^2026-08-(18|25)$/) });
       });
     });
     CHARACTER_GUIDE_CATALOG.hsr.forEach((name, index) => expect(hsrGuides[index]?.profileId).toBe(expectedProfileFor("hsr", name)));

@@ -74,6 +74,25 @@ const CHARACTER_CHANGE_EVENTS: Partial<Record<CatalogGameId, Record<string, Guid
   },
 };
 
+const BATCH_2_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["ロビン", "ルアン・メェイ", "飛霄"],
+  genshin: ["アルレッキーノ", "ヌヴィレット", "夜蘭"],
+  zzz: ["月城柳", "アストラ", "ライト", "レミエール"],
+};
+
+function batch2UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
+  if (!BATCH_2_UPDATED_NAMES[game].includes(name)) return undefined;
+  return {
+    date: "2026-08-25T12:14:00+09:00",
+    scope: "character",
+    title: "第2バッチ：個別ビルド・凸・推奨PTを再精査",
+    summary: `${name}の公開プロフィールで比較する目標値、全6段階の凸効果、最大3案の推奨PTを更新日付き個別ガイドで照合しました。`,
+    changes: ["ロール共通の目標値を個別ビルドへ置換", "全6段階の凸効果を追加", "条件付きの戦闘内効果を公開値から分離", "最新の個別根拠で推奨PTを更新"],
+    rationale: "ビルド・凸・編成の前提をキャラクターごとに明確化し、公開プロフィールと混同しない比較にするため。",
+    games: [game],
+  };
+}
+
 export function guideUpdateHistory() {
   const games: CatalogGameId[] = ["hsr", "genshin", "zzz"];
   const characters = games.flatMap((game) => CHARACTER_GUIDE_CATALOG[game].map((name) => {
@@ -87,6 +106,7 @@ export function guideUpdateHistory() {
       sourceLabel: metadata.sourceLabel,
       events: [
         ...(CHARACTER_CHANGE_EVENTS[game]?.[name] ?? []),
+        ...(batch2UpdateEvent(game, name) ? [batch2UpdateEvent(game, name)!] : []),
         {
         date: metadata.updatedAt,
         scope: "character" as const,

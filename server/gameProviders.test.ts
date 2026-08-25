@@ -69,6 +69,26 @@ describe("原神公開プロフィールの正規化", () => {
     expect(byName["久岐忍"]?.guide.dataAsOf).toBe("2026-08-18");
     expect(byName["ノエル"]?.guide.sourceLabel).toContain("GameWith");
   });
+
+  it("第2バッチの原神主力は個別の有効ステータスを比較する", () => {
+    const avatar = (avatarId: number) => ({ avatarId, propMap: { "4001": { val: 90 } }, talentIdList: [], fightPropMap: { "20": 0.75, "22": 1.6, "23": 2.0, "28": 120, "2000": 40000, "2001": 2400, "2002": 900 }, equipList: [] });
+    const result = normalizeGenshinPayload({ uid: "618285856", playerInfo: { nickname: "テスト旅人", level: 60 }, avatarInfoList: [avatar(10000901), avatar(10000902), avatar(10000903)] }, {
+      characters: {
+        "10000901": { NameTextMapHash: 1, Element: "Fire", WeaponType: "WEAPON_POLE", SideIconName: "UI_Test_Arlecchino" },
+        "10000902": { NameTextMapHash: 2, Element: "Water", WeaponType: "WEAPON_CATALYST", SideIconName: "UI_Test_Neuvillette" },
+        "10000903": { NameTextMapHash: 3, Element: "Water", WeaponType: "WEAPON_BOW", SideIconName: "UI_Test_Yelan" },
+      },
+      loc: { ja: { "1": "アルレッキーノ", "2": "ヌヴィレット", "3": "夜蘭" } },
+    });
+    const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
+
+    expect(byName["アルレッキーノ"]?.comparisons.map((comparison) => comparison.key)).toEqual(["attack", "critRate", "critDmg"]);
+    expect(byName["ヌヴィレット"]?.comparisons.map((comparison) => comparison.key)).toEqual(["hp", "critRate", "critDmg", "energyRecharge"]);
+    expect(byName["夜蘭"]?.comparisons.map((comparison) => comparison.key)).toEqual(["hp", "energyRecharge", "critRate", "critDmg"]);
+    expect(byName["アルレッキーノ"]?.guide.targetContext).toContain("アルレッキーノ専用");
+    expect(byName["ヌヴィレット"]?.guide.targetContext).toContain("ヌヴィレット専用");
+    expect(byName["夜蘭"]?.guide.targetContext).toContain("夜蘭専用");
+  });
 });
 
 describe("ZZZ公開プロフィールの正規化", () => {
@@ -126,7 +146,7 @@ describe("ZZZ公開プロフィールの正規化", () => {
     expect(byName["アストラ"]?.comparisons.map((comparison) => comparison.key)).toEqual(["attack"]);
     expect(byName["0号・アンビー"]?.guide.targetContext).toContain("0号・アンビー専用");
     expect(byName["ビビアン"]?.guide.targetContext).toContain("ビビアン専用");
-    expect(byName["アストラ"]?.guide.targetContext).toContain("アストラ専用");
+    expect(byName["アストラ"]?.guide.targetContext).toContain("アストラ・ヤオ専用");
   });
 
   it("精密定義がないZZZエージェントにも個別プロファイルとデータ時点を付与する", () => {
@@ -149,5 +169,31 @@ describe("ZZZ公開プロフィールの正規化", () => {
     expect(byName["クレタ"]?.guide.targetContext).toContain("クレタ用");
     expect(byName["グレース"]?.guide.dataAsOf).toBe("2026-08-18");
     expect(byName["アンビー"]?.guide.sourceLabel).toContain("Prydwen");
+  });
+
+  it("第2バッチのZZZエージェントは役割共通値でなく個別の目標軸を返す", () => {
+    const metadata = { ElementTypes: ["Elec"], ProfessionType: "Anomaly", Image: "/ui/zzz/avatar.png", BaseProps: { "11101": 100, "12101": 100, "20101": 500, "21101": 5000 }, GrowthProps: {}, PromotionProps: [{}], CoreEnhancementProps: [{}] };
+    const result = normalizeZzzPayload({ uid: "1300622089", PlayerInfo: { SocialDetail: { ProfileDetail: { Nickname: "テストプロキシ", Level: 60 } }, ShowcaseDetail: { AvatarList: [
+      { Id: 1901, Level: 60, TalentLevel: 0, Weapon: { Id: 12001, Level: 60, BreakLevel: 0 }, EquippedList: [] },
+      { Id: 1902, Level: 60, TalentLevel: 0, Weapon: { Id: 12001, Level: 60, BreakLevel: 0 }, EquippedList: [] },
+      { Id: 1903, Level: 60, TalentLevel: 0, Weapon: { Id: 12001, Level: 60, BreakLevel: 0 }, EquippedList: [] },
+      { Id: 1904, Level: 60, TalentLevel: 0, Weapon: { Id: 12001, Level: 60, BreakLevel: 0 }, EquippedList: [] },
+    ] } } }, {
+      avatars: { "1901": { ...metadata, Name: "Avatar_Yanagi" }, "1902": { ...metadata, Name: "Avatar_Astra" }, "1903": { ...metadata, Name: "Avatar_Lighter" }, "1904": { ...metadata, Name: "Avatar_Remielle" } },
+      weapons: { "12001": { ItemName: "Weapon_Test", ImagePath: "/ui/zzz/weapon.png", MainStat: { PropertyId: 12101, PropertyValue: 50 }, SecondaryStat: {} } },
+      equipments: { Items: {}, Suits: {} },
+      locs: { ja: { Avatar_Yanagi: "月城柳", Avatar_Astra: "アストラ", Avatar_Lighter: "ライト", Avatar_Remielle: "レミエール", Weapon_Test: "テスト音動機" } },
+      property: { "11101": { Name: "HP", Format: "{0:0}" }, "12101": { Name: "AttackBase", Format: "{0:0}" }, "20101": { Name: "CritRateBase", Format: "{0:0.0}%" }, "21101": { Name: "CritDmgBase", Format: "{0:0.0}%" } },
+    });
+    const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
+
+    expect(byName["月城柳"]?.comparisons.map((comparison) => comparison.key)).toEqual(["anomalyMastery", "attack"]);
+    expect(byName["アストラ"]?.comparisons.map((comparison) => comparison.key)).toEqual(["attack"]);
+    expect(byName["ライト"]?.comparisons.map((comparison) => comparison.key)).toEqual(["impact"]);
+    expect(byName["レミエール"]?.comparisons.map((comparison) => comparison.key)).toEqual(["attack", "anomalyMastery"]);
+    expect(byName["月城柳"]?.guide.targetContext).toContain("月城柳専用");
+    expect(byName["アストラ"]?.guide.targetContext).toContain("アストラ・ヤオ専用");
+    expect(byName["ライト"]?.guide.targetContext).toContain("ライト専用");
+    expect(byName["レミエール"]?.guide.targetContext).toContain("レミエール専用");
   });
 });

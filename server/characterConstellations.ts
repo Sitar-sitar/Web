@@ -82,6 +82,36 @@ const CURATED: Record<string, CuratedEntry> = {
       effect(6, "Await for Years to Loom", "Await for Years to Loom", "静候岁月织就", "キャストリスまたは死龍の攻撃時、量子耐性貫通20%を得る。死龍は弱点タイプを無視して靭性を削る。", "Castorice or Netherwing attacks gain 20% Quantum RES PEN; Netherwing can reduce Toughness regardless of Weakness Type.", "卡斯托丽斯或死龙攻击时获得20%量子抗性穿透；死龙可无视弱点类型削减韧性。"),
     ],
   },
+  "hsr:1309": {
+    ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/Robin-Best-Builds", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "笑顔の国", "Land of Smiles", "Land of Smiles", "協奏状態中、味方全体の全属性耐性貫通を24%上げる。", "While Concerto is active, all allies gain 24% All-Type RES PEN.", "协奏状态期间，全队获得24%全属性抗性穿透。"),
+      effect(2, "二人の午後の茶会", "Afternoon Tea For Two", "Afternoon Tea For Two", "協奏状態中、味方全体の速度を16%上げ、天賦のEP回復量を1増やす。", "While Concerto is active, all allies gain 16% SPD and the Talent restores 1 more Energy.", "协奏状态期间，全队速度提高16%，天赋额外回复1点能量。"),
+      effect(3, "逆転の調律", "Inverted Tuning", "Inverted Tuning", "戦闘スキルと必殺技を2レベル上げる。", "Raises Skill and Ultimate by 2.", "战技与终结技提高2级。"),
+      effect(4, "雨だれの鍵", "Raindrop Key", "Raindrop Key", "必殺技使用時に味方全体の行動制限系デバフを解除し、協奏状態中の効果抵抗を50%上げる。", "Using Ultimate dispels Crowd Control debuffs from all allies and grants 50% Effect RES during Concerto.", "施放终结技时解除全队控制类负面效果，协奏期间效果抵抗提高50%。"),
+      effect(5, "孤星の嘆き", "Lonestar's Lament", "Lonestar's Lament", "通常攻撃を1、天賦を2レベル上げる。", "Raises Basic ATK by 1 and Talent by 2.", "普攻提高1级，天赋提高2级。"),
+      effect(6, "月のない真夜中", "Moonless Midnight", "Moonless Midnight", "協奏状態中の必殺技による追加物理ダメージの会心ダメージを450%上げる。1回の必殺技につき最大8回発動する。", "During Concerto, Ultimate Additional Physical DMG gains 450% CRIT DMG, up to 8 triggers per Ultimate.", "协奏期间，终结技追加物理伤害的暴击伤害提高450%，每次终结技最多触发8次。"),
+    ],
+  },
+  "hsr:1303": {
+    ...SOURCE.hsr, sourceUrl: "https://www.prydwen.gg/star-rail/characters/ruan-mei", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "神経刺繍", "Neuronic Embroidery", "Neuronic Embroidery", "必殺技の結界中、味方全体の与ダメージは敵防御力を20%無視する。", "While the Ultimate field is active, all allies' DMG ignores 20% of enemy DEF.", "终结技结界期间，全队伤害无视敌方20%防御力。"),
+      effect(2, "葦辺の散歩道", "Reedside Promenade", "Reedside Promenade", "ルアン・メェイがフィールドにいる時、弱点撃破状態の敵へ与える味方全体の攻撃力を40%上げる。", "With Ruan Mei on the field, allies gain 40% ATK when damaging Weakness-Broken enemies.", "阮·梅在场时，全队攻击弱点击破敌人获得40%攻击力。"),
+      effect(3, "翠緑のピルエット", "Viridescent Pirouette", "Viridescent Pirouette", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+      effect(4, "玉虫色の輝き", "Chatoyant Éclat", "Chatoyant Éclat", "敵の弱点撃破時、ルアン・メェイの撃破特効を3ターン100%上げる。", "When an enemy is Weakness Broken, increases Ruan Mei's Break Effect by 100% for 3 turns.", "敌人弱点击破时，阮·梅的击破特攻提高100%，持续3回合。"),
+      effect(5, "けだるい髪飾り", "Languid Barrette", "Languid Barrette", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+      effect(6, "サッシュの滝", "Sash Cascade", "Sash Cascade", "必殺技の結界を1ターン延長し、天賦の弱点撃破ダメージ倍率をさらに200%上げる。", "Extends the Ultimate field by 1 turn and increases the Talent's Break DMG multiplier by 200%.", "终结技结界延长1回合，天赋的弱点击破伤害倍率额外提高200%。"),
+    ],
+  },
+  "hsr:1220": {
+    ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/462222", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "天を鎮める", "Skyward I Quell", "Skyward I Quell", "必殺技「天堕の烈弓」または「斧天の裂傷」後、その必殺技中の与ダメージを元の10%分、最大5層まで上げる。", "After either Ultimate attack, increases Ultimate DMG by 10% of the original DMG per stack, up to 5 stacks for that Ultimate action.", "施放两种终结技攻击后，使该次终结技伤害按原伤害的10%提高，最多5层。"),
+      effect(2, "月に願う", "Moonward I Wish", "Moonward I Wish", "味方が追加攻撃を1回行うごとに「飛黄」を1獲得する。1ターンに最大6回発動する。", "For every allied follow-up attack, gains 1 Flying Aureus, up to 6 times per turn.", "每次队友发动追加攻击获得1点飞黄，每回合最多6次。"),
+      effect(3, "星に兆す", "Starward I Bode", "Starward I Bode", "必殺技を2、通常攻撃を1レベル上げる。", "Raises Ultimate by 2 and Basic ATK by 1.", "终结技提高2级，普攻提高1级。"),
+      effect(4, "嵐を聞く", "Stormward I Hear", "Stormward I Hear", "天賦の追加攻撃の靭性削りを100%上げ、発動時に速度を2ターン8%上げる。", "Increases Talent follow-up Toughness Reduction by 100%; when it triggers, gains 8% SPD for 2 turns.", "天赋追加攻击的削韧提高100%，发动时速度提高8%，持续2回合。"),
+      effect(5, "天へ跳ぶ", "Heavenward I Leap", "Heavenward I Leap", "戦闘スキルと天賦を2レベル上げる。", "Raises Skill and Talent by 2.", "战技与天赋提高2级。"),
+      effect(6, "故郷へ近づく", "Homeward I Near", "Homeward I Near", "必殺技ダメージの全属性耐性貫通を20%上げ、天賦の追加攻撃を必殺技ダメージとして扱い、その倍率を140%上げる。", "Ultimate DMG gains 20% All-Type RES PEN; Talent follow-up counts as Ultimate DMG and gains 140% multiplier.", "终结技伤害获得20%全属性抗性穿透；天赋追加攻击视为终结技伤害且倍率提高140%。"),
+    ],
+  },
   "genshin:楓原万葉": {
     ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/332826", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
       effect(1, "赤穂百目鬼", "Scarlet Hills", "赤穗百目鬼", "元素スキルのクールダウンを10%短縮し、元素爆発後にリセットする。", "Reduces Elemental Skill cooldown by 10% and resets it after Burst.", "元素战技冷却缩短10%，施放元素爆发后重置。"),
@@ -122,6 +152,36 @@ const CURATED: Record<string, CuratedEntry> = {
       effect(6, "不朽の夜の祝祭", "Imperishable Night Carnival", "不灭之夜的狂欢", "夜魂の加護中の支援・回復・自身の防御力参照ダメージを強化する。", "Enhances support, healing, and DEF-scaling damage during Nightsoul Blessing.", "强化夜魂加持期间的辅助、治疗以及自身防御力倍率伤害。"),
     ],
   },
+  "genshin:10000096": {
+    ...SOURCE.genshin, sourceUrl: "https://gamewith.net/genshin-impact/article/show/30553", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "すべての報復と負債は私が背負おう", "All Reprisals And Arrears Are Mine To Bear", "All Reprisals And Arrears Are Mine To Bear", "赤死の仮面の強化値を120%へ上げ、通常攻撃中の中断耐性を上げる。", "Raises Masque of the Red Death's enhancement value to 120% and increases interruption resistance during Normal Attacks.", "赤月之形的强化数值提高至120%，普通攻击期间抗打断能力提高。"),
+      effect(2, "すべての報いと罰は私が与えよう", "All Rewards And Retribution, Mine To Bestow", "All Rewards And Retribution, Mine To Bestow", "血償の勅令を即座に血償の清算状態とし、吸収時に前方へ攻撃力900%の炎元素範囲ダメージを与える（10秒に1回）。", "Blood-Debt Directives are immediately Due; absorbing one deals 900% ATK AoE Pyro DMG once every 10s.", "血偿敕令立即成为血偿清算；吸收时造成攻击力900%的火元素范围伤害，每10秒一次。"),
+      effect(3, "あなたも我が家族の一員となる", "You Shall Become A New Member Of Our Family", "You Shall Become A New Member Of Our Family", "通常攻撃「斬首への招待状」を3レベル上げる。", "Raises Normal Attack: Invitation To A Beheading by 3.", "普通攻击「斩首之邀」提高3级。"),
+      effect(4, "あなたたちを愛し、守るのだ", "You Shall Love And Protect Each Other Henceforth", "You Shall Love And Protect Each Other Henceforth", "血償の勅令を吸収すると元素爆発のクールダウンを2秒短縮し、元素エネルギーを15回復する（10秒に1回）。", "Absorbing a Blood-Debt Directive reduces Burst cooldown by 2s and restores 15 Energy once every 10s.", "吸收血偿敕令时，元素爆发冷却缩短2秒并回复15点能量，每10秒一次。"),
+      effect(5, "孤独では、いずれ死を迎える", "For Alone, We Are As Good As Dead", "For Alone, We Are As Good As Dead", "元素爆発「昇りゆく凶月」を3レベル上げる。", "Raises Elemental Burst: Balemoon Rising by 3.", "元素爆发「厄月将升」提高3级。"),
+      effect(6, "今日から新たな人生を謳歌しよう", "From This Day On, We Shall Delight In New Life Together", "From This Day On, We Shall Delight In New Life Together", "元素爆発ダメージを現在の命の契約割合に応じて強化する。元素スキル後20秒間、通常攻撃と元素爆発の会心率を10%、会心ダメージを70%上げる。", "Strengthens Burst based on current Bond of Life; for 20s after Skill, Normal Attacks and Burst gain 10% CRIT Rate and 70% CRIT DMG.", "元素爆发伤害随当前生命之契强化；施放战技后20秒内，普攻与元素爆发暴击率提高10%、暴击伤害提高70%。"),
+    ],
+  },
+  "genshin:10000087": {
+    ...SOURCE.genshin, sourceUrl: "https://gamewith.net/genshin-impact/article/show/39683", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "古き制度", "Venerable Institution", "Venerable Institution", "出場時に固有天賦「古海継嗣の権威」の遺龍の栄光を1層獲得し、強化重撃中の中断耐性を上げる。", "On entering, gains one Past Draconic Glory stack from the Passive Talent and increased interruption resistance during Charged Attacks.", "登场时获得固有天赋的1层古龙大权，强化重击期间抗打断能力提高。"),
+      effect(2, "律法の訓戒", "Juridical Exhortation", "Juridical Exhortation", "遺龍の栄光1層ごとに重撃・衡平な裁量の会心ダメージを14%上げる。最大42%まで。", "Each Past Draconic Glory stack raises Charged Attack: Equitable Judgment CRIT DMG by 14%, up to 42%.", "每层古龙大权使重击·衡平推裁暴击伤害提高14%，最多42%。"),
+      effect(3, "古き推論", "Ancient Postulation", "Ancient Postulation", "通常攻撃「水の如き平衡」を3レベル上げる。", "Raises Normal Attack: As Water Seeks Equilibrium by 3.", "普通攻击「如水从平」提高3级。"),
+      effect(4, "哀れみの冠", "Crown Of Commiseration", "Crown Of Commiseration", "ヌヴィレットがフィールド上で回復を受けると、4秒に1回、源水の雫を1個生成する。", "When Neuvillette is healed on-field, generates one Sourcewater Droplet once every 4s.", "那维莱特在场上受到治疗时，每4秒生成1枚源水之滴。"),
+      effect(5, "公理の裁き", "Axiomatic Judgment", "Axiomatic Judgment", "元素爆発「万潮奔流」を3レベル上げる。", "Raises Elemental Burst: O Tides, I Have Returned by 3.", "元素爆发「潮水啊，我已归来」提高3级。"),
+      effect(6, "憤怒の報い", "Wrathful Recompense", "Wrathful Recompense", "重撃・衡平な裁量で周囲の源水の雫を吸収し、1個ごとに継続時間を1秒延長する。命中時は2秒ごとに最大HP10%の水流を2本追加発射する。", "Equitable Judgment absorbs nearby Sourcewater Droplets to extend its duration by 1s each and fires two 10% Max-HP Hydro currents every 2s on hit.", "衡平推裁吸收附近源水之滴，每个延长1秒；命中时每2秒额外发射两道相当于最大生命值10%的水流。"),
+    ],
+  },
+  "genshin:10000060": {
+    ...SOURCE.genshin, sourceUrl: "https://gamewith.net/genshin-impact/article/show/33289", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "策謀への進入", "Enter The Plotters", "Enter The Plotters", "元素スキル「絡み合う命の糸」の使用可能回数を1回増やす。", "Grants one additional charge of Elemental Skill: Lingering Lifeline.", "元素战技「萦络纵命索」可使用次数增加1次。"),
+      effect(2, "すべての敵を迎え撃つ", "Taking All Comers", "Taking All Comers", "元素爆発の連携攻撃時、夜蘭の最大HP14%分の水元素ダメージを与える追加水矢を放つ。", "When Exquisite Throw makes a coordinated attack, fires an additional Hydro arrow dealing 14% of Yelan's Max HP.", "玄掷玲珑进行协同攻击时，额外发射造成夜兰最大生命值14%水元素伤害的水箭。"),
+      effect(3, "詐術のサイコロに注意", "Beware The Trickster's Dice", "Beware The Trickster's Dice", "元素爆発「深き玲瓏の骰子」を3レベル上げる。", "Raises Elemental Burst: Depth-Clarion Dice by 3.", "元素爆发「渊图玲珑骰」提高3级。"),
+      effect(4, "餌と入れ替え", "Bait-And-Switch", "Bait-And-Switch", "命の糸の爆発で標記した敵1体ごとに、味方全員の最大HPを25秒間10%上げる。最大40%まで。", "Each enemy marked when Lifeline explodes increases all party members' Max HP by 10% for 25s, up to 40%.", "命之丝爆炸时，每个被标记敌人使全队最大生命值提高10%，持续25秒，最多40%。"),
+      effect(5, "ディーラーの手練", "Dealer's Sleight", "Dealer's Sleight", "元素スキル「絡み合う命の糸」を3レベル上げる。", "Raises Elemental Skill: Lingering Lifeline by 3.", "元素战技「萦络纵命索」提高3级。"),
+      effect(6, "勝者総取り", "Winner Takes All", "Winner Takes All", "元素爆発後、夜蘭は「神算」状態へ入り、通常攻撃が特殊な破局の矢となる。これは重撃ダメージとして扱われ、通常の破局の矢の156%ダメージを与える。", "After Burst, enters Mastermind: Normal Attacks become special Breakthrough Barbs treated as Charged Attack DMG at 156% of normal Breakthrough Barb damage.", "施放元素爆发后进入运筹帷幄状态，普通攻击变为特殊破局矢，视为重击伤害并造成普通破局矢156%的伤害。"),
+    ],
+  },
   "zzz:1091": {
     ...SOURCE.zzz, dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
       effect(1, "霜雪の頂", "Frost Atop the Snow", "霜雪之巅", "霜月の型で落霜消費ごとに防御無視を得て、チームの異常蓄積効率を10秒間20%上げる。", "In Shimotsuki Stance, Fallen Frost grants DEF ignore; a charged hit raises squad Anomaly Buildup Rate by 20% for 10s.", "在霜月姿态中，落霜提供无视防御；蓄力攻击可使全队异常积蓄效率提高20%，持续10秒。"),
@@ -140,6 +200,46 @@ const CURATED: Record<string, CuratedEntry> = {
       effect(4, "落下する魔法", "Falling Magic", "坠落魔法", "支援追撃のダメージを30%、異常蓄積効率を20%上げ、命中時にクイック支援を発動する。", "Raises Assist Follow-Up DMG by 30% and Anomaly Buildup Rate by 20%; hit triggers Quick Assist.", "支援追击伤害提高30%、异常积蓄效率提高20%，命中时触发快速支援。"),
       effect(5, "色褪せる冬の夢", "Dreams of a Fading Winter", "褪色冬日之梦", "基本・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
       effect(6, "根を下ろす", "Put Down Roots", "扎根", "パリィ成功で糖分ポイントを追加し、強化支援追撃でチームの混沌ダメージ倍率を上げる。", "Successful parries grant extra Sugar Points; charged Assist Follow-Up raises squad Disorder damage multiplier.", "成功格挡获得额外糖分点；蓄力支援追击提高全队紊乱伤害倍率。"),
+    ],
+  },
+  "zzz:1221": {
+    ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/474448", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "己を知り、敵を知る", "Know Thy Self, Know Thy Enemy", "Know Thy Self, Know Thy Enemy", "任意の味方が異常を付与すると「澄明」を1層得る。1層以上で異常マスタリーを80上げ、被弾時に1層消費して1秒無敵になる。", "When the squad inflicts Anomaly, gains Clarity; with a stack, increases Anomaly Proficiency by 80 and can consume a stack for 1s invulnerability when hit.", "队伍施加异常时获得澄明；拥有层数时异常精通提高80点，受击可消耗一层获得1秒无敌。"),
+      effect(2, "卓越した適応力", "Outstanding Adaptability", "Outstanding Adaptability", "EX特殊スキルの突き刺しによる電気異常蓄積効率を20%上げ、追加の突き刺しで極性混沌ダメージ倍率を強化する。", "Raises Electric Anomaly Buildup from EX Special thrusts by 20% and additional thrusts strengthen the Polarity Disorder multiplier.", "强化特殊技突刺的电气异常积蓄效率提高20%，额外突刺强化极性紊乱倍率。"),
+      effect(3, "月城流管理術", "Tsukishiro Style Management", "Tsukishiro Style Management", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+      effect(4, "チェスマスター", "Chessmaster", "Chessmaster", "属性異常ダメージを与えた敵に15秒の「露出」を付与し、その敵への攻撃の貫通率を16%上げる。", "Attribute Anomaly DMG inflicts Exposed for 15s; attacks against Exposed enemies gain 16% PEN Ratio.", "造成属性异常伤害时赋予敌人15秒暴露，对暴露敌人的攻击穿透率提高16%。"),
+      effect(5, "もう一人の母", "Other Mother", "Other Mother", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+      effect(6, "非人の血", "Inhuman Blood", "Inhuman Blood", "EX特殊スキルの突き刺し後、森羅万象状態を30秒へ延長する。状態中は攻撃力15%、EX特殊スキルダメージ20%を上げ、追加突き刺しの上限を増やす。", "After an EX Special thrust, extends Shinrabanshou to 30s; while active gains 15% ATK, 20% EX Special DMG, and more additional thrusts.", "强化特殊技突刺后将森罗万象延长至30秒；期间攻击力提高15%、强化特殊技伤害提高20%，并增加额外突刺次数。"),
+    ],
+  },
+  "zzz:1311": {
+    ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/490842", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "十二平均律", "12-Tone Equal Temperament", "12-Tone Equal Temperament", "攻撃命中時、対象の全属性耐性を6%下げる（最大3層、30秒）。入場時にデシベルを1,000獲得し、必殺技で味方全体へ1秒無敵となる防護効果を与える。", "Hits reduce the target's All-Attribute RES by 6%, up to 3 stacks for 30s; grants 1,000 Decibels on entry and an Ultimate protection stack for allies.", "攻击命中使目标全属性抗性降低6%，最多3层持续30秒；入场获得1000喧响值，终结技给予全队防护层。"),
+      effect(2, "欲望の技法", "Art of Greed", "Art of Greed", "コアパッシブの攻撃力バフを19%強化し、上限を400増やす。アイドリック・カデンツァ中、特定の支援交代で追加追撃を行う。", "Strengthens the Core Passive ATK buff by 19% and raises its cap by 400; enables additional follow-ups on specified assists during Idyllic Cadenza.", "核心被动攻击增益额外提高19%，上限增加400；田园咏叹调期间特定支援切换可发动追加追击。"),
+      effect(3, "交差する譜表", "Interwoven Staff Notation", "Interwoven Staff Notation", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+      effect(4, "うなじの髪", "Hair Upon Your Nape", "Hair Upon Your Nape", "連携スキルまたは必殺技後、コードがなくてもクイック支援を発動できる。特性に応じて攻撃・異常蓄積・ブレイクを強化する。", "After a Chain Attack or Ultimate, can trigger Quick Assist without Chords and grants specialty-based Attack, Anomaly Buildup, or Daze bonuses.", "连携技或终结技后无需和弦即可触发快速支援，并按特性强化攻击、异常积蓄或失衡值。"),
+      effect(5, "プロキシと絹糸", "Proxy and Silk String", "Proxy and Silk String", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+      effect(6, "私たちは世界", "We Are the World", "We Are the World", "アイドリック・カデンツァ中、トレモロと音球のダメージ倍率を200%へ上げ、会心率を80%上げる。精密支援では強化された追撃を行う。", "During Idyllic Cadenza, raises Tremolo and Tone Cluster multiplier to 200% and CRIT Rate by 80%, with an empowered follow-up on Precise Assist.", "田园咏叹调期间，颤音与音球倍率提高至200%、暴击率提高80%，精准支援时发动强化追击。"),
+    ],
+  },
+  "zzz:1161": {
+    ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/474509", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "チャンピオン", "The Champion", "The Champion", "コアパッシブの「崩壊」でブレイク時間を5秒延長し、氷・炎耐性をさらに10%下げる。士気を使い切った後の強化フィニッシュのダメージを30%上げる。", "Core Passive Collapse extends Stun by 5s, further reduces Ice and Fire RES by 10%, and raises the empowered finishing move by 30%.", "核心被动的崩坏延长5秒失衡，冰火抗性额外降低10%，强化终结动作伤害提高30%。"),
+      effect(2, "赤いスカーフ", "Red Scarf", "Red Scarf", "「崩壊」付与時、敵のブレイクダメージ倍率を25%上げる。追加能力の炎・氷ダメージ上昇を元の120%へ強化する。", "Applying Collapse raises the target's Stun DMG Multiplier by 25% and strengthens Additional Ability Ice/Fire DMG to 120% of its original value.", "施加崩坏时，敌人的失衡伤害倍率提高25%，额外能力的冰火伤害增益强化至原本的120%。"),
+      effect(3, "傭兵団長", "Mercenary Leader", "Mercenary Leader", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+      effect(4, "サングラス", "Sunglasses", "Sunglasses", "ライトが控えにいる時、表キャラクターのエネルギー自動回復を10%上げる。士気爆発突入時、控えの味方を回復する。", "While Lighter is off-field, increases the on-field character's Energy Regen by 10%; entering Morale Burst restores Energy to off-field allies.", "莱特在后台时，前场角色能量自动回复提高10%；进入士气爆发时为后台队友回复能量。"),
+      effect(5, "意思決定者", "Decision Maker", "Decision Maker", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+      effect(6, "生存者", "Survivor", "Survivor", "士気回復効率を200%へ上げ、重撃命中で炎属性追加ダメージ「灼熱衝撃」を発生させる。衝撃力170超過分はその倍率をさらに上げる。", "Raises Morale recovery efficiency to 200% and heavy strikes trigger Blazing Impact Fire DMG; Impact above 170 further raises its multiplier.", "士气回复效率提高至200%，重击触发灼热冲击火伤；冲击力超过170后进一步提高倍率。"),
+    ],
+  },
+  "zzz:1581": {
+    ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/588854", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", effects: [
+      effect(1, "無垢な誓い", "Naive Oath", "Naive Oath", "入場時に特別な虚炎を3得る。耀変ダメージ時に敵の全属性耐性を50%無視し、相転状態中は他の味方の属性異常ダメージを10%上げる。", "Gains 3 special Voidflares on entry; Luminize ignores 50% All-Attribute RES and Phase Flow raises other allies' Attribute Anomaly DMG by 10%.", "入场获得3个特殊虚炎；耀变伤害无视50%全属性抗性，相转状态使其他队友属性异常伤害提高10%。"),
+      effect(2, "雑音へ落ちる", "Fall Into the Noise", "Fall Into the Noise", "昇華係数を20%上げる。編成内の異常キャラクターがプリズマティック状態の敵へ異常ダメージを与える時、敵防御力を15%無視する。", "Raises Refringe Coefficient by 20%; Anomaly squad members dealing Anomaly DMG to Prismatic enemies ignore 15% DEF.", "昇华系数提高20%；队伍异常角色对棱彩状态敌人造成异常伤害时无视15%防御力。"),
+      effect(3, "分岐する時の庭", "The Garden of Diverging Time", "The Garden of Diverging Time", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+      effect(4, "長い別れ", "The Long Goodbye", "The Long Goodbye", "耀変のダメージ倍率を12%上げ、特別な虚炎をすべて消費した後に一度だけ最大数まで回復できる。", "Raises Luminize DMG multiplier by 12% and can refill special Voidflares to maximum once after all are consumed.", "耀变伤害倍率提高12%，特殊虚炎全部消耗后可一次恢复至最大数量。"),
+      effect(5, "忘却を飲む", "To Drink Forgetfulness", "To Drink Forgetfulness", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+      effect(6, "孤独な羽の果てなき飛翔", "Lone Feather's Endless Flight", "Lone Feather's Endless Flight", "通常攻撃「虹の終焉」または「流れる恩寵」使用時、耀変を2回発動する。通常攻撃4段目命中後に特別な虚炎を3得る。", "Basic Attack: Rainbow's End or Fleeting Grace triggers Luminize twice; the fourth Basic hit grants 3 special Voidflares.", "使用普攻「虹之终焉」或「流逝恩泽」时触发两次耀变；普攻第四段命中后获得3个特殊虚炎。"),
     ],
   },
 };

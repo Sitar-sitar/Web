@@ -34,6 +34,27 @@ export const CHARACTER_GUIDE_METADATA: Record<CatalogGameId, Record<string, Char
   zzz: createGameRecords("zzz"),
 };
 
+const BATCH_2_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["ロビン", "ルアン・メェイ", "飛霄"],
+  genshin: ["アルレッキーノ", "ヌヴィレット", "夜蘭"],
+  zzz: ["月城柳", "アストラ", "ライト", "レミエール"],
+};
+
+Object.entries(BATCH_2_UPDATED_NAMES).forEach(([game, names]) => {
+  const gameId = game as CatalogGameId;
+  names.forEach((name) => {
+    const record = CHARACTER_GUIDE_METADATA[gameId][name];
+    if (!record) return;
+    record.dataAsOf = "2026-08-25";
+    record.updatedAt = "2026-08-25";
+    record.sourceLabel = gameId === "hsr"
+      ? "Game8・Prydwenの更新日付き個別ビルド・PTガイドを照合"
+      : gameId === "genshin"
+        ? "Game8の更新日付き個別ビルド・PTガイドを照合"
+        : "Game8・Prydwenの更新日付き個別エージェントガイドを照合";
+  });
+});
+
 export function guideMetadataFor(game: CatalogGameId, name?: string): CharacterGuideMetadata {
   const record = name ? CHARACTER_GUIDE_METADATA[game][name] : undefined;
   return record ?? {

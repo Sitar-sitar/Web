@@ -83,6 +83,80 @@ describe("constellationProfileFor", () => {
     ]));
   });
 
+  it("第2バッチのHSR3名を正しいIDで解決し、戦闘中星魂効果を公開値へ自動加算しない", () => {
+    const entries = [
+      identity("hsr", "1309", "ロビン"),
+      identity("hsr", "1303", "ルアン・メェイ"),
+      identity("hsr", "1220", "飛霄"),
+    ];
+    entries.forEach((character) => {
+      const profile = constellationProfileFor(character, 6);
+      expect(profile.dataStatus).toBe("curated");
+      expect(profile.effects.map((item) => item.level)).toEqual([1, 2, 3, 4, 5, 6]);
+      expect(profile.activeTargetChanges).toEqual([]);
+    });
+    expect(constellationProfileFor(entries[0]!, 1).effects[0]?.description.ja).toContain("24%");
+    expect(constellationProfileFor(entries[1]!, 1).effects[0]?.description.ja).toContain("20%無視");
+    expect(constellationProfileFor(entries[2]!, 4).effects[3]?.description.ja).toContain("8%");
+  });
+
+  it("第2バッチの月城柳を正しいZZZ IDで解決し、M1〜M6を順に表示する", () => {
+    const profile = constellationProfileFor(identity("zzz", "1221", "月城柳"), 6);
+    expect(profile.dataStatus).toBe("curated");
+    expect(profile.effects.map((item) => item.level)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(profile.effects[0]?.description.ja).toContain("80");
+    expect(profile.activeTargetChanges).toEqual([]);
+  });
+
+  it("第2バッチのアストラを正しいZZZ IDで解決し、M1〜M6を順に表示する", () => {
+    const profile = constellationProfileFor(identity("zzz", "1311", "アストラ"), 6);
+    expect(profile.dataStatus).toBe("curated");
+    expect(profile.effects.map((item) => item.level)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(profile.effects[1]?.description.ja).toContain("400");
+    expect(profile.activeTargetChanges).toEqual([]);
+  });
+
+  it("第2バッチのライトを正しいZZZ IDで解決し、M1〜M6を順に表示する", () => {
+    const profile = constellationProfileFor(identity("zzz", "1161", "ライト"), 6);
+    expect(profile.dataStatus).toBe("curated");
+    expect(profile.effects.map((item) => item.level)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(profile.effects[0]?.description.ja).toContain("5秒");
+    expect(profile.activeTargetChanges).toEqual([]);
+  });
+
+  it("第2バッチのレミエールを実公開UIDと同じIDで解決し、M1〜M6を順に表示する", () => {
+    const profile = constellationProfileFor(identity("zzz", "1581", "レミエール"), 2);
+    expect(profile.dataStatus).toBe("curated");
+    expect(profile.acquiredRank).toBe(2);
+    expect(profile.effects.map((item) => item.level)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(profile.effects[0]?.description.ja).toContain("50%無視");
+    expect(profile.activeTargetChanges).toEqual([]);
+  });
+
+  it("第2バッチのアルレッキーノを正しい原神IDで解決し、C1〜C6を順に表示する", () => {
+    const profile = constellationProfileFor(identity("genshin", "10000096", "アルレッキーノ"), 6);
+    expect(profile.dataStatus).toBe("curated");
+    expect(profile.effects.map((item) => item.level)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(profile.effects[1]?.description.ja).toContain("900%");
+    expect(profile.activeTargetChanges).toEqual([]);
+  });
+
+  it("第2バッチのヌヴィレットを正しい原神IDで解決し、C1〜C6を順に表示する", () => {
+    const profile = constellationProfileFor(identity("genshin", "10000087", "ヌヴィレット"), 6);
+    expect(profile.dataStatus).toBe("curated");
+    expect(profile.effects.map((item) => item.level)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(profile.effects[1]?.description.ja).toContain("42%");
+    expect(profile.activeTargetChanges).toEqual([]);
+  });
+
+  it("第2バッチの夜蘭を正しい原神IDで解決し、C1〜C6を順に表示する", () => {
+    const profile = constellationProfileFor(identity("genshin", "10000060", "夜蘭"), 6);
+    expect(profile.dataStatus).toBe("curated");
+    expect(profile.effects.map((item) => item.level)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(profile.effects[3]?.description.ja).toContain("40%");
+    expect(profile.activeTargetChanges).toEqual([]);
+  });
+
   it("never fabricates effects for an uncollected character", () => {
     const profile = constellationProfileFor(identity("genshin", "10000125", "コロンビーナ"), 3);
     expect(profile.dataStatus).toBe("preparing");

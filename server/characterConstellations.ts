@@ -784,11 +784,100 @@ Object.assign(CURATED, {
   ] },
 });
 
+Object.assign(CURATED, {
+  "hsr:1107": { ...SOURCE.hsr, sourceUrl: "https://game8.jp/houkaistarrail/524682", dataAsOf: "2026-08-21", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "戦闘スキル後、反撃の印を解除しなくなる。", "Using Skill no longer removes Marks of Counter.", "施放战技后不再解除反击之印。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "必殺技後、攻撃力を30%上げる（2ターン）。", "After Ultimate, increases ATK by 30% for 2 turns.", "施放终结技后攻击力提高30%，持续2回合。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "攻撃を受けた後、次のターン開始まで被ダメージを30%下げる。", "After being hit, reduces DMG taken by 30% until the next turn starts.", "受到攻击后，受到伤害降低30%，持续至下回合开始。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "味方が攻撃を受けると固定倍率の反撃を行い、必殺技時の強化反撃回数を1増やす。", "When allies are hit, performs a fixed-scaling counter and grants 1 extra enhanced counter during Ultimate.", "队友受击时进行固定倍率反击，并使终结技期间的强化反击次数增加1次。"),
+  ] },
+  "hsr:1412": { ...SOURCE.hsr, sourceUrl: "https://game8.jp/houkaistarrail/698898", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "軍功対象の防御無視を強化し、戦闘スキル対象のEPを追加回復する。", "Strengthens DEF ignore for the Merit target and restores additional Energy to the Skill target.", "强化军功目标的无视防御，并额外回复战技目标能量。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "軍功対象の与ダメージを40%上げ、追加の軍功関連効果を得る。", "Raises the Merit target's DMG by 40% and adds further Merit-related effects.", "使军功目标造成的伤害提高40%，并获得额外军功相关效果。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "必殺技のダメージ倍率を240%上げる。", "Raises Ultimate DMG scaling by 240%.", "终结技伤害倍率提高240%。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "軍功対象に耐性貫通と付加ダメージ倍率上昇を与える。", "Grants RES PEN and increased Additional DMG scaling to the Merit target.", "为军功目标提供抗性穿透与附加伤害倍率提升。"),
+  ] },
+  "hsr:1406": { ...SOURCE.hsr, sourceUrl: "https://game8.jp/houkaistarrail/678974", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "記録ダメージを元値の150%にし、天賦追加攻撃時に攻撃力を80%上げる（2ターン）。", "Sets recorded DMG to 150% of its base value and grants 80% ATK for 2 turns when Talent follow-up triggers.", "记录伤害变为原值150%，天赋追击时攻击力提高80%，持续2回合。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "命中時、基礎確率120%で敵の被ダメージを30%上げる（2ターン）。", "On hit, has a 120% base chance to increase enemy DMG taken by 30% for 2 turns.", "命中时有120%基础概率使敌人受到伤害提高30%，持续2回合。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "必殺技を2、通常攻撃を1レベル上げる。", "Raises Ultimate by 2 and Basic ATK by 1.", "终结技提高2级，普攻提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "味方が「お得意様」を攻撃した後、攻撃力50%分の量子追加ダメージを与える。", "After an ally attacks Patron, deals Quantum Additional DMG equal to 50% ATK.", "队友攻击常客后，造成相当于攻击力50%的量子附加伤害。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "戦闘スキルと天賦を2レベル上げる。", "Raises Skill and Talent by 2.", "战技与天赋提高2级。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "天賦追加攻撃ダメージを350%上げ、追加記録と必殺技時の一部返還を得る。", "Raises Talent follow-up DMG by 350% and grants extra recording plus partial refund on Ultimate.", "天赋追击伤害提高350%，获得额外记录与终结技时的部分返还。"),
+  ] },
+  "hsr:1108": { ...SOURCE.hsr, sourceUrl: "https://game8.jp/houkaistarrail/524681", dataAsOf: "2026-08-11", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "戦闘スキルが追加で1ヒットする。", "Skill gains 1 additional hit.", "战技额外造成1次命中。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "風化状態の敵を倒すと、敵全体へ風化を1層付与する。", "Defeating a Wind Shear enemy applies 1 Wind Shear stack to all enemies.", "击败处于风化状态的敌人时，对全体敌人施加1层风化。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "風化5層以上の敵へスキル命中時、本来ダメージ8%分の風化を追加で発生させる。", "When Skill hits an enemy with 5+ Wind Shear stacks, triggers extra Wind Shear equal to 8% of original DMG.", "战技命中5层以上风化的敌人时，额外触发相当于原伤害8%的风化。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "天賦の風化ダメージ倍率を15%上げる。", "Increases Talent Wind Shear DMG scaling by 15%.", "天赋的风化伤害倍率提高15%。"),
+  ] },
+});
+
 const LABELS: Record<CharacterIdentity["game"], LocalizedText> = {
   hsr: t("星魂", "Eidolons", "星魂"),
   genshin: t("命ノ星座", "Constellations", "命之座"),
   zzz: t("心象映画", "Mindscape Cinema", "心象电影"),
 };
+
+Object.assign(CURATED, {
+  "genshin:10000113": { ...SOURCE.genshin, sourceUrl: "https://game8.jp/genshin/639101", dataAsOf: "2026-08-24", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "援護射撃命中時に元素エネルギーを6回復する（8秒ごと）。", "A Supportive Fire hit restores 6 Energy once every 8s.", "援护射击命中时回复6点元素能量，每8秒一次。"),
+    effect(2, "命ノ星座2", "Constellation 2", "命之座2", "夜魂値に応じて救命の理念を追加獲得し、所持上限を50増やす。", "Gains extra Lifesaving Principles based on Nightsoul points and raises the cap by 50.", "按夜魂值额外获得救命理念，持有上限提高50。"),
+    effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+    effect(4, "命ノ星座4", "Constellation 4", "命之座4", "元素爆発後、元素熟知を100上げる（15秒）。", "After Burst, increases Elemental Mastery by 100 for 15s.", "元素爆发后元素精通提高100，持续15秒。"),
+    effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+    effect(6, "命ノ星座6", "Constellation 6", "命之座6", "長押し援護射撃時、50%で攻撃力120%分の追加風ダメージを与え、非戦闘時の夜魂値・燃素消費を20%下げる。", "Holding Supportive Fire has a 50% chance to fire bonus Anemo DMG equal to 120% ATK and reduces out-of-combat Nightsoul/Phlogiston consumption by 20%.", "长按援护射击有50%概率造成攻击力120%的额外风伤，并使非战斗时夜魂值与燃素消耗降低20%。"),
+  ] },
+  "genshin:10000111": { ...SOURCE.genshin, sourceUrl: "https://game8.jp/genshin/669311", dataAsOf: "2026-08-13", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "特殊落下攻撃時に攻撃力180%分の追加ダメージを与え、探索中の消費を30%下げる。", "Special Plunges deal bonus DMG equal to 180% ATK and reduce exploration consumption by 30%.", "特殊下落攻击造成攻击力180%的额外伤害，并使探索消耗降低30%。"),
+    effect(2, "命ノ星座2", "Constellation 2", "命之座2", "落下後にマキシマムドライブ化し、元素エネルギーを11.5回復する。", "After a Plunge, enters Maximum Drive and restores 11.5 Energy.", "下落攻击后进入极限驱动并回复11.5点元素能量。"),
+    effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+    effect(4, "命ノ星座4", "Constellation 4", "命之座4", "条件に応じて攻撃力500%分（上限20,000）の落下強化、または元素爆発ダメージ100%上昇を得る。", "Conditionally grants a Plunge boost equal to 500% ATK (max 20,000) or 100% increased Burst DMG.", "按条件获得攻击力500%（上限20000）的下落强化，或元素爆发伤害提高100%。"),
+    effect(5, "命ノ星座5", "Constellation 5", "命之座5", "通常攻撃を3レベル上げる。", "Raises Normal Attack by 3.", "普通攻击提高3级。"),
+    effect(6, "命ノ星座6", "Constellation 6", "命之座6", "マキシマムドライブ時に元素エネルギーを30回復し、落下・爆発の会心率を10%、会心ダメージを100%上げる。", "During Maximum Drive, restores 30 Energy and increases Plunge/Burst CRIT Rate by 10% and CRIT DMG by 100%.", "极限驱动期间回复30点元素能量，下落与爆发的暴击率提高10%、暴击伤害提高100%。"),
+  ] },
+  "genshin:10000022": { ...SOURCE.genshin, sourceUrl: "https://game8.jp/genshin/352607", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "狙い撃ち時に追加の暴風の矢を発射する。", "Aimed Shots fire additional Storm Arrows.", "瞄准射击时额外发射暴风之箭。"),
+    effect(2, "命ノ星座2", "Constellation 2", "命之座2", "元素スキル後、敵の風・物理耐性を24%下げる。", "After Skill, reduces enemy Anemo and Physical RES by 24%.", "元素战技后，敌人的风与物理抗性降低24%。"),
+    effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+    effect(4, "命ノ星座4", "Constellation 4", "命之座4", "スキルまたは爆発後、自身とフィールド上キャラの風元素ダメージを25%上げる。", "After Skill or Burst, increases Anemo DMG for Venti and the active character by 25%.", "施放战技或爆发后，温迪与场上角色的风元素伤害提高25%。"),
+    effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+    effect(6, "命ノ星座6", "Constellation 6", "命之座6", "元素爆発命中敵の風耐性を20%下げ、元素変化時は該当元素の耐性も20%下げる。", "Burst-hit enemies lose 20% Anemo RES; when absorption occurs, corresponding Elemental RES is also reduced by 20%.", "元素爆发命中的敌人风抗降低20%；发生元素转化时，对应元素抗性也降低20%。"),
+  ] },
+});
+
+Object.assign(CURATED, {
+  "zzz:1111": { ...SOURCE.zzz, sourceUrl: "https://game8.jp/zenless/607797", dataAsOf: "2026-08-19", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "ドリル攻撃命中時、スキルあたり最大5エネルギーを追加で得る。", "Drill attacks grant up to 5 extra Energy per Skill.", "钻头攻击命中时，每次战技最多额外获得5点能量。"),
+    effect(2, "心象映画2", "Mindscape 2", "心象电影2", "バーストモード移行時に最大HP7.5%分のシールドを得る。", "Entering Burst Mode grants a shield equal to 7.5% Max HP.", "进入爆发模式时获得相当于生命上限7.5%的护盾。"),
+    effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(4, "心象映画4", "Mindscape 4", "心象电影4", "連携スキルまたは終結スキル時、全員の会心率を10%上げる（12秒）。", "Chain or Ultimate raises squad CRIT Rate by 10% for 12s.", "连携技或终结技使全队暴击率提高10%，持续12秒。"),
+    effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(6, "心象映画6", "Mindscape 6", "心象电影6", "パイルドライバー会心時、バースト通常・回避反撃の与ダメージを4%上げる（30秒、最大6層）。", "Pile Driver CRIT raises Burst Basic and Dodge Counter DMG by 4% for 30s, up to 6 stacks.", "打桩机暴击时，爆发普攻与闪避反击伤害提高4%，持续30秒，最多6层。"),
+  ] },
+  "zzz:1011": { ...SOURCE.zzz, sourceUrl: "https://game8.jp/zenless/607757", dataAsOf: "2026-06-05", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "通常攻撃4段目命中時、エネルギー獲得効率を12%上げる（30秒）。", "Hitting the fourth Basic hit raises Energy generation by 12% for 30s.", "普通攻击第四段命中时，能量获取效率提高12%，持续30秒。"),
+    effect(2, "心象映画2", "Mindscape 2", "心象电影2", "ブレイク敵へ落雷ダメージを30%上げ、非ブレイク敵へ強化特殊のブレイク値を10%上げる。", "Raises thunderbolt DMG against stunned enemies by 30% and EX Special Daze against non-stunned enemies by 10%.", "对失衡敌人的落雷伤害提高30%，对非失衡敌人的强化特殊技失衡值提高10%。"),
+    effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(4, "心象映画4", "Mindscape 4", "心象电影4", "連携/終結時、控えの電気メンバーのエネルギーを回復する。", "On Chain/Ultimate, restores Energy to off-field Electric allies.", "施放连携/终结技时，回复后台电系队友的能量。"),
+    effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(6, "心象映画6", "Mindscape 6", "心象电影6", "強化特殊で最大8層を得て、通常/ダッシュ命中時に1層消費し当該ダメージを45%上げる。", "EX Special gains up to 8 stacks; Basic/Dash hits consume one to increase that hit's DMG by 45%.", "强化特殊技获得最多8层，普攻/冲刺命中时消耗1层并使该次伤害提高45%。"),
+  ] },
+  "zzz:1321": { ...SOURCE.zzz, sourceUrl: "https://game8.jp/zenless/658501", dataAsOf: "2026-08-19", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "入場時にデシベル1,500を得て、束縛敵への防御無視12%を得る。", "On entry gains 1,500 Decibels and 12% DEF ignore against Entangled enemies.", "入场时获得1500点喧响值，并对束缚敌人无视12%防御。"),
+    effect(2, "心象映画2", "Mindscape 2", "心象电影2", "攻撃力を15%上げ、連携・終結時の追加の火力効果を得る。", "Increases ATK by 15% and adds Chain/Ultimate damage effects.", "攻击力提高15%，并获得连携与终结技的额外输出效果。"),
+    effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(4, "心象映画4", "Mindscape 4", "心象电影4", "連携/終結時に最大HP10%分のシールドを得て、シールド中の会心ダメージを40%上げる。", "Chain/Ultimate grants a shield equal to 10% Max HP and 40% CRIT DMG while shielded.", "连携/终结技获得相当于生命上限10%的护盾，持盾时暴击伤害提高40%。"),
+    effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(6, "心象映画6", "Mindscape 6", "心象电影6", "連携/終結後に攻撃力375%分の炎追撃を最大16回発動する。", "After Chain/Ultimate, triggers up to 16 Fire follow-ups equal to 375% ATK.", "连携/终结技后最多触发16次相当于攻击力375%的火系追击。"),
+  ] },
+});
 
 export function constellationProfileFor(identity: CharacterIdentity, rank: number | null): ConstellationProfile {
   const entry = CURATED[identity.key] ?? CURATED[`${identity.game}:${identity.displayName}`];

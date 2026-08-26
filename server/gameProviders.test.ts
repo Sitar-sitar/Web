@@ -188,7 +188,7 @@ describe("ZZZ公開プロフィールの正規化", () => {
     });
     const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
 
-    expect(byName["アンビー"]?.comparisons.map((comparison) => comparison.key)).toEqual(["impact", "attack"]);
+    expect(byName["アンビー"]?.comparisons.map((comparison) => comparison.key)).toEqual(["impact", "critRate", "critDmg"]);
     expect(byName["グレース"]?.comparisons.map((comparison) => comparison.key)).toEqual(["anomalyProficiency", "anomalyMastery", "attack", "penRatio"]);
     expect(byName["クレタ"]?.guide.targetContext).toContain("クレタ用");
     expect(byName["グレース"]?.guide.dataAsOf).toBe("2026-08-26");

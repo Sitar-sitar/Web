@@ -7,7 +7,7 @@ import { resolveCharacterIdentity, type CharacterIdentity } from "./characterIde
 import { constellationProfileFor, type ConstellationProfile } from "./characterConstellations";
 
 export type TierName = "厳選" | "目標" | "妥協";
-export type StatKey = "critRate" | "critDmg" | "speed" | "attack" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hp" | "hpPercent" | "defense" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "impact" | "penRatio" | "energyRegen";
+export type StatKey = "critRate" | "critDmg" | "speed" | "attack" | "attackPercent" | "breakEffect" | "effectHitRate" | "effectRes" | "hp" | "hpPercent" | "defense" | "defPercent" | "energyRecharge" | "elementalMastery" | "anomalyMastery" | "anomalyProficiency" | "impact" | "penRatio" | "energyRegen";
 
 type RawRecord = Record<string, unknown>;
 
@@ -109,7 +109,7 @@ type RelicForAction = { name: string; slot?: string; main: { name: string; displ
 const STAT_MAIN_LABELS: Record<StatKey, string[]> = {
   critRate: ["会心率"], critDmg: ["会心ダメ"], speed: ["速度"], attack: ["攻撃力"], attackPercent: ["攻撃力"], breakEffect: ["撃破特効"],
   effectHitRate: ["効果命中"], effectRes: ["効果抵抗"], hp: ["HP"], hpPercent: ["HP"], defense: ["防御力"], defPercent: ["防御力"],
-  energyRecharge: ["元素チャージ", "EP回復", "エネルギー"], elementalMastery: ["元素熟知"], anomalyMastery: ["異常マスタリー"], impact: ["衝撃力"], penRatio: ["貫通"], energyRegen: ["エネルギー"],
+  energyRecharge: ["元素チャージ", "EP回復", "エネルギー"], elementalMastery: ["元素熟知"], anomalyMastery: ["異常マスタリー"], anomalyProficiency: ["異常掌握"], impact: ["衝撃力"], penRatio: ["貫通"], energyRegen: ["エネルギー"],
 };
 
 function guideFamily(guide: GuideDefinition): "hsr" | "genshin" | "zzz" {
@@ -125,6 +125,7 @@ function defaultSlotsForStat(family: "hsr" | "genshin" | "zzz", key: StatKey): s
   if (key === "energyRecharge") return family === "genshin" ? ["時計"] : family === "hsr" ? ["連結縄"] : ["VI"];
   if (key === "elementalMastery") return family === "genshin" ? ["時計", "杯", "冠"] : [];
   if (key === "anomalyMastery") return family === "zzz" ? ["IV", "VI"] : [];
+  if (key === "anomalyProficiency") return family === "zzz" ? ["VI"] : [];
   if (key === "impact" || key === "energyRegen") return family === "zzz" ? ["VI"] : [];
   if (key === "penRatio") return family === "zzz" ? ["V"] : [];
   if (key === "breakEffect") return family === "hsr" ? ["連結縄"] : [];
@@ -368,6 +369,13 @@ Object.assign(GUIDE_OVERRIDES, {
   "マダム・ヘルタ": { headline: "知恵の範囲火力を伸ばすため、会心・攻撃力・行動回数を優先する。", relicSet: "灰燼を燃やし尽くす大公 ×4", planarSet: "奔狼の都藍王朝 ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度 / 攻撃力%" }, { slot: "次元界オーブ", value: "氷属性ダメージ" }, { slot: "連結縄", value: "攻撃力%" }], targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 75, "妥協": 65 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 220, "目標": 180, "妥協": 150 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 143, "目標": 134, "妥協": 120 } }, { key: "attackPercent", label: "攻撃力%", unit: "%", targets: { "厳選": 80, "目標": 65, "妥協": 50 } }] },
 });
 
+Object.assign(GUIDE_OVERRIDES, {
+  "アベンチュリン": { headline: "バリアと追加攻撃を安定させるため、公開値の防御力4,000と速度134を優先する。", relicSet: "純庭教会の聖騎士 ×4 / 灰燼を燃やし尽くす大公 ×4", planarSet: "ベロブルグの建築家 ×2 / 奔狼の都藍王朝 ×2", mainStats: [{ slot: "胴体", value: "防御力% / 会心率" }, { slot: "脚部", value: "速度 / 防御力%" }, { slot: "次元界オーブ", value: "防御力%" }, { slot: "連結縄", value: "防御力%" }], targets: [{ key: "defense", label: "防御力", unit: "", targets: { "厳選": 4300, "目標": 4000, "妥協": 3700 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 143, "目標": 134, "妥協": 120 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }], targetContext: "アベンチュリン専用：防御力4,000で解放される追加能力の会心率最大48%、天賦・味方・E4の防御力、護盾中の効果抵抗は戦闘中効果として公開プロフィールへ加算しない。", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・Prydwenの更新日付き個別ビルド・PTガイドを照合" },
+  "トパーズ&カブ": { headline: "追加攻撃の火力を安定させるため、会心率80%・会心ダメージ150%・攻撃力2,500・速度134を公開値で整える。", relicSet: "灰燼を燃やし尽くす大公 ×4", planarSet: "奔狼の都藍王朝 ×2 / 自転が止まったサルソット ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "炎属性ダメージ / 攻撃力%" }, { slot: "連結縄", value: "攻撃力%" }], targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 90, "目標": 80, "妥協": 70 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 170, "目標": 150, "妥協": 140 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 2800, "目標": 2500, "妥協": 2100 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 143, "目標": 134, "妥協": 120 } }], targetContext: "トパーズ&カブ専用：負債証明の被ダメージ上昇、カブの行動順前進、必殺技「大当たり」中の会心ダメージ、味方・光円錐・遺物の条件付き効果は公開プロフィールへ加算しない。", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・Prydwenの更新日付き個別ビルド・PTガイドを照合" },
+  "花火": { headline: "主力より1低い低速型または高速型を選び、公開値の会心ダメージ200%以上・効果抵抗30%以上を優先する。", relicSet: "仮想空間を漫遊するメッセンジャー ×4 / 風雲を薙ぎ払う勇烈 ×4", planarSet: "折れた竜骨 ×2 / 海に沈んだルサカ ×2", mainStats: [{ slot: "胴体", value: "会心ダメ" }, { slot: "脚部", value: "速度" }, { slot: "次元界オーブ", value: "HP% / 防御力%" }, { slot: "連結縄", value: "EP回復効率" }], targets: [{ key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 230, "目標": 200, "妥協": 180 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 200, "目標": 184, "妥協": 168 } }, { key: "effectRes", label: "効果抵抗", unit: "%", targets: { "厳選": 40, "目標": 30, "妥協": 20 } }], targetContext: "花火専用：低速型は主力アタッカーより速度を1低く設定する。会心ダメージ付与・最大SP・SP回復・全体攻撃力・耐性貫通、E1〜E6の速度・攻撃力などは戦闘中効果として公開プロフィールへ加算しない。", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・Prydwenの更新日付き個別ビルド・PTガイドを照合" },
+  "丹恒・飲月": { headline: "SP消費型の強化通常攻撃を支えるため、公開値の会心率75%・会心ダメージ145%・攻撃力2,500を優先し、速度は加速役に応じて選ぶ。", relicSet: "荒海を歩む旅人 ×4 / 死水に潜る先駆者 ×4", planarSet: "ルサカの海中世界 ×2 / 自転が止まったサルソット ×2", mainStats: [{ slot: "胴体", value: "会心率 / 会心ダメ" }, { slot: "脚部", value: "攻撃力% / 速度" }, { slot: "次元界オーブ", value: "虚数属性ダメージ / 攻撃力%" }, { slot: "連結縄", value: "攻撃力%" }], targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 75, "妥協": 70 } }, { key: "critDmg", label: "会心ダメ", unit: "%", targets: { "厳選": 165, "目標": 145, "妥協": 140 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 2600, "目標": 2500, "妥協": 2200 } }, { key: "speed", label: "速度", unit: "", targets: { "厳選": 134, "目標": 102, "妥協": 102 } }], targetContext: "丹恒・飲月専用：花火・サンデーの行動順加速を採る低速型では基礎速度を維持する。強化通常攻撃のSP消費、逆鱗、追加能力、光円錐・味方・E1〜E6の条件付き効果は公開プロフィールへ加算しない。", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・Prydwenの更新日付き個別ビルド・PTガイドを照合" },
+});
+
 const DEFAULT_GUIDE: GuideDefinition = {
   headline: "基礎火力を軸に、会心・速度・攻撃力の優先度を整える。",
   relicSet: "キャラクター適性に応じた属性セット ×4",
@@ -394,6 +402,7 @@ const STAT_MATCHERS: Record<StatKey, RegExp[]> = {
   energyRecharge: [/energy.*recharge/i, /charge.*efficiency/i, /元素チャージ/i],
   elementalMastery: [/elemental.*mastery/i, /元素熟知/i],
   anomalyMastery: [/anomaly.*mastery/i, /異常マスタリー/i],
+  anomalyProficiency: [/anomaly.*proficiency/i, /異常掌握/i],
   impact: [/impact/i, /衝撃力/i],
   penRatio: [/pen.*ratio/i, /貫通率/i],
   energyRegen: [/energy.*regen/i, /energy.*recovery/i, /エネルギー自動回復/i],

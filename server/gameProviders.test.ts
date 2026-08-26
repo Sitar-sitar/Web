@@ -63,10 +63,10 @@ describe("原神公開プロフィールの正規化", () => {
     const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
 
     expect(byName["香菱"]?.comparisons.map((comparison) => comparison.key)).toEqual(["critRate", "critDmg", "energyRecharge"]);
-    expect(byName["久岐忍"]?.comparisons.map((comparison) => comparison.key)).toEqual(["elementalMastery", "energyRecharge"]);
+    expect(byName["久岐忍"]?.comparisons.map((comparison) => comparison.key)).toEqual(["elementalMastery", "hp", "energyRecharge"]);
     expect(byName["ノエル"]?.comparisons.map((comparison) => comparison.key)).toEqual(["defense", "critRate", "critDmg"]);
     expect(byName["香菱"]?.guide.targetContext).toContain("香菱用");
-    expect(byName["久岐忍"]?.guide.dataAsOf).toBe("2026-08-18");
+    expect(byName["久岐忍"]?.guide.dataAsOf).toBe("2026-08-26");
     expect(byName["ノエル"]?.guide.sourceLabel).toContain("GameWith");
   });
 

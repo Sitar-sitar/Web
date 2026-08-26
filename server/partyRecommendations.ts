@@ -149,6 +149,12 @@ const batch3Options = (game: PartyGameId, name: string, sourceUrl: string, selec
   updatedAt: "2026-08-26",
   communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
 }));
+const batch4Options = (game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: [ManualPlan, ManualPlan, ManualPlan]) => manualOptions(game, name, sourceUrl, selectedRole, plans).map((entry) => ({
+  ...entry,
+  dataAsOf: "2026-08-26",
+  updatedAt: "2026-08-26",
+  communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
+}));
 
 /**
  * 公開使用率・現行エンドコンテンツ・更新日付きチームガイドを照合した上位20の手動精査データ。
@@ -299,6 +305,56 @@ const MANUALLY_CURATED_HIGH_USAGE_CATALOG: Record<string, PartyRecommendation[]>
     plan(["エレン", "ダイアリン", "千夏"], "ブレイクと氷支援を重ね、エレンの急凍を火力窓へ変える現行高難度案。", "A current endgame core that layers stun and Ice support to convert Flash Freeze into damage windows.", "当前高难度核心队叠加失衡和冰系辅助，将急冻转化为输出窗口。"),
     plan(["エレン", "シーザー", "ライト"], "耐久支援と氷耐性低下・ブレイク延長を組み、短時間の直撃火力を伸ばす。", "Combines defensive support with Ice RES shred and extended stun windows for burst damage.", "结合防护辅助、冰抗降低与延长失衡窗口，提高短爆发直伤。"),
     plan(["エレン", "蒼角", "ルーシー"], "氷・攻撃力支援を使う入手しやすい代替案。", "An accessible alternative using Ice and ATK support.", "使用冰系与攻击辅助的易获取替代方案。"),
+  ]),
+  "hsr:アベンチュリン": batch4Options("hsr", "アベンチュリン", "https://game8.co/games/Honkai-Star-Rail/archives/429966", t("耐久", "Sustain", "生存位"), [
+    plan(["アベンチュリン", "飛霄", "サフェル", "ロビン"], "追加攻撃の頻度を耐久・会心支援へつなげ、飛霄の蓄積と決定打を安定させる。", "Connects follow-up frequency to sustain and CRIT support, stabilizing Feixiao’s stack building and finisher.", "将追击频率转化为生存与暴击辅助，稳定飞霄的叠层与终结爆发。"),
+    plan(["アベンチュリン", "Dr.レイシオ", "トパーズ&カブ", "ロビン"], "デバフと追加攻撃を連鎖させ、単体主力の追撃回数を伸ばす。", "Chains debuffs and follow-ups to increase a single-target carry’s follow-up frequency.", "串联减益与追击，提高单体主C的追击频率。"),
+    plan(["アベンチュリン", "黄泉", "椒丘", "サフェル"], "耐久枠のデバフも残夢蓄積に活かす虚無軸。", "A Nihility core that also turns the sustain slot’s debuffs into Slashed Dream stacks.", "将生存位减益也用于残梦积累的虚无核心队。"),
+  ]),
+  "hsr:トパーズ&カブ": batch4Options("hsr", "トパーズ&カブ", "https://game8.co/games/Honkai-Star-Rail/archives/421778", mainDps, [
+    plan(["トパーズ&カブ", "飛霄", "ロビン", "アベンチュリン"], "頻繁な追加攻撃を相互に増やし、飛霄の飛黄とカブの行動を循環させる。", "Mutual frequent follow-ups cycle Feixiao’s Flying Aureus and Numby’s turns.", "以高频互相追击循环飞霄的飞黄与账账行动。"),
+    plan(["トパーズ&カブ", "Dr.レイシオ", "銀狼", "羅刹"], "単体デバフと追加攻撃を重ね、レイシオとカブの追撃条件を満たす。", "Stacks single-target debuffs and follow-ups to meet Dr. Ratio and Numby follow-up conditions.", "叠加单体减益与追击，满足真理医生和账账的追击条件。"),
+    plan(["トパーズ&カブ", "姫子", "銀狼", "符玄"], "炎・量子の火力軸に単体追撃を加える所持対応案。", "A roster-friendly Fire/Quantum damage core with a single-target follow-up slot.", "为火量输出核心加入单体追击位的持有适配方案。"),
+  ]),
+  "hsr:花火": batch4Options("hsr", "花火", "https://game8.co/games/Honkai-Star-Rail/archives/Sparkle-Best-Builds", support, [
+    plan(["花火", "丹恒・飲月", "停雲", "羅刹"], "SP供給と行動順操作を重ね、強化通常攻撃を継続するハイパーキャリー。", "Stacks Skill Point supply and action control to sustain enhanced Basic Attacks in hypercarry play.", "叠加战技点供给与行动控制，维持强化普攻的单核队。"),
+    plan(["花火", "アーチャー", "サフェル", "ギャラガー"], "会心支援と行動順操作を単体主力へ集約する代替案。", "An alternative concentrating CRIT support and action control on a single-target carry.", "将暴击辅助与行动控制集中给单体主C的替代方案。"),
+    plan(["花火", "黄泉", "椒丘", "アベンチュリン"], "黄泉E2限定で虚無1名と調和1名を採用し、行動加速を必殺技回転へ変える。", "E2 Acheron only: uses one Nihility and one Harmony unit to turn action advance into Ultimate cycling.", "仅限E2黄泉：采用一名虚无与一名同谐，将拉条转化为终结技循环。"),
+  ]),
+  "hsr:丹恒・飲月": batch4Options("hsr", "丹恒・飲月", "https://game8.co/games/Honkai-Star-Rail/archives/417235", mainDps, [
+    plan(["丹恒・飲月", "花火", "停雲", "アベンチュリン"], "SP供給・行動順操作・耐久を組み、強化通常攻撃の3SP消費を安定させる。", "Combines Skill Point supply, action control, and sustain to stabilize 3-SP enhanced Basic Attacks.", "组合战技点供给、行动控制与生存，稳定三战技点强化普攻。"),
+    plan(["丹恒・飲月", "花火", "銀狼", "羅刹"], "虚数寄りのデバフとSP供給を組み合わせる単体戦向け案。", "A single-target option combining Imaginary-oriented debuffs and Skill Point supply.", "结合虚数向减益与战技点供给的单体战方案。"),
+    plan(["丹恒・飲月", "ロビン", "サンデー", "アベンチュリン"], "SP収支を確認しつつ、行動支援を強化通常攻撃の回数へ変換する編成。", "A setup that monitors Skill Point economy while converting action support into more enhanced Basic Attacks.", "在关注战技点收支的同时，将行动辅助转化为更多强化普攻。"),
+  ]),
+  "genshin:アルハイゼン": batch4Options("genshin", "アルハイゼン", "https://game8.co/games/Genshin-Impact/archives/383712", mainDps, [
+    plan(["アルハイゼン", "ナヒーダ", "夜蘭", "久岐忍"], "草・水・雷の高頻度付着で超開花を回し、鏡の投影攻撃を反応へつなげる。", "Frequent Dendro, Hydro, and Electro application sustains Hyperbloom and converts mirror projections into reaction damage.", "高频草、水、雷附着维持超绽放，将琢光镜投影转化为反应伤害。"),
+    plan(["アルハイゼン", "ナヒーダ", "八重神子", "鍾離"], "草激化・超激化の火力を草付着・雷副火力・耐性低下で安定させる。", "Stabilizes Spread/Aggravate with Dendro application, Electro sub-DPS, and RES shred.", "以草附着、雷系副输出与减抗稳定蔓激化和超激化。"),
+    plan(["アルハイゼン", "フィッシュル", "フリーナ", "白朮"], "フリーナのHP変動と草激化を組み合わせる所持対応の火力案。", "A roster option combining Furina’s HP fluctuation with Spread/Aggravate.", "组合芙宁娜生命波动与激化的持有适配输出方案。"),
+  ]),
+  "genshin:胡桃": batch4Options("genshin", "胡桃", "https://game8.co/games/Genshin-Impact/archives/314347", mainDps, [
+    plan(["胡桃", "フリーナ", "夜蘭", "閑雲"], "HP変動・水付着・落下蒸発を重ね、重撃以外の高火力窓も作る。", "Stacks HP fluctuation, Hydro application, and plunging Vaporize for additional high-damage windows.", "叠加生命波动、挂水与下落蒸发，创造重击以外的高伤窗口。"),
+    plan(["胡桃", "行秋", "夜蘭", "鍾離"], "二重水の安定した水付着と護盾で、蒸発重撃の中断を抑える定番軸。", "A classic core using double Hydro application and a shield to protect Vaporize Charged Attacks.", "以双水稳定挂水和护盾保护蒸发重击的经典核心队。"),
+    plan(["胡桃", "行秋", "ロサリア", "シトラリ"], "蒸発と溶解の反応機会を組み、会心と元素熟知を活かす代替案。", "An alternative combining Vaporize and Melt opportunities to use CRIT and Elemental Mastery.", "结合蒸发与融化机会，发挥暴击和元素精通的替代方案。"),
+  ]),
+  "genshin:久岐忍": batch4Options("genshin", "久岐忍", "https://game8.co/games/Genshin-Impact/archives/346199", support, [
+    plan(["久岐忍", "アルハイゼン", "夜蘭", "ナヒーダ"], "雷草の輪で超開花を起こし、回復と持続雷付着を同時に担う。", "The Sanctifying Ring triggers Hyperbloom while providing healing and sustained Electro application.", "草轮同时触发超绽放、治疗与持续雷附着。"),
+    plan(["久岐忍", "ナヒーダ", "行秋", "夜蘭"], "二重水の種生成を超開花へ変換する実戦的な反応軸。", "A practical reaction core that converts double-Hydro seed generation into Hyperbloom.", "将双水产种转化为超绽放的实战反应核心。"),
+    plan(["久岐忍", "アルハイゼン", "八重神子", "ナヒーダ"], "回復を確保しながら草激化・超激化を回す支援型案。", "A support-oriented option that sustains Spread/Aggravate while retaining healing.", "在保留治疗的同时循环蔓激化和超激化的支援型方案。"),
+  ]),
+  "zzz:セス": batch4Options("zzz", "セス", "https://game8.co/games/Zenless-Zone-Zero/archives/460687", t("防護", "Defense", "防护"), [
+    plan(["セス", "ジェーン", "ビビアン"], "主力異常の直後に入り、盾・異常掌握付与・クイック支援で強撃と混沌をつなぐ。", "Placed after the primary Anomaly agent, Seth links Assault and Disorder through shields, Anomaly Proficiency, and Quick Assist.", "置于主异常角色之后，以护盾、异常精通与快速支援衔接强击和紊乱。"),
+    plan(["セス", "ジェーン", "月城柳"], "物理・電気の状態異常を重ね、盾支援で主力の行動を守る。", "Layers Physical and Electric Anomaly while shield support protects the carry’s actions.", "叠加物理与电气异常，并以护盾辅助保护主C行动。"),
+    plan(["セス", "グレース", "リナ"], "電気異常の蓄積と貫通支援を組み合わせる電気軸。", "An Electric core combining Anomaly buildup with PEN support.", "结合异常积累与穿透辅助的电气核心队。"),
+  ]),
+  "zzz:パイパー": batch4Options("zzz", "パイパー", "https://game8.co/games/Zenless-Zone-Zero/archives/459818", anomaly, [
+    plan(["パイパー", "ビビアン", "浮波柚葉"], "物理・エーテル異常を重ね、柚葉の支援で混沌と控え火力を回す。", "Layers Physical and Ether Anomaly while Yuzuha support sustains Disorder and off-field damage.", "叠加物理和以太异常，以柚叶辅助循环紊乱与后台伤害。"),
+    plan(["パイパー", "バーニス", "アストラ"], "炎・物理の異常を交互に起こし、全体支援で混沌の価値を高める。", "Alternates Fire and Physical Anomaly while team buffs raise Disorder payoff.", "交替触发火与物理异常，以全队增益提高紊乱收益。"),
+    plan(["パイパー", "アンビー", "ニコ"], "状態異常・ブレイク・集敵を使う入手しやすい物理軸。", "An accessible Physical option using Anomaly, stun, and grouping.", "使用异常、失衡与聚怪的易获取物理队。"),
+  ]),
+  "zzz:蒼角": batch4Options("zzz", "蒼角", "https://game8.co/games/Zenless-Zone-Zero/archives/436880", support, [
+    plan(["蒼角", "星見雅", "月城柳"], "旗揚げの攻撃力・氷ダメージ支援と異常連鎖で、霜灼・烈霜の回転を支える。", "Fly the Flag’s ATK/Ice support and Anomaly chains sustain Frostburn and Fallen Frost rotations.", "以旗扬的攻击力、冰伤辅助和异常连锁支撑霜灼与落霜循环。"),
+    plan(["蒼角", "エレン", "ライト"], "氷ダメージ支援と氷耐性低下・ブレイク延長を重ね、エレンの直撃火力を伸ばす。", "Stacks Ice support with Ice RES shred and longer stun windows for Ellen’s direct damage.", "叠加冰系辅助、冰抗降低与延长失衡窗口，提高艾莲直伤。"),
+    plan(["蒼角", "星見雅", "ライカン"], "氷軸の耐性低下・ブレイクと旗揚げを組む実戦代替案。", "A practical Ice alternative combining RES shred, stun, and Fly the Flag.", "结合减抗、失衡与旗扬的实战冰系替代队。"),
   ]),
 };
 

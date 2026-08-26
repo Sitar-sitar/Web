@@ -342,6 +342,106 @@ const CURATED: Record<string, CuratedEntry> = {
       effect(6, "心象映画6", "Mindscape 6", "心象电影6", "貫通率と与ダメージを強化し、急凍関連攻撃をさらに伸ばす。", "Strengthens PEN Ratio and damage, further raising Flash Freeze-related attacks.", "强化穿透率与造成的伤害，进一步提高急冻相关攻击。"),
     ],
   },
+  "hsr:1304": {
+    ...SOURCE.hsr, sourceUrl: "https://www.prydwen.gg/star-rail/characters/aventurine", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "星魂1", "Eidolon 1", "星魂1", "護盾所持者の会心ダメージを20%上げ、必殺技後に全体へ護盾を付与する。", "Shielded allies gain 20% CRIT DMG, and the Ultimate grants a teamwide shield.", "使持有护盾的队友暴击伤害提高20%，终结技后为全队提供护盾。"),
+      effect(2, "星魂2", "Eidolon 2", "星魂2", "通常攻撃時、敵の全属性耐性を12%下げる。", "Basic ATK reduces the target's All-Type RES by 12%.", "普通攻击使目标全属性抗性降低12%。"),
+      effect(3, "星魂3", "Eidolon 3", "星魂3", "必殺技を2、通常攻撃を1レベル上げる。", "Raises Ultimate by 2 and Basic ATK by 1.", "终结技提高2级，普攻提高1级。"),
+      effect(4, "星魂4", "Eidolon 4", "星魂4", "追加攻撃時に防御力を40%上げ、ヒット数を3増やす（2ターン）。", "Follow-up attacks grant 40% DEF and add 3 hits for 2 turns.", "发动追加攻击时防御力提高40%，并增加3段攻击，持续2回合。"),
+      effect(5, "星魂5", "Eidolon 5", "星魂5", "戦闘スキルと天賦を2レベル上げる。", "Raises Skill and Talent by 2.", "战技与天赋提高2级。"),
+      effect(6, "星魂6", "Eidolon 6", "星魂6", "護盾を持つ味方1人につき自身の与ダメージを50%上げ、最大150%まで。", "Each shielded ally raises Aventurine's DMG by 50%, up to 150%.", "每有1名持盾队友，自身造成的伤害提高50%，最多150%。"),
+    ],
+  },
+  "hsr:1112": {
+    ...SOURCE.hsr, sourceUrl: "https://www.prydwen.gg/star-rail/characters/topaz", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "星魂1", "Eidolon 1", "星魂1", "負債証明の敵への追加攻撃命中時、追加攻撃会心ダメージ+25%の債務者を最大2層付与する。", "Follow-ups hitting Proof of Debt targets apply up to 2 Debtor stacks, each granting 25% Follow-up CRIT DMG.", "追加攻击命中负债证明目标时施加最多2层债务人，每层使追加攻击暴击伤害提高25%。"),
+      effect(2, "星魂2", "Eidolon 2", "星魂2", "カブの行動後にEPを5回復する。", "Restores 5 Energy after Numby's action.", "账账行动后回复5点能量。"),
+      effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+      effect(4, "星魂4", "Eidolon 4", "星魂4", "カブの行動開始時、トパーズの行動順を20%早める。", "At the start of Numby's turn, advances Topaz's action by 20%.", "账账回合开始时，使托帕的行动提前20%。"),
+      effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+      effect(6, "星魂6", "Eidolon 6", "星魂6", "大当たり中のカブ攻撃回数を1増やし、炎属性耐性貫通を10%得る。", "During Windfall Bonanza, Numby gains 1 extra hit and 10% Fire RES PEN.", "大赚状态下账账攻击次数增加1次，并获得10%火属性抗性穿透。"),
+    ],
+  },
+  "hsr:1306": {
+    ...SOURCE.hsr, sourceUrl: "https://www.prydwen.gg/star-rail/characters/sparkle", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "星魂1", "Eidolon 1", "星魂1", "暗号所持味方の攻撃力を40%上げ、花火の速度を15%上げる（2ターン）。", "Cipher allies gain 40% ATK and Sparkle gains 15% SPD for 2 turns.", "持有密语的队友攻击力提高40%，花火速度提高15%，持续2回合。"),
+      effect(2, "星魂2", "Eidolon 2", "星魂2", "天賦スタックごとに、敵防御力を10%下げる。", "Each Talent stack reduces enemy DEF by 10%.", "每层天赋效果使敌人防御力降低10%。"),
+      effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+      effect(4, "星魂4", "Eidolon 4", "星魂4", "必殺技のSP回復を1増やし、最大SPを1増やす。", "Increases Ultimate Skill Point recovery by 1 and maximum Skill Points by 1.", "终结技额外恢复1点战技点，战技点上限提高1点。"),
+      effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+      effect(6, "星魂6", "Eidolon 6", "星魂6", "戦闘スキルの会心ダメージ補正に花火会心ダメージの30%を追加し、暗号所持味方へ拡張する。", "Adds 30% of Sparkle's CRIT DMG to her Skill's CRIT DMG modifier and extends it to Cipher allies.", "战技的暴击伤害加成额外获得花火暴击伤害的30%，并扩展至持有密语的队友。"),
+    ],
+  },
+  "hsr:1213": {
+    ...SOURCE.hsr, sourceUrl: "https://www.prydwen.gg/star-rail/characters/imbibitor-lunae", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "星魂1", "Eidolon 1", "星魂1", "「逆鱗」の最大層数を4増やし、攻撃ヒットごとに追加で逆鱗を得る。", "Increases the maximum Squama Sacrosancta by 4 and grants additional stacks for each attack hit.", "逆鳞的上限提高4层，攻击每段命中额外获得逆鳞。"),
+      effect(2, "星魂2", "Eidolon 2", "星魂2", "必殺技後に行動順を100%早め、逆鱗を1得る。", "After Ultimate, advances action by 100% and grants 1 Squama Sacrosancta.", "施放终结技后行动提前100%，并获得1层逆鳞。"),
+      effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+      effect(4, "星魂4", "Eidolon 4", "星魂4", "「轟天」の会心ダメージ効果を次ターン終了まで延長する。", "Extends Fulgurant Leap's CRIT DMG effect until the end of the next turn.", "延长轰天的暴击伤害效果至下一回合结束。"),
+      effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+      effect(6, "星魂6", "Eidolon 6", "星魂6", "他味方の必殺技後、次の「飛翔する天照」は虚数耐性貫通+20%を最大3層得る。", "After other allies use Ultimate, the next Fulgurant Leap gains up to 3 stacks of 20% Imaginary RES PEN.", "其他队友施放终结技后，下一次飞天神照获得最多3层20%虚数抗性穿透。"),
+    ],
+  },
+  "genshin:10000078": {
+    ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/383712", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "命ノ星座1", "Constellation 1", "命之座1", "投影攻撃命中時、元素スキルのクールダウンを1.2秒短縮する。", "Projection Attack hits reduce Elemental Skill cooldown by 1.2s.", "琢光镜投影攻击命中时，元素战技冷却时间减少1.2秒。"),
+      effect(2, "命ノ星座2", "Constellation 2", "命之座2", "琢光鏡生成ごとに元素熟知を50上げる（8秒、最大4層）。", "Each mirror creation grants 50 Elemental Mastery for 8s, up to 4 stacks.", "每生成一枚琢光镜，元素精通提高50点，持续8秒，最多4层。"),
+      effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+      effect(4, "命ノ星座4", "Constellation 4", "命之座4", "元素爆発で消費した鏡数に応じ、味方の元素熟知または本人の草元素ダメージを15秒上げる。", "Burst mirror consumption grants allies Elemental Mastery or Alhaitham Dendro DMG for 15s.", "根据元素爆发消耗的琢光镜数量，提高队友元素精通或艾尔海森草元素伤害，持续15秒。"),
+      effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+      effect(6, "命ノ星座6", "Constellation 6", "命之座6", "元素爆発2秒後に琢光鏡を3枚生成し、最大時の再生成で会心率+10%・会心ダメージ+70%を得る（6秒）。", "Creates 3 mirrors 2s after Burst; recreating them at maximum grants 10% CRIT Rate and 70% CRIT DMG for 6s.", "元素爆发2秒后生成3枚琢光镜；满层时再次生成可获得10%暴击率与70%暴击伤害，持续6秒。"),
+    ],
+  },
+  "genshin:10000046": {
+    ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/314347", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "命ノ星座1", "Constellation 1", "命之座1", "蝶導来世中の重撃はスタミナを消費しない。", "Charged Attacks consume no Stamina during Paramita Papilio.", "蝶引来生状态下重击不消耗体力。"),
+      effect(2, "命ノ星座2", "Constellation 2", "命之座2", "血梅香ダメージに付与時HP上限の10%を加算し、元素爆発にも血梅香を付与する。", "Blood Blossom gains 10% of Hu Tao's Max HP at application, and Burst also applies Blood Blossom.", "血梅香伤害额外获得施加时胡桃生命上限的10%，元素爆发也会施加血梅香。"),
+      effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+      effect(4, "命ノ星座4", "Constellation 4", "命之座4", "自身の血梅香の敵撃破時、本人以外の味方の会心率を12%上げる（15秒）。", "Defeating a Blood Blossom target grants other allies 12% CRIT Rate for 15s.", "击败受自身血梅香影响的敌人时，除自身外的队友暴击率提高12%，持续15秒。"),
+      effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+      effect(6, "命ノ星座6", "Constellation 6", "命之座6", "HP25%未満または致死被弾時、10秒間全元素・物理耐性+200%・会心率+100%・中断耐性上昇を得る（60秒に1回）。", "Below 25% HP or on a lethal hit, gains 200% All-Elemental/Physical RES, 100% CRIT Rate, and interruption resistance for 10s, once every 60s.", "生命低于25%或受到致命伤害时，获得200%全元素与物理抗性、100%暴击率及抗打断能力，持续10秒，每60秒一次。"),
+    ],
+  },
+  "genshin:10000065": {
+    ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/346199", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "命ノ星座1", "Constellation 1", "命之座1", "元素爆発の範囲を50%広げる。", "Increases Elemental Burst area by 50%.", "元素爆发的范围扩大50%。"),
+      effect(2, "命ノ星座2", "Constellation 2", "命之座2", "雷草の輪の継続時間を3秒延長する。", "Extends Grass Ring of Sanctification duration by 3s.", "越祓草轮的持续时间延长3秒。"),
+      effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+      effect(4, "命ノ星座4", "Constellation 4", "命之座4", "雷草の輪所持キャラクターの通常・重撃・落下攻撃命中時、HP上限9.7%の雷範囲ダメージを与える（5秒に1回）。", "When a Grass Ring character hits with Normal, Charged, or Plunging Attacks, deals AoE Electro DMG equal to 9.7% of Kuki's Max HP once every 5s.", "草轮角色的普攻、重击或下落攻击命中时，造成相当于久岐忍生命上限9.7%的雷元素范围伤害，每5秒一次。"),
+      effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+      effect(6, "命ノ星座6", "Constellation 6", "命之座6", "致死ダメージを1回無効にし、HP25%未満で元素熟知+150を得る（15秒、60秒に1回）。", "Negates one lethal hit and grants 150 Elemental Mastery below 25% HP for 15s, once every 60s.", "可免除一次致命伤害，生命低于25%时元素精通提高150点，持续15秒，每60秒一次。"),
+    ],
+  },
+  "zzz:1271": {
+    ...SOURCE.zzz, sourceUrl: "https://www.prydwen.gg/zenless/characters/seth", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "心象映画1", "Mindscape 1", "心象电影1", "固定決意の盾量・上限を30%上げ、盾終了後の異常掌握増加を10秒延長する。", "Increases the shield value and cap of Resolute Shield by 30% and extends its post-shield Anomaly Proficiency increase by 10s.", "使正义之盾的护盾值与上限提高30%，并将护盾结束后的异常掌握提升延长10秒。"),
+      effect(2, "心象映画2", "Mindscape 2", "心象电影2", "開幕時に決意を75%得て、強化通常攻撃の感電蓄積を35%上げる。", "Starts combat with 75% Resolve and increases enhanced Basic Attack Shock buildup by 35%.", "开场获得75%意气值，强化普攻的感电异常积蓄提高35%。"),
+      effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・支援・回避・特殊・連携スキルを2レベル上げる。", "Raises Basic, Assist, Dodge, Special, and Chain skills by 2.", "普攻、支援、闪避、特殊技和连携技提高2级。"),
+      effect(4, "心象映画4", "Mindscape 4", "心象电影4", "防御支援のブレイク値を25%上げる。", "Increases Defensive Assist Daze by 25%.", "防御支援造成的失衡值提高25%。"),
+      effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・支援・回避・特殊・連携スキルを2レベル上げる。", "Raises Basic, Assist, Dodge, Special, and Chain skills by 2.", "普攻、支援、闪避、特殊技和连携技提高2级。"),
+      effect(6, "心象映画6", "Mindscape 6", "心象电影6", "強化通常攻撃のフィニッシュに攻撃力500%の追加ダメージ・確定会心・会心ダメージ+60%を付与する。", "The enhanced Basic finisher gains 500% ATK bonus damage, guaranteed CRIT, and 60% CRIT DMG.", "强化普攻终结段获得攻击力500%的额外伤害、必定暴击与60%暴击伤害。"),
+    ],
+  },
+  "zzz:1281": {
+    ...SOURCE.zzz, sourceUrl: "https://www.prydwen.gg/zenless/characters/piper", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "心象映画1", "Mindscape 1", "心象电影1", "回転斬り命中時50%で追加パワーを獲得し、上限を30層にする。", "Spin hits have a 50% chance to grant extra Power, raising the cap to 30 stacks.", "旋转攻击命中有50%概率获得额外动力，层数上限提高至30层。"),
+      effect(2, "心象映画2", "Mindscape 2", "心象电影2", "回転中の移動速度を上げ、叩きつけの物理ダメージを10%とパワー1層ごとに1%上げる。", "Raises movement speed while spinning and increases Slam Physical DMG by 10% plus 1% per Power stack.", "旋转期间移动速度提高，砸击物理伤害提高10%并且每层动力额外提高1%。"),
+      effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・支援・回避・特殊・連携スキルを2レベル上げる。", "Raises Basic, Assist, Dodge, Special, and Chain skills by 2.", "普攻、支援、闪避、特殊技和连携技提高2级。"),
+      effect(4, "心象映画4", "Mindscape 4", "心象电影4", "味方が状態異常を付与するとEPを20回復する（30秒に1回）。", "When an ally inflicts Anomaly, restores 20 Energy once every 30s.", "队友施加异常时回复20点能量，每30秒一次。"),
+      effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・支援・回避・特殊・連携スキルを2レベル上げる。", "Raises Basic, Assist, Dodge, Special, and Chain skills by 2.", "普攻、支援、闪避、特殊技和连携技提高2级。"),
+      effect(6, "心象映画6", "Mindscape 6", "心象电影6", "EX特殊スキルの持続時間を2秒、パワーの持続時間を4秒延長する。", "Extends EX Special duration by 2s and Power duration by 4s.", "强化特殊技持续时间延长2秒，动力持续时间延长4秒。"),
+    ],
+  },
+  "zzz:1131": {
+    ...SOURCE.zzz, sourceUrl: "https://www.prydwen.gg/zenless/characters/soukaku", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "心象映画1", "Mindscape 1", "心象电影1", "コアパッシブ・追加能力のバフ時間を8秒延長する。", "Extends Core Passive and Additional Ability buff duration by 8s.", "核心被动和额外能力的增益持续时间延长8秒。"),
+      effect(2, "心象映画2", "Mindscape 2", "心象电影2", "通常・ダッシュ・回避反撃・クイック支援命中時15%で渦流を1得る（毎秒1回）。最大時の余剰はEP1.2に変換する。", "Basic, Dash, Dodge Counter, and Quick Assist hits have a 15% chance to grant 1 Vortex once per second; excess at max converts to 1.2 Energy.", "普攻、冲刺、闪避反击和快速支援命中有15%概率获得1层涡流，每秒一次；满层后的额外层数转化为1.2点能量。"),
+      effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・支援・回避・特殊・連携スキルを2レベル上げる。", "Raises Basic, Assist, Dodge, Special, and Chain skills by 2.", "普攻、支援、闪避、特殊技和连携技提高2级。"),
+      effect(4, "心象映画4", "Mindscape 4", "心象电影4", "旗揚げ命中時、敵の氷耐性を10%下げる（8秒）。", "Fly the Flag hits reduce enemy Ice RES by 10% for 8s.", "旗扬命中时，敌人的冰属性抗性降低10%，持续8秒。"),
+      effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・支援・回避・特殊・連携スキルを2レベル上げる。", "Raises Basic, Assist, Dodge, Special, and Chain skills by 2.", "普攻、支援、闪避、特殊技和连携技提高2级。"),
+      effect(6, "心象映画6", "Mindscape 6", "心象电影6", "霜旗状態の強化通常・ダッシュの使用可能回数を12回にし、与ダメージを45%上げる。", "In Frosted Banner, increases enhanced Basic/Dash uses to 12 and raises their DMG by 45%.", "霜旗状态下强化普攻和冲刺攻击可使用12次，造成的伤害提高45%。"),
+    ],
+  },
 };
 
 const LABELS: Record<CharacterIdentity["game"], LocalizedText> = {

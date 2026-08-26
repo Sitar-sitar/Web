@@ -43,7 +43,7 @@ describe("原神公開プロフィールの正規化", () => {
 
     const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
     expect(byName["神里綾華"]?.comparisons.map((comparison) => comparison.key)).toEqual(["critRate", "critDmg", "energyRecharge"]);
-    expect(byName["ナヒーダ"]?.comparisons.map((comparison) => comparison.key)).toEqual(["elementalMastery", "critRate", "critDmg"]);
+    expect(byName["ナヒーダ"]?.comparisons.map((comparison) => comparison.key)).toEqual(["elementalMastery", "energyRecharge"]);
     expect(byName["鍾離"]?.comparisons.map((comparison) => comparison.key)).toEqual(["hp", "energyRecharge"]);
     expect(byName["神里綾華"]?.guide.targetContext).toContain("神里綾華専用");
     expect(byName["ナヒーダ"]?.guide.targetContext).toContain("ナヒーダ専用");

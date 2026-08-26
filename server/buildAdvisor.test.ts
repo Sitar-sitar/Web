@@ -203,7 +203,7 @@ describe("全キャラクターガイドの網羅性", () => {
     (Object.keys(CHARACTER_GUIDE_METADATA) as Array<keyof typeof CHARACTER_GUIDE_METADATA>).forEach((game) => {
       expect(Object.keys(CHARACTER_GUIDE_METADATA[game])).toHaveLength(CHARACTER_GUIDE_CATALOG[game].length);
       CHARACTER_GUIDE_CATALOG[game].forEach((name) => {
-        expect(CHARACTER_GUIDE_METADATA[game][name]).toMatchObject({ profileId: expect.any(String), dataAsOf: expect.stringMatching(/^2026-08-(18|25)$/), updatedAt: expect.stringMatching(/^2026-08-(18|25)$/) });
+        expect(CHARACTER_GUIDE_METADATA[game][name]).toMatchObject({ profileId: expect.any(String), dataAsOf: expect.stringMatching(/^2026-08-(18|25|26)$/), updatedAt: expect.stringMatching(/^2026-08-(18|25|26)$/) });
       });
     });
     CHARACTER_GUIDE_CATALOG.hsr.forEach((name, index) => expect(hsrGuides[index]?.profileId).toBe(expectedProfileFor("hsr", name)));

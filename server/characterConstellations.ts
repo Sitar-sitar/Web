@@ -242,6 +242,106 @@ const CURATED: Record<string, CuratedEntry> = {
       effect(6, "孤独な羽の果てなき飛翔", "Lone Feather's Endless Flight", "Lone Feather's Endless Flight", "通常攻撃「虹の終焉」または「流れる恩寵」使用時、耀変を2回発動する。通常攻撃4段目命中後に特別な虚炎を3得る。", "Basic Attack: Rainbow's End or Fleeting Grace triggers Luminize twice; the fourth Basic hit grants 3 special Voidflares.", "使用普攻「虹之终焉」或「流逝恩泽」时触发两次耀变；普攻第四段命中后获得3个特殊虚炎。"),
     ],
   },
+  "hsr:1313": {
+    ...SOURCE.hsr, sourceUrl: "https://www.prydwen.gg/star-rail/characters/sunday", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "星魂1", "Eidolon 1", "星魂1", "戦闘スキル対象の与ダメージに防御力無視を付与する。", "The Skill target gains DEF ignore for its damage.", "战技目标造成伤害时获得无视防御。"),
+      effect(2, "星魂2", "Eidolon 2", "星魂2", "初回必殺技使用時にSPを回復し、スキル対象の与ダメージを上げる。", "The first Ultimate restores Skill Points and raises the Skill target's damage.", "首次施放终结技恢复战技点并提高战技目标造成的伤害。"),
+      effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルとメモスプライト関連天賦のレベルを上げる。", "Raises Skill and Memosprite-related Talent levels.", "提高战技和忆灵相关天赋等级。"),
+      effect(4, "星魂4", "Eidolon 4", "星魂4", "サンデーまたはメモスプライトの行動時にEPを回復する。", "Restores Energy when Sunday or his memosprite acts.", "星期日或其忆灵行动时恢复能量。"),
+      effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技・天賦・メモスプライトスキルのレベルを上げる。", "Raises Ultimate, Talent, and Memosprite Skill levels.", "提高终结技、天赋和忆灵技能等级。"),
+      effect(6, "星魂6", "Eidolon 6", "星魂6", "会心率バフをスタック化し、100%を超える会心率を会心ダメージへ変換する。", "Makes the CRIT Rate buff stack and converts CRIT Rate above 100% into CRIT DMG.", "使暴击率增益可叠加，并将超过100%的暴击率转化为暴击伤害。"),
+    ],
+  },
+  "hsr:1315": {
+    ...SOURCE.hsr, sourceUrl: "https://www.prydwen.gg/star-rail/characters/boothill", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "星魂1", "Eidolon 1", "星魂1", "決闘状態の敵への攻撃で防御力無視を得て、ポケットトリックショットを獲得する。", "Attacks against Standoff enemies gain DEF ignore and grant Pocket Trickshot.", "攻击决斗状态敌人时获得无视防御并取得袖珍绝技。"),
+      effect(2, "星魂2", "Eidolon 2", "星魂2", "弱点撃破時に撃破特効を得て、決闘の準備を補助する。", "Weakness Break grants Break Effect and helps set up Standoff.", "弱点击破时获得击破特攻并辅助准备决斗。"),
+      effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルと通常攻撃のレベルを上げる。", "Raises Skill and Basic ATK levels.", "提高战技与普攻等级。"),
+      effect(4, "星魂4", "Eidolon 4", "星魂4", "決闘状態の敵との戦闘で被ダメージと与ダメージを変化させる。", "Changes damage taken and dealt during Standoff combat.", "在决斗状态战斗中改变受到与造成的伤害。"),
+      effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦のレベルを上げる。", "Raises Ultimate and Talent levels.", "提高终结技与天赋等级。"),
+      effect(6, "星魂6", "Eidolon 6", "星魂6", "強化通常攻撃に追加の撃破ダメージを発生させる。", "Adds extra Break damage to the enhanced Basic ATK.", "使强化普攻追加造成击破伤害。"),
+    ],
+  },
+  "hsr:1308": {
+    ...SOURCE.hsr, sourceUrl: "https://www.prydwen.gg/star-rail/characters/acheron", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "星魂1", "Eidolon 1", "星魂1", "デバフ状態の敵への会心率を18%上げる。", "Increases CRIT Rate by 18% against debuffed enemies.", "攻击陷入负面状态的敌人时暴击率提高18%。"),
+      effect(2, "星魂2", "Eidolon 2", "星魂2", "追加能力の虚無人数条件を緩和し、自身のターン開始時に残夢を得る。", "Relaxes the Nihility-count requirement and grants Slashed Dream at the start of Acheron's turn.", "放宽额外能力的虚无角色人数要求，并在自身回合开始时获得残梦。"),
+      effect(3, "星魂3", "Eidolon 3", "星魂3", "必殺技のレベルを上げる。", "Raises Ultimate level.", "提高终结技等级。"),
+      effect(4, "星魂4", "Eidolon 4", "星魂4", "デバフ付与時に、対象が受ける必殺技ダメージを上げる。", "Applying a debuff increases Ultimate damage taken by the target.", "施加负面效果时提高目标受到的终结技伤害。"),
+      effect(5, "星魂5", "Eidolon 5", "星魂5", "戦闘スキルのレベルを上げる。", "Raises Skill level.", "提高战技等级。"),
+      effect(6, "星魂6", "Eidolon 6", "星魂6", "必殺技以外の攻撃も必殺技ダメージとして扱い、全属性耐性貫通を得る。", "Treats non-Ultimate attacks as Ultimate damage and grants All-Type RES PEN.", "将非终结技攻击也视为终结技伤害，并获得全属性抗性穿透。"),
+    ],
+  },
+  "hsr:1222": {
+    ...SOURCE.hsr, sourceUrl: "https://gamewith.jp/houkaistarrail/article/show/457049", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "星魂1", "Eidolon 1", "星魂1", "弱点撃破効率を上げ、弱点撃破状態の敵の防御力を下げる。", "Raises Weakness Break Efficiency and reduces the DEF of Weakness-Broken enemies.", "提高弱点击破效率并降低弱点击破状态敌人的防御力。"),
+      effect(2, "星魂2", "Eidolon 2", "星魂2", "必殺技使用時に味方全体の撃破特効を上げる。", "Using Ultimate raises all allies' Break Effect.", "施放终结技时提高全队击破特攻。"),
+      effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルのレベルを上げる。", "Raises Skill level.", "提高战技等级。"),
+      effect(4, "星魂4", "Eidolon 4", "星魂4", "回復対象のHPが低い時に回復量を増やす。", "Increases healing for targets at low HP.", "目标生命较低时提高治疗量。"),
+      effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦のレベルを上げる。", "Raises Ultimate and Talent levels.", "提高终结技与天赋等级。"),
+      effect(6, "星魂6", "Eidolon 6", "星魂6", "攻撃で敵の全属性耐性を下げ、浮元の追加攻撃を強化する。", "Attacks reduce enemies' All-Type RES and strengthen Fuyuan follow-ups.", "攻击降低敌人全属性抗性并强化浮元追加攻击。"),
+    ],
+  },
+  "genshin:10000052": {
+    ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/337161", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "命ノ星座1", "Constellation 1", "命之座1", "元素爆発による願力の獲得量を元素種別に応じて増やす。", "Increases Resolve gained from Elemental Bursts based on element type.", "按元素类型提高元素爆发获得的愿力。"),
+      effect(2, "命ノ星座2", "Constellation 2", "命之座2", "夢想の一太刀と夢想の一心の攻撃が敵防御力60%を無視する。", "Musou no Hitotachi and Musou Isshin attacks ignore 60% of enemy DEF.", "梦想的一刀与梦想一心攻击无视敌人60%防御力。"),
+      effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素爆発のレベルを3上げる。", "Raises Elemental Burst level by 3.", "元素爆发等级提高3级。"),
+      effect(4, "命ノ星座4", "Constellation 4", "命之座4", "夢想の一心終了後、周囲の味方の攻撃力を上げる。", "After Musou Isshin ends, increases nearby allies' ATK.", "梦想一心结束后提高附近队友的攻击力。"),
+      effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素スキルのレベルを3上げる。", "Raises Elemental Skill level by 3.", "元素战技等级提高3级。"),
+      effect(6, "命ノ星座6", "Constellation 6", "命之座6", "夢想の一心中の攻撃命中で、他の味方の元素爆発クールダウンを短縮する。", "Hits during Musou Isshin reduce other party members' Elemental Burst cooldowns.", "梦想一心期间攻击命中可缩短其他队友元素爆发冷却时间。"),
+    ],
+  },
+  "genshin:10000073": {
+    ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/Nahida-Best-Builds", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "命ノ星座1", "Constellation 1", "命之座1", "元素爆発の元素種別カウントを各1増やす。", "Adds one to each elemental-type count for the Elemental Burst.", "元素爆发的各元素类型计数均增加1。"),
+      effect(2, "命ノ星座2", "Constellation 2", "命之座2", "開花系反応の会心と激化系反応の敵防御低下を可能にする。", "Enables Bloom-family CRIT effects and DEF reduction for Quicken-family reactions.", "使绽放类反应能够暴击，并使激化类反应降低敌人防御力。"),
+      effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素スキルのレベルを3上げる。", "Raises Elemental Skill level by 3.", "元素战技等级提高3级。"),
+      effect(4, "命ノ星座4", "Constellation 4", "命之座4", "蕴種印を付与した近くの敵数に応じて元素熟知を上げる。", "Raises Elemental Mastery based on nearby enemies marked by Seed of Skandha.", "按附近被蕴种印标记的敌人数量提高元素精通。"),
+      effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素爆発のレベルを3上げる。", "Raises Elemental Burst level by 3.", "元素爆发等级提高3级。"),
+      effect(6, "命ノ星座6", "Constellation 6", "命之座6", "元素爆発後の通常・重撃で滅浄三業を強化し、追加の草元素ダメージを与える。", "Normal and Charged Attacks after Burst enhance Tri-Karma Purification and deal extra Dendro damage.", "元素爆发后的普攻与重击强化灭净三业并造成额外草元素伤害。"),
+    ],
+  },
+  "genshin:10000030": {
+    ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/305858", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "命ノ星座1", "Constellation 1", "命之座1", "岩柱の同時存在上限を2本に増やす。", "Increases the maximum simultaneous Stone Steles to two.", "将岩脊的同时存在上限提高至2根。"),
+      effect(2, "命ノ星座2", "Constellation 2", "命之座2", "元素爆発時、近くのキャラクターに玉璋シールドを付与する。", "Elemental Burst grants nearby characters a Jade Shield.", "元素爆发时为附近角色赋予玉璋护盾。"),
+      effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素スキルのレベルを3上げる。", "Raises Elemental Skill level by 3.", "元素战技等级提高3级。"),
+      effect(4, "命ノ星座4", "Constellation 4", "命之座4", "元素爆発の範囲を広げ、石化時間を延長する。", "Increases the Elemental Burst area and Petrification duration.", "扩大元素爆发范围并延长石化时间。"),
+      effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素爆発のレベルを3上げる。", "Raises Elemental Burst level by 3.", "元素爆发等级提高3级。"),
+      effect(6, "命ノ星座6", "Constellation 6", "命之座6", "玉璋シールドが受けたダメージの一部を現在キャラクターのHP回復へ変換する。", "Converts part of Jade Shield damage into HP restoration for the active character.", "将玉璋护盾受到的部分伤害转化为当前角色生命恢复。"),
+    ],
+  },
+  "zzz:1331": {
+    ...SOURCE.zzz, sourceUrl: "https://game8.jp/zenless/673769", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "心象映画1", "Mindscape 1", "心象电影1", "侵蝕・混沌の敵が受けるダメージを上げ、編成の侵蝕関連効果を強化する。", "Raises damage taken by Corruption/Disorder targets and strengthens Corruption-related team effects.", "提高侵蚀与紊乱目标受到的伤害，并强化队伍的侵蚀相关效果。"),
+      effect(2, "心象映画2", "Mindscape 2", "心象电影2", "特殊攻撃の異常蓄積効率と条件付きの耐性無視を強化する。", "Strengthens Special Attack Anomaly buildup and conditional RES ignore.", "强化特殊攻击的异常积累效率与条件性的无视抗性。"),
+      effect(3, "心象映画3", "Mindscape 3", "心象电影3", "基本・回避・支援・特殊・連携スキルのレベルを上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skill levels.", "提高普攻、闪避、支援、特殊技和连携技等级。"),
+      effect(4, "心象映画4", "Mindscape 4", "心象电影4", "条件を満たす攻撃で会心・攻撃力関連の強化を得る。", "Qualifying attacks grant conditional CRIT and ATK-related enhancements.", "满足条件的攻击获得暴击与攻击力相关强化。"),
+      effect(5, "心象映画5", "Mindscape 5", "心象电影5", "基本・回避・支援・特殊・連携スキルのレベルを上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skill levels.", "提高普攻、闪避、支援、特殊技和连携技等级。"),
+      effect(6, "心象映画6", "Mindscape 6", "心象电影6", "エーテル与ダメージと特殊な狂咲攻撃を強化する。", "Strengthens Ether damage and the special Abloom attack.", "强化以太伤害与特殊的狂咲攻击。"),
+    ],
+  },
+  "zzz:1261": {
+    ...SOURCE.zzz, sourceUrl: "https://game8.jp/zenless/625565", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "心象映画1", "Mindscape 1", "心象电影1", "熱狂状態の異常蓄積効率と与ダメージを強化する。", "Strengthens Anomaly buildup and damage while Passion is active.", "强化热狂状态下的异常积累效率与造成的伤害。"),
+      effect(2, "心象映画2", "Mindscape 2", "心象电影2", "強撃関連の防御無視と会心ダメージを強化する。", "Strengthens Assault-related DEF ignore and CRIT DMG.", "强化强击相关的无视防御与暴击伤害。"),
+      effect(3, "心象映画3", "Mindscape 3", "心象电影3", "基本・回避・支援・特殊・連携スキルのレベルを上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skill levels.", "提高普攻、闪避、支援、特殊技和连携技等级。"),
+      effect(4, "心象映画4", "Mindscape 4", "心象电影4", "チームの状態異常ダメージを条件付きで強化する。", "Conditionally strengthens squad Attribute Anomaly damage.", "条件性强化全队属性异常伤害。"),
+      effect(5, "心象映画5", "Mindscape 5", "心象电影5", "基本・回避・支援・特殊・連携スキルのレベルを上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skill levels.", "提高普攻、闪避、支援、特殊技和连携技等级。"),
+      effect(6, "心象映画6", "Mindscape 6", "心象电影6", "会心と追加攻撃を強化し、熱狂中の強撃火力を高める。", "Strengthens CRIT and follow-up attacks, increasing Passion-state Assault damage.", "强化暴击与追加攻击，提高热狂状态下的强击火力。"),
+    ],
+  },
+  "zzz:1191": {
+    ...SOURCE.zzz, sourceUrl: "https://game8.jp/zenless/607800", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+      effect(1, "心象映画1", "Mindscape 1", "心象电影1", "急凍消費時の会心率と氷属性攻撃を強化する。", "Strengthens CRIT Rate and Ice attacks when Flash Freeze is consumed.", "消耗急冻时强化暴击率与冰属性攻击。"),
+      effect(2, "心象映画2", "Mindscape 2", "心象电影2", "急凍消費時の会心ダメージと急凍関連攻撃を強化する。", "Strengthens CRIT DMG and Flash Freeze-related attacks when it is consumed.", "消耗急冻时强化暴击伤害与急冻相关攻击。"),
+      effect(3, "心象映画3", "Mindscape 3", "心象电影3", "基本・回避・支援・特殊・連携スキルのレベルを上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skill levels.", "提高普攻、闪避、支援、特殊技和连携技等级。"),
+      effect(4, "心象映画4", "Mindscape 4", "心象电影4", "凍結・ブレイク時に急凍を回復する。", "Restores Flash Freeze when Freeze or Stun conditions occur.", "在冻结或失衡时恢复急冻。"),
+      effect(5, "心象映画5", "Mindscape 5", "心象电影5", "基本・回避・支援・特殊・連携スキルのレベルを上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skill levels.", "提高普攻、闪避、支援、特殊技和连携技等级。"),
+      effect(6, "心象映画6", "Mindscape 6", "心象电影6", "貫通率と与ダメージを強化し、急凍関連攻撃をさらに伸ばす。", "Strengthens PEN Ratio and damage, further raising Flash Freeze-related attacks.", "强化穿透率与造成的伤害，进一步提高急冻相关攻击。"),
+    ],
+  },
 };
 
 const LABELS: Record<CharacterIdentity["game"], LocalizedText> = {

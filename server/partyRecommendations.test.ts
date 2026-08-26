@@ -44,7 +44,7 @@ describe("推奨パーティー編成カタログ", () => {
       const options = partyRecommendationsFor(game, name).options;
       expect(options).toHaveLength(MAX_PARTY_OPTIONS);
       expect(options.every((option) => option.members.some((partyMember) => partyMember.name.ja === name))).toBe(true);
-      expect(options.every((option) => option.communitySources.some((source) => source.checkedAt === "2026-08-25" && source.url.startsWith("https://")))).toBe(true);
+      expect(options.every((option) => option.communitySources.some((source) => /^2026-08-(25|26)$/.test(source.checkedAt) && source.url.startsWith("https://")))).toBe(true);
     });
   });
 

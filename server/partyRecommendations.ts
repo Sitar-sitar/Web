@@ -143,6 +143,12 @@ const plan = (members: string[], ja: string, en: string, zh: string, targetChang
 const mainDps = t("主力", "Main DPS", "主C");
 const support = t("支援", "Support", "辅助");
 const anomaly = t("異常", "Anomaly", "异常");
+const batch3Options = (game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: [ManualPlan, ManualPlan, ManualPlan]) => manualOptions(game, name, sourceUrl, selectedRole, plans).map((entry) => ({
+  ...entry,
+  dataAsOf: "2026-08-26",
+  updatedAt: "2026-08-26",
+  communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
+}));
 
 /**
  * 公開使用率・現行エンドコンテンツ・更新日付きチームガイドを照合した上位20の手動精査データ。
@@ -243,6 +249,57 @@ const MANUALLY_CURATED_HIGH_USAGE_CATALOG: Record<string, PartyRecommendation[]>
     plan(["レミエール", "ヴェリナ", "ジェーン・ドゥ"], "物理異常の高速蓄積で昇華を回す案。", "An option that uses rapid Physical Anomaly buildup to cycle Refringe.", "利用高速物理异常积累循环昇华的方案。"),
     plan(["レミエール", "パイパー・ウィール", "グレース・ハワード"], "異常3名を維持する所持対応の代替案。", "A roster-friendly alternative that retains the three-Anomaly condition.", "保持三异常条件的持有适配替代方案。"),
   ]),
+
+  "hsr:サンデー": batch3Options("hsr", "サンデー", "https://game8.co/games/Honkai-Star-Rail/archives/437272", support, [
+    plan(["サンデー", "アグライア", "ロビン", "フォフォ"], "アグライアと召喚物の行動をサンデーで補助し、ロビンの全体火力支援と耐久を重ねる。", "Sunday advances Aglaea and her summon while Robin supplies team damage and Huohuo sustains the core.", "星期日拉条阿格莱雅及其召唤物，知更鸟提供全队增益，藿藿维持生存。"),
+    plan(["サンデー", "飲月", "花火", "フォフォ"], "単体ハイパーキャリーで行動順操作とSP供給を組み、主力より1低い速度設計を活かす。", "A hypercarry core that combines action control and Skill Point supply while using the carry-minus-one SPD setup.", "单核队结合行动控制与战技点供给，利用比主C低1点速度的配速。"),
+    plan(["サンデー", "姫子", "ジェイド", "霊砂"], "姫子・ジェイドの2アタッカー連携に行動支援と撃破寄り耐久を添える。", "Pairs Sunday’s action support with the Himeko–Jade dual-DPS core and break-oriented sustain.", "以星期日的行动辅助搭配姬子、翡翠双输出与击破向生存位。"),
+  ]),
+  "hsr:ブートヒル": batch3Options("hsr", "ブートヒル", "https://game8.co/games/Honkai-Star-Rail/archives/Boothill-Best-Builds", mainDps, [
+    plan(["ブートヒル", "サンデー", "ルアン・メェイ", "霊砂"], "行動補助・弱点撃破効率・撃破回復を重ね、決闘と物理撃破を安定させる。", "Action support, Break Efficiency, and break sustain stabilize Boothill’s duels and Physical Breaks.", "叠加行动辅助、击破效率与击破生存，稳定波提欧的决斗与物理击破。"),
+    plan(["ブートヒル", "帰忘の流離人", "ダリア", "霊砂"], "超撃破と撃破支援を組み、弱点撃破後の追撃価値を高める。", "Combines Super Break and break support to raise payoff after Weakness Breaks.", "结合超击破与击破辅助，提高弱点击破后的收益。"),
+    plan(["ブートヒル", "開拓者（調和）", "アスター", "ナターシャ"], "調和開拓者の超撃破と速度支援を使う、所持対応の撃破編成。", "A roster-friendly Break team using Harmony Trailblazer’s Super Break and Asta’s SPD support.", "使用同谐开拓者超击破与艾丝妲速度辅助的持有适配击破队。"),
+  ]),
+  "hsr:黄泉": batch3Options("hsr", "黄泉", "https://game8.co/games/Honkai-Star-Rail/archives/436053", mainDps, [
+    plan(["黄泉", "椒丘", "ペラ", "フォフォ"], "E0/E1では虚無2名を配置し、デバフ頻度で必殺技の残夢蓄積を支える。", "For E0/E1, two Nihility allies supply frequent debuffs and support Slashed Dream stacks.", "E0/E1使用两名虚无角色，以高频减益辅助残梦积累。"),
+    plan(["黄泉", "モルトナックス・ブレード", "サフェル", "アベンチュリン"], "虚無2名の追加能力条件を満たしつつ、デバフと耐久を両立する代替案。", "An alternative that preserves the two-Nihility passive requirement while balancing debuffs and sustain.", "在满足双虚无额外能力条件的同时兼顾减益与生存的替代方案。"),
+    plan(["黄泉", "椒丘", "花火", "アベンチュリン"], "E2限定で虚無1名と調和1名を採用し、行動加速を必殺技回転へ変換する。", "E2-only: uses one Nihility and one Harmony unit, converting action advance into Ultimate cycling.", "仅限E2：采用一名虚无与一名同谐，将拉条转化为终结技循环。"),
+  ]),
+  "hsr:霊砂": batch3Options("hsr", "霊砂", "https://game8.co/games/Honkai-Star-Rail/archives/462279", t("耐久", "Sustain", "生存位"), [
+    plan(["霊砂", "ホタル", "帰忘の流離人", "ダリア"], "超撃破の撃破機会と霊砂の回復・追加攻撃を重ねる完成形。", "A premium Super Break core that layers break opportunities with Lingsha’s healing and follow-ups.", "超击破高配队叠加击破机会与灵砂的治疗、追加攻击。"),
+    plan(["霊砂", "マダム・ヘルタ", "アナイクス", "トリビー"], "知恵の範囲火力へ回復・追加攻撃を添える非撃破の実戦案。", "A non-Break practical team that adds healing and follow-ups to an Erudition AoE core.", "为智识范围输出核心补充治疗与追加攻击的非击破实战队。"),
+    plan(["霊砂", "三月なのか（巡狩）", "開拓者（調和）", "ルアン・メェイ"], "撃破支援と超撃破を組み、霊砂自身の撃破特効運用を活かす案。", "Combines Break support and Super Break to use Lingsha’s own Break Effect build.", "结合击破辅助与超击破，发挥灵砂自身击破特攻配装。"),
+  ]),
+  "genshin:雷電将軍": batch3Options("genshin", "雷電将軍", "https://game8.co/games/Genshin-Impact/archives/337161", mainDps, [
+    plan(["雷電将軍", "行秋", "香菱", "ベネット"], "高コスト元素爆発の循環を雷電の回復で支える雷電ナショナル。", "Raiden National uses her Energy restoration to sustain the team’s high-cost Bursts.", "雷电国家队利用雷电的回能维持队伍高能量终结技循环。"),
+    plan(["雷電将軍", "楓原万葉", "九条裟羅", "ベネット"], "雷元素ダメージ・攻撃力・会心支援を重ねる高投資ハイパーキャリー。", "A high-investment hypercarry stacking Electro DMG, ATK, and CRIT support.", "叠加雷伤、攻击与暴击辅助的高投入单核队。"),
+    plan(["雷電将軍", "ナヒーダ", "夜蘭", "白朮"], "超開花のトリガーとして運用し、元素熟知1,000前後の別ビルドを選ぶ。", "Uses Raiden as a Hyperbloom trigger with the separate ~1,000 Elemental Mastery build.", "作为超绽放触发器使用，选择约1000元素精通的独立配装。", [change("elementalMastery", "元素熟知", "Elemental Mastery", "元素精通", "", 1100, 1000, 800, "超開花型は元素爆発DPSの会心・攻撃力・元素チャージではなく元素熟知を比較する。", "Hyperbloom compares Elemental Mastery rather than the Burst DPS CRIT, ATK, and ER package.", "超绽放比较元素精通，而非元素爆发输出的暴击、攻击与充能组合。")]),
+  ]),
+  "genshin:ナヒーダ": batch3Options("genshin", "ナヒーダ", "https://game8.co/games/Genshin-Impact/archives/Nahida-Best-Builds", support, [
+    plan(["ナヒーダ", "ラウマ", "ニィロウ", "珊瑚宮心海"], "深林4セットの草付着と元素熟知支援で、豊穣開花の反応密度を支える。", "Deepwood Dendro application and Elemental Mastery support sustain dense Bountiful Core reactions.", "以深林套草附着和元素精通辅助维持丰穰之核的高反应密度。"),
+    plan(["ナヒーダ", "アルハイゼン", "夜蘭", "久岐忍"], "高頻度の草・水・雷付着で超開花を回し、控えからも草元素を維持する。", "Frequent Dendro, Hydro, and Electro application sustains Hyperbloom while Nahida applies Dendro off-field.", "高频草、水、雷附着维持超绽放，纳西妲在后台持续挂草。"),
+    plan(["ナヒーダ", "アルハイゼン", "八重神子", "鍾離"], "草激化・激化の火力を、草付着・雷副火力・中断耐性で安定させる。", "Stabilizes Spread/Aggravate with Dendro application, Electro sub-DPS, and interruption resistance.", "以草附着、雷系副输出与抗打断稳定蔓激化和超激化。"),
+  ]),
+  "genshin:鍾離": batch3Options("genshin", "鍾離", "https://game8.co/games/Genshin-Impact/archives/305858", t("耐久", "Sustain", "生存位"), [
+    plan(["鍾離", "ヌヴィレット", "フリーナ", "シャルロット"], "護盾・耐性低下で重撃主力の中断を抑え、フリーナのHP変動編成を安定させる。", "Shielding and RES shred protect a Charged Attack carry while stabilizing Furina’s HP-fluctuation team.", "护盾和减抗保护重击主C，并稳定芙宁娜生命波动队。"),
+    plan(["鍾離", "荒瀧一斗", "アルベド", "ゴロー"], "岩共鳴と岩粒子を活かし、耐久と岩主力の継続火力を両立する。", "Uses Geo Resonance and Geo particles to combine sustain with a Geo carry’s sustained output.", "利用岩元素共鸣与岩元素微粒，兼顾生存和岩系主C持续输出。"),
+    plan(["鍾離", "胡桃", "行秋", "夜蘭"], "護盾で中断を防ぎ、水付着を厚くして蒸発主力の攻撃時間を守る。", "The shield prevents interruption while double Hydro supports Vaporize carry uptime.", "护盾防止打断，双水保证蒸发主C的输出时间。"),
+  ]),
+  "zzz:ビビアン": batch3Options("zzz", "ビビアン", "https://game8.jp/zenless/673769", anomaly, [
+    plan(["ビビアン", "月城柳", "浮波柚葉"], "エーテル・電気の異常と混沌を重ね、柚葉の異常支援で侵蝕を活かす。", "Layers Ether and Electric Anomaly/Disorder while Yuzuha supports Anomaly buildup and Corruption.", "叠加以太和电气异常、紊乱，并以柚叶辅助异常积累与侵蚀。"),
+    plan(["ビビアン", "アリス", "浮波柚葉"], "異常2枠と支援で混沌の回数を確保する代替編成。", "An alternative with two Anomaly agents and support to sustain Disorder frequency.", "以双异常角色和辅助维持紊乱频率的替代队。"),
+    plan(["ビビアン", "パイパー", "ルーシー"], "物理異常と攻撃支援を組み、限定支援不在時にも混沌を回す所持対応案。", "Pairs Physical Anomaly with ATK support for a roster-friendly Disorder option.", "组合物理异常与攻击辅助，适合缺少限定辅助时的持有适配紊乱队。"),
+  ]),
+  "zzz:ジェーン": batch3Options("zzz", "ジェーン", "https://game8.jp/zenless/625565", anomaly, [
+    plan(["ジェーン", "セス", "浮波柚葉"], "防護と異常支援で強撃の蓄積・会心・生存を支える物理異常軸。", "Defense and Anomaly support stabilize Assault buildup, crit behavior, and sustain for the Physical Anomaly core.", "防护与异常辅助稳定物理异常核心的强击积累、会心与生存。"),
+    plan(["ジェーン", "レミエール", "ヴェリナ"], "異常3人編成の相乗を活かし、複数の状態異常で混沌を回す案。", "Uses three-Anomaly synergy and multiple statuses to cycle Disorder.", "利用三异常协同与多种异常状态循环紊乱。"),
+    plan(["ジェーン", "セス", "ルーシー"], "防護と攻撃支援を使う所持対応の物理異常編成。", "A roster-friendly Physical Anomaly team with Defense and ATK support.", "结合防护与攻击辅助的持有适配物理异常队。"),
+  ]),
+  "zzz:エレン": batch3Options("zzz", "エレン", "https://game8.jp/zenless/607800", mainDps, [
+    plan(["エレン", "ダイアリン", "千夏"], "ブレイクと氷支援を重ね、エレンの急凍を火力窓へ変える現行高難度案。", "A current endgame core that layers stun and Ice support to convert Flash Freeze into damage windows.", "当前高难度核心队叠加失衡和冰系辅助，将急冻转化为输出窗口。"),
+    plan(["エレン", "シーザー", "ライト"], "耐久支援と氷耐性低下・ブレイク延長を組み、短時間の直撃火力を伸ばす。", "Combines defensive support with Ice RES shred and extended stun windows for burst damage.", "结合防护辅助、冰抗降低与延长失衡窗口，提高短爆发直伤。"),
+    plan(["エレン", "蒼角", "ルーシー"], "氷・攻撃力支援を使う入手しやすい代替案。", "An accessible alternative using Ice and ATK support.", "使用冰系与攻击辅助的易获取替代方案。"),
+  ]),
 };
 
 type GenericProfile = "crit" | "dot" | "break" | "support" | "sustain" | "tank" | "hp" | "def" | "em" | "anomaly" | "stun" | "rupture";
@@ -308,7 +365,8 @@ export function partyRecommendationsFor(game: PartyGameId, characterName: string
   const key = `${game}:${characterName}`;
   const options = (MANUALLY_CURATED_HIGH_USAGE_CATALOG[key] ?? PARTY_CATALOG[key] ?? genericOptionsFor(game, characterName)).slice(0, MAX_PARTY_OPTIONS);
   const dataset = GAME_PARTY_DATASET[game];
-  return { ...dataset, options };
+  const optionDataset = options[0] ? { gameVersion: options[0].gameVersion, dataAsOf: options[0].dataAsOf, updatedAt: options[0].updatedAt } : dataset;
+  return { ...optionDataset, options };
 }
 
 export function assertPartyCatalogIntegrity() {

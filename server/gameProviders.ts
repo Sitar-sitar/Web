@@ -157,18 +157,18 @@ const GI_CRIT_MAIN_STATS: GuideDefinition["mainStats"] = [{ slot: "時計", valu
 const GI_STANDARD_CRIT_TARGETS: TargetStatDefinition[] = [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 80, "目標": 70, "妥協": 60 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 220, "目標": 180, "妥協": 150 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 150, "目標": 130, "妥協": 115 } }];
 
 const GI_GUIDE_OVERRIDES: Record<string, GuideDefinition> = {
-  "ナヒーダ": { headline: "元素熟知を土台に、反応火力と元素スキルの循環を整える。", relicSet: "深林の記憶 / 金メッキの夢", planarSet: "元素熟知・会心を役割に応じて調整", mainStats: [{ slot: "時計", value: "元素熟知" }, { slot: "杯", value: "元素熟知 / 草元素ダメージ" }, { slot: "冠", value: "元素熟知 / 会心" }], targets: [{ key: "elementalMastery", label: "元素熟知", unit: "", targets: { "厳選": 900, "目標": 750, "妥協": 600 } }, { key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 65, "目標": 55, "妥協": 45 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 140, "目標": 110, "妥協": 90 } }] },
+  "ナヒーダ": { headline: "控え草サブDPS／支援は元素熟知800以上と必要な元素チャージを優先し、1,000超は会心へ振り分ける。", relicSet: "深林の記憶 ×4 / 他の装備者がいる場合は金メッキの夢 ×4", planarSet: "控え型：元素熟知・草元素ダメージ／会心、オンフィールド型：草元素ダメージ・会心", mainStats: [{ slot: "時計", value: "元素熟知" }, { slot: "杯", value: "元素熟知 / 草元素ダメージ" }, { slot: "冠", value: "元素熟知 / 会心率 / 会心ダメージ" }], targets: [{ key: "elementalMastery", label: "元素熟知", unit: "", targets: { "厳選": 1000, "目標": 800, "妥協": 700 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 160, "目標": 130, "妥協": 110 } }], targetContext: "ナヒーダ専用：元素爆発の元素熟知共有、深林4セットの草元素耐性低下、武器・味方・C1〜C6による反応／戦闘中効果は公開プロフィールへ加算しない。オンフィールド火力型では草元素ダメージ杯・会心冠へ切り替える。", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・GameWithの更新日付き個別ビルド・PTガイドを照合" },
   "楓原万葉": { headline: "翠緑4セットの拡散支援を安定させるため、元素熟知と元素チャージ効率170%前後を優先する。", relicSet: "翠緑の影 ×4", planarSet: "元素熟知・元素チャージ効率を優先", mainStats: [{ slot: "時計", value: "元素チャージ効率 / 元素熟知" }, { slot: "杯", value: "元素熟知" }, { slot: "冠", value: "元素熟知" }], targets: [{ key: "elementalMastery", label: "元素熟知", unit: "", targets: { "厳選": 1000, "目標": 850, "妥協": 700 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 200, "目標": 170, "妥協": 150 } }], targetContext: "楓原万葉専用：C2の元素熟知+200は元素爆発フィールド中の戦闘内効果であり、現在値には加算しない。", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", sourceLabel: "Game8の更新日付き個別ビルド・PTガイドを照合" },
 };
 
 Object.assign(GI_GUIDE_OVERRIDES, {
   "神里綾華": giGuide("氷風4セットと氷共鳴による戦闘中会心率を前提に、会心ダメージと元素爆発の循環を優先する。", "氷風を彷徨う勇士 ×4", [{ slot: "時計", value: "攻撃力%" }, { slot: "杯", value: "氷元素ダメージ" }, { slot: "冠", value: "会心ダメージ" }], [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 55, "目標": 45, "妥協": 35 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 280, "目標": 240, "妥協": 210 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 150, "目標": 130, "妥協": 115 } }], "氷風4セット・氷共鳴の戦闘中会心率を別途加味"),
-  "雷電将軍": giGuide("元素爆発の回転とダメージを両立するため、元素チャージ効率を最優先に会心を整える。", "絶縁の旗印 ×4", [{ slot: "時計", value: "元素チャージ効率 / 攻撃力%" }, { slot: "杯", value: "雷元素ダメージ / 攻撃力%" }, { slot: "冠", value: "会心率 / 会心ダメージ" }], [{ key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 300, "目標": 270, "妥協": 240 } }, { key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 75, "目標": 65, "妥協": 55 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 170, "目標": 140, "妥協": 120 } }]),
+  "雷電将軍": { headline: "元素爆発DPSは元素チャージ200%以上・会心・攻撃力を整え、超開花は元素熟知1,000の別ビルドとして扱う。", relicSet: "元素爆発DPS：絶縁の旗印 ×4／超開花：楽園の絶花 ×4・金メッキの夢 ×4", planarSet: "元素爆発DPS：元素チャージまたは攻撃力%・雷元素ダメージ・会心／超開花：元素熟知", mainStats: [{ slot: "時計", value: "元素チャージ効率 / 攻撃力%（超開花は元素熟知）" }, { slot: "杯", value: "攻撃力% / 雷元素ダメージ（超開花は元素熟知）" }, { slot: "冠", value: "会心率 / 会心ダメージ（超開花は元素熟知）" }], targets: [{ key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 250, "目標": 220, "妥協": 200 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 2000, "目標": 1500, "妥協": 1300 } }, { key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 80, "妥協": 70 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 220, "目標": 200, "妥協": 170 } }], targetContext: "雷電将軍専用：この公開プロフィール比較表は元素爆発DPSの公開値を対象とする。超開花では会心・攻撃力・元素チャージを混在させず元素熟知1,000前後へ切り替える。武器・固有天賦・味方・C1〜C6の戦闘中効果は現在値へ加算しない。", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・GameWithの更新日付き個別ビルド・PTガイドを照合" },
   "ヌヴィレット": giGuide("固有天賦の反応条件とHP重撃を両立するため、HP・会心・必要分の元素チャージを個別に整える。", "ファントムハンター ×4 / 月感電では天穹の影 ×4", [{ slot: "時計", value: "HP%" }, { slot: "杯", value: "水元素ダメージ / HP%" }, { slot: "冠", value: "会心率 / 会心ダメージ" }], [{ key: "hp", label: "HP", unit: "", targets: { "厳選": 45000, "目標": 40000, "妥協": 35000 } }, { key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 65, "目標": 55, "妥協": 45 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 260, "目標": 220, "妥協": 180 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 150, "目標": 130, "妥協": 115 } }], "ヌヴィレット専用：ファントムハンター4セットの会心率、C1の反応条件緩和・中断耐性は戦闘中・編成条件として別表示する。"),
   "フリーナ": { ...giGuide("元素スキルの火力と全体バフを安定させるため、HP40,000・元素チャージ効率180%以上と会心比率を個別に整える。", "黄金の劇団 ×4", [{ slot: "時計", value: "HP% / 元素チャージ効率" }, { slot: "杯", value: "HP% / 水元素ダメージ" }, { slot: "冠", value: "会心率 / 会心ダメージ" }], [{ key: "hp", label: "HP", unit: "", targets: { "厳選": 45000, "目標": 40000, "妥協": 35000 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 220, "目標": 180, "妥協": 160 } }, { key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 80, "妥協": 60 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 220, "目標": 180, "妥協": 160 } }]), targetContext: "フリーナ専用：元素爆発中のファンファーレ、C1/C2のHP・バフは戦闘内効果として公開プロフィールへ加算しない。", dataAsOf: "2026-08-25", updatedAt: "2026-08-25", sourceLabel: "Game8・GameWithの更新日付き個別ビルド・PTガイドを照合" },
   "夜蘭": giGuide("元素爆発を切らさないチャージ要求を先に満たし、HP・水ダメージ・会心で追撃火力を整える。", "絶縁の旗印 ×4", [{ slot: "時計", value: "元素チャージ効率 / HP%" }, { slot: "杯", value: "水元素ダメージ / HP%" }, { slot: "冠", value: "会心率 / 会心ダメージ" }], [{ key: "hp", label: "HP", unit: "", targets: { "厳選": 40000, "目標": 35000, "妥協": 30000 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 220, "目標": 200, "妥協": 180 } }, { key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 80, "目標": 70, "妥協": 60 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 200, "目標": 160, "妥協": 130 } }], "夜蘭専用：元素チャージ効率は水共鳴・C1・武器・粒子条件で180〜220%へ変動する。C1以降の条件付き効果を固定の公開値目標へ減算しない。"),
   "珊瑚宮心海": giGuide("回復と水付着を安定させるため、HPと元素爆発の循環を優先する。", "千岩牢固 ×4 / 海染硨磲 ×4", [{ slot: "時計", value: "HP% / 元素チャージ効率" }, { slot: "杯", value: "HP%" }, { slot: "冠", value: "与える治癒効果" }], [{ key: "hp", label: "HP", unit: "", targets: { "厳選": 45000, "目標": 40000, "妥協": 35000 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 220, "目標": 190, "妥協": 160 } }]),
-  "鍾離": giGuide("シールド耐久を最優先に、HPを大きく確保する。", "千岩牢固 ×4", [{ slot: "時計", value: "HP%" }, { slot: "杯", value: "HP%" }, { slot: "冠", value: "HP%" }], [{ key: "hp", label: "HP", unit: "", targets: { "厳選": 55000, "目標": 45000, "妥協": 35000 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 160, "目標": 140, "妥協": 120 } }]),
+  "鍾離": { headline: "支援型はシールド耐久のためHPを優先し、岩サブDPSは攻撃力・岩元素ダメージ・会心へ別途切り替える。", relicSet: "支援：千岩牢固 ×4／岩サブDPS：旧貴族のしつけ ×2・悠久の磐岩 ×2", planarSet: "支援：HP%・HP・元素チャージ／岩サブDPS：攻撃力%・岩元素ダメージ・会心", mainStats: [{ slot: "時計", value: "HP%（岩サブDPSは攻撃力%）" }, { slot: "杯", value: "HP%（岩サブDPSは岩元素ダメージ）" }, { slot: "冠", value: "HP%（岩サブDPSは会心率 / 会心ダメージ）" }], targets: [{ key: "hp", label: "HP", unit: "", targets: { "厳選": 55000, "目標": 45000, "妥協": 35000 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 160, "目標": 140, "妥協": 120 } }], targetContext: "鍾離専用：この比較表は支援型の公開値を対象にする。護盾の全元素耐性低下、千岩4セット、岩共鳴、C1〜C6の条件付き効果は公開プロフィールへ加算しない。岩サブDPSを選ぶ場合はHP目標を攻撃力・岩元素ダメージ・会心へ置き換える。", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・GameWithの更新日付き個別ビルド・PTガイドを照合" },
   "ニィロウ": giGuide("開花ダメージ上限へ近づけるため、HPを最優先に積み上げる。", "千岩牢固 ×2 / 花海甘露の光 ×2", [{ slot: "時計", value: "HP%" }, { slot: "杯", value: "HP%" }, { slot: "冠", value: "HP%" }], [{ key: "hp", label: "HP", unit: "", targets: { "厳選": 76000, "目標": 70000, "妥協": 65000 } }, { key: "energyRecharge", label: "元素チャージ効率", unit: "%", targets: { "厳選": 180, "目標": 150, "妥協": 120 } }]),
   "アルハイゼン": giGuide("草激化・開花の両面を支える元素熟知と、会心比率を優先する。", "金メッキの夢 ×4 / 深林の記憶 ×4", [{ slot: "時計", value: "元素熟知" }, { slot: "杯", value: "草元素ダメージ" }, { slot: "冠", value: "会心率 / 会心ダメージ" }], [{ key: "elementalMastery", label: "元素熟知", unit: "", targets: { "厳選": 400, "目標": 300, "妥協": 200 } }, ...GI_STANDARD_CRIT_TARGETS]),
   "アルレッキーノ": giGuide("命の契約を維持する通常攻撃火力へ、攻撃力・会心比率を優先する。蒸発・溶解では元素熟知を編成別に追加する。", "諧律奇想の断章 ×4", [{ slot: "時計", value: "攻撃力%" }, { slot: "杯", value: "炎元素ダメージ / 攻撃力%" }, { slot: "冠", value: "会心率 / 会心ダメージ" }], [{ key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 2400, "目標": 2000, "妥協": 1800 } }, { key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 80, "目標": 75, "妥協": 70 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 200, "目標": 160, "妥協": 140 } }], "アルレッキーノ専用：攻撃力3,000は固有天賦の耐性上限を意識する補助目安。C1以降の中断耐性・自己強化は公開値へ加算しない。"),
@@ -395,11 +395,12 @@ const ZZZ_CHARACTER_GUIDES: Record<string, GuideDefinition> = {
     targetContext: "0号・アンビー専用：会心率はステータス画面の戦闘外値です。追加能力・シャドウハーモニー4セットの戦闘中補正は判定に含めません。",
   },
   "ビビアン": {
-    headline: "異常ダメージの基礎となる異常マスタリーを最優先し、攻撃力で控えからの付与火力を補強する。",
-    relicSet: "パエトーンの歌 ×4", planarSet: "異常マスタリーを優先して選択",
-    mainStats: [{ slot: "IV", value: "異常マスタリー" }, { slot: "V", value: "エーテル属性ダメージ / 攻撃力%" }, { slot: "VI", value: "異常マスタリー" }],
-    targets: [{ key: "anomalyMastery", label: "異常マスタリー", unit: "", targets: { "厳選": 500, "目標": 430, "妥協": 380 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 3200, "目標": 3000, "妥協": 2800 } }],
-    targetContext: "ビビアン専用：異常マスタリーを最優先に表示します。会心系は主判定対象に含めません。",
+    headline: "控えからの侵蝕・混沌を伸ばすため、異常マスタリーを優先し、音動機に応じた攻撃力を確保する。",
+    relicSet: "パエトーンの歌 ×4 / ケイオス・ジャズ ×2", planarSet: "異常マスタリー・エーテル属性ダメージまたは攻撃力%・異常掌握",
+    mainStats: [{ slot: "IV", value: "異常マスタリー" }, { slot: "V", value: "エーテル属性ダメージ / 攻撃力%" }, { slot: "VI", value: "異常掌握" }],
+    targets: [{ key: "anomalyMastery", label: "異常マスタリー", unit: "", targets: { "厳選": 450, "目標": 430, "妥協": 340 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 2500, "目標": 2300, "妥協": 2000 } }],
+    targetContext: "ビビアン専用：モチーフありは異常マスタリー430以上・攻撃力2,300、モチーフなしは異常マスタリー340以上・攻撃力2,500を目安にする。音動機・パエトーン4セット・追加能力・M1〜M6の条件付き効果は公開プロフィールへ加算しない。",
+    dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・Prydwenの更新日付き個別エージェントガイドを照合",
   },
   "プロメイア": {
     headline: "異常マスタリーを最優先に、攻撃力を積み上げて状態異常火力を安定させる。",
@@ -409,11 +410,20 @@ const ZZZ_CHARACTER_GUIDES: Record<string, GuideDefinition> = {
     targetContext: "プロメイア専用：異常マスタリーと攻撃力のみを主判定にし、会心系は評価対象から外します。",
   },
   "エレン": {
-    headline: "氷属性の直撃火力を支える、会心率・会心ダメージ・攻撃力のバランスを整える。",
-    relicSet: "極地のヘヴィメタル ×4", planarSet: "会心率70%以上を起点に調整",
-    mainStats: [{ slot: "IV", value: "会心率 / 会心ダメージ" }, { slot: "V", value: "氷属性ダメージ / 攻撃力%" }, { slot: "VI", value: "攻撃力%" }],
-    targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 85, "目標": 70, "妥協": 60 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 180, "目標": 150, "妥協": 130 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 3000, "目標": 2800, "妥協": 2500 } }],
-    targetContext: "エレン専用：会心率を優先し、コアスキル由来の会心ダメージ補正を前提に会心バランスを確認します。",
+    headline: "氷属性の直撃火力へ、公開値の会心率70%以上・会心ダメージ120%・攻撃力2,500を整える。",
+    relicSet: "極地のヘヴィメタル ×4 / ウッドペッカー・エレクトロ ×2", planarSet: "会心率または会心ダメージ・貫通率／氷属性ダメージ／攻撃力%",
+    mainStats: [{ slot: "IV", value: "会心率 / 会心ダメージ" }, { slot: "V", value: "貫通率 / 氷属性ダメージ / 攻撃力%" }, { slot: "VI", value: "攻撃力%" }],
+    targets: [{ key: "critRate", label: "会心率", unit: "%", targets: { "厳選": 80, "目標": 70, "妥協": 65 } }, { key: "critDmg", label: "会心ダメージ", unit: "%", targets: { "厳選": 160, "目標": 120, "妥協": 100 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 2800, "目標": 2500, "妥協": 2200 } }],
+    targetContext: "エレン専用：音動機ありでは会心率65〜80%・会心ダメージ160%を追加目安にする。コア・追加能力・凍結／ブレイク・味方・M1〜M6の条件付き会心・与ダメージ・貫通率は公開プロフィールへ加算しない。",
+    dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・Prydwenの更新日付き個別エージェントガイドを照合",
+  },
+  "ジェーン": {
+    headline: "強撃・混沌を安定させるため、公開値の異常マスタリー400以上と攻撃力2,500を優先する。",
+    relicSet: "獣牙のヘヴィメタル ×4 / ケイオス・ジャズ ×2・フリーダム・ブルース ×2", planarSet: "異常マスタリー・物理属性ダメージまたは攻撃力%・異常掌握",
+    mainStats: [{ slot: "IV", value: "異常マスタリー" }, { slot: "V", value: "物理属性ダメージ / 攻撃力%" }, { slot: "VI", value: "異常掌握" }],
+    targets: [{ key: "anomalyMastery", label: "異常マスタリー", unit: "", targets: { "厳選": 450, "目標": 400, "妥協": 375 } }, { key: "attack", label: "攻撃力", unit: "", targets: { "厳選": 2800, "目標": 2500, "妥協": 2200 } }],
+    targetContext: "ジェーン専用：モチーフありでは異常マスタリー450、通常は400以上、強撃会心を安定させる目安は375を下限とする。熱狂中の攻撃力・蓄積効率、追加能力、ディスク・音動機、M1〜M6の条件付き効果は公開プロフィールへ加算しない。",
+    dataAsOf: "2026-08-26", updatedAt: "2026-08-26", sourceLabel: "Game8・Prydwenの更新日付き個別エージェントガイドを照合",
   },
   "星見雅": {
     headline: "霜灼・烈霜の異常蓄積を最大化する会心率80%を優先し、会心ダメージと攻撃力を補強する。",

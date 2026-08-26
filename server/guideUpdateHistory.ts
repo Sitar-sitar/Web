@@ -129,6 +129,12 @@ const BATCH_9_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["アンドー", "アンビー", "イヴリン"],
 };
 
+const BATCH_10_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["ジェイド", "ジェパード", "セイバー", "セイレンス"],
+  genshin: ["エウルア", "エスコフィエ", "エミリエ"],
+  zzz: ["イドリー", "ヴェリナ", "オルペウス&「鬼火」"],
+};
+
 function batch2UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
   if (!BATCH_2_UPDATED_NAMES[game].includes(name)) return undefined;
   return {
@@ -246,6 +252,19 @@ function batch9UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent 
   };
 }
 
+function batch10UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
+  if (!BATCH_10_UPDATED_NAMES[game].includes(name)) return undefined;
+  return {
+    date: "2026-08-26T19:00:00+09:00",
+    scope: "character",
+    title: "第10バッチ：個別ビルド・凸・推奨PTを再精査",
+    summary: `${name}の公開プロフィール目標、全6段階の凸効果、最大3案の推奨PTを更新日付き個別ガイドで照合しました。`,
+    changes: ["ロール共通の旧目標を個別ビルドへ置換", "全6段階の凸効果をID優先で追加", "戦闘中・編成・条件付き効果を公開値から分離", "最新の個別根拠で最大3案の推奨PTを更新", "公開UIDは明示検索のみで検証"],
+    rationale: "キャラクター固有の公開値目標と編成条件を明示し、戦闘内バフと公開プロフィールを混同しない比較にするため。",
+    games: [game],
+  };
+}
+
 export function guideUpdateHistory() {
   const games: CatalogGameId[] = ["hsr", "genshin", "zzz"];
   const characters = games.flatMap((game) => CHARACTER_GUIDE_CATALOG[game].map((name) => {
@@ -268,6 +287,7 @@ export function guideUpdateHistory() {
         ...(batch7UpdateEvent(game, name) ? [batch7UpdateEvent(game, name)!] : []),
         ...(batch8UpdateEvent(game, name) ? [batch8UpdateEvent(game, name)!] : []),
         ...(batch9UpdateEvent(game, name) ? [batch9UpdateEvent(game, name)!] : []),
+        ...(batch10UpdateEvent(game, name) ? [batch10UpdateEvent(game, name)!] : []),
         {
         date: metadata.updatedAt,
         scope: "character" as const,

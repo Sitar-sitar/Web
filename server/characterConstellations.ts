@@ -879,6 +879,107 @@ Object.assign(CURATED, {
   ] },
 });
 
+Object.assign(CURATED, {
+  "hsr:1014": { ...SOURCE.hsr, sourceUrl: "https://game8.jp/houkaistarrail/686759", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "必殺技ダメージ+60%。通常攻撃または戦闘スキル後に炉心共鳴を1層得る。", "Ultimate DMG +60%; Basic or Skill grants one Core Resonance stack.", "终结技伤害提高60%；普攻或战技后获得1层炉心共鸣。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "炉心共鳴1層ごとに防御を1%無視（最大15層）し、戦闘スキル倍率を追加で上げる。", "Each Core Resonance stack ignores 1% DEF, up to 15 stacks, and further boosts Skill scaling.", "每层炉心共鸣无视1%防御，最多15层，并额外提升战技倍率。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "必殺技Lv.+2、通常攻撃Lv.+1。", "Ultimate Lv. +2 and Basic ATK Lv. +1.", "终结技等级+2，普攻等级+1。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "風属性耐性貫通+8%。必殺技後にさらに+4%（最大3層）。", "Wind RES PEN +8%, with another +4% after Ultimate up to 3 stacks.", "风属性抗性穿透提高8%，终结技后额外提高4%，最多3层。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "戦闘スキルと天賦Lv.+2。", "Skill and Talent Lv. +2.", "战技与天赋等级+2。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "必殺技の風属性耐性貫通+20%。超過EP上限が200になり、初回必殺技後にEPを300回復する。", "Ultimate gains 20% Wind RES PEN; excess Energy cap becomes 200 and the first Ultimate restores 300 Energy.", "终结技获得20%风抗穿透；溢出能量上限变为200，首次终结技后恢复300能量。"),
+  ] },
+  "hsr:1410": { ...SOURCE.hsr, sourceUrl: "https://game8.jp/houkaistarrail/698610", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "フィールド上にいる間、味方の持続ダメージが本来の116%になり、天賦のDoTを追加で1つ付与できる。", "While on field, allies' DoT becomes 116% and Talent DoTs can apply one additional instance.", "在场时，队友持续伤害变为原本的116%，天赋DoT可额外附加1次。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "結界中、軌跡の与ダメージアップ効果を味方全体へ適用する。", "While the field is active, applies the Trace DMG increase to all allies.", "结界存在时，将行迹的增伤效果施加给全队。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "必殺技Lv.+2、通常攻撃Lv.+1。", "Ultimate Lv. +2 and Basic ATK Lv. +1.", "终结技等级+2，普攻等级+1。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "結界継続中、敵全体の全属性耐性-20%。", "While the field persists, all enemies lose 20% All-Type RES.", "结界持续期间，敌方全体全属性抗性降低20%。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "戦闘スキルと天賦Lv.+2。", "Skill and Talent Lv. +2.", "战技与天赋等级+2。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "結界中、物理持続ダメージ系デバフの発動上限が12回になり、与ダメージ倍率+20%。", "While the field persists, Physical DoT debuff triggers cap at 12 and its multiplier gains 20%.", "结界持续期间，物理持续伤害类减益触发上限变为12次，倍率提高20%。"),
+  ] },
+});
+
+Object.assign(CURATED, {
+  "hsr:1314": { ...SOURCE.hsr, sourceUrl: "https://game8.jp/houkaistarrail/605745", dataAsOf: "2026-08-11", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "追加攻撃の与ダメージ+32%。敵が1体または2体のみの場合、チャージを追加で得る。", "Follow-up DMG +32%; gains extra Charges when there are only one or two enemies.", "追加攻击伤害提高32%；敌人仅有1或2名时额外获得充能。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "質草が15層以上の時、会心率+18%。", "At 15 or more Pawned Asset stacks, CRIT Rate +18%.", "质料达到15层或以上时，暴击率提高18%。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルと天賦Lv.+2。", "Skill and Talent Lv. +2.", "战技与天赋等级+2。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "必殺技使用時、敵防御を12%無視する（3ターン）。", "Using Ultimate ignores 12% of enemy DEF for 3 turns.", "施放终结技时无视敌人12%防御，持续3回合。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技Lv.+2、通常攻撃Lv.+1。", "Ultimate Lv. +2 and Basic ATK Lv. +1.", "终结技等级+2，普攻等级+1。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "債権回収者がいる時、量子耐性貫通+20%となり、自身も債権回収者扱いになる。", "With a Debt Collector present, gains 20% Quantum RES PEN and Jade also counts as a Debt Collector.", "存在收债人时获得20%量子抗性穿透，翡翠自身也视为收债人。"),
+  ] },
+  "hsr:1104": { ...SOURCE.hsr, sourceUrl: "https://game8.jp/houkaistarrail/524685", dataAsOf: "2026-08-21", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "戦闘スキルの凍結基礎確率+35%。", "Skill base Freeze chance +35%.", "战技的冻结基础概率提高35%。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "凍結解除後、敵の速度-20%（1ターン）。", "After Freeze ends, enemy SPD -20% for 1 turn.", "冻结解除后，敌方速度降低20%，持续1回合。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "必殺技と天賦Lv.+2。", "Ultimate and Talent Lv. +2.", "终结技与天赋等级+2。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "味方全体の効果抵抗+20%。", "All allies gain 20% Effect RES.", "全体队友效果抵抗提高20%。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "戦闘スキルLv.+2、通常攻撃Lv.+1。", "Skill Lv. +2 and Basic ATK Lv. +1.", "战技等级+2，普攻等级+1。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "天賦発動時の即時行動と回復量を最大HP50%分上昇する。", "Talent activation advances action and raises its recovery by 50% of Max HP.", "天赋触发时立即行动，并使恢复量提高至生命上限的50%。"),
+  ] },
+});
+
+Object.assign(CURATED, {
+  "genshin:10000112": { ...SOURCE.genshin, sourceUrl: "https://game8.jp/genshin/678671", dataAsOf: "2026-08-13", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "水・氷4名編成時、元素スキルまたは爆発後15秒、チーム全員の氷ダメージ会心ダメージ+60%。", "In four Hydro/Cryo teams, Skill or Burst grants the party 60% Cryo CRIT DMG for 15s.", "水冰四人队中，施放战技或爆发后15秒，全队冰伤暴击伤害提高60%。"),
+    effect(2, "命ノ星座2", "Constellation 2", "命之座2", "チルドモード起動時に料理効果を5層得て、氷ダメージ命中時に1層を消費しエスコフィエ攻撃力240%分を加算する。", "Entering Chilled Mode grants 5 stacks; allies' Cryo hits consume a stack to add 240% of Escoffier's ATK.", "进入冷藏模式获得5层效果；队友冰伤命中时消耗1层，附加艾斯科菲耶攻击力240%的伤害。"),
+    effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素スキルLv.+3。", "Elemental Skill Lv. +3.", "元素战技等级+3。"),
+    effect(4, "命ノ星座4", "Constellation 4", "命之座4", "回復料理の継続時間+6秒。回復時、会心率に応じて回復量を100%上げ、元素エネルギーを2回復する（最大7回）。", "Healing dish lasts 6s longer; healing can double based on CRIT Rate and restore 2 Energy, up to 7 times.", "治疗料理持续时间延长6秒；治疗时按暴击率概率使治疗量翻倍并恢复2点能量，最多7次。"),
+    effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素爆発Lv.+3。", "Elemental Burst Lv. +3.", "元素爆发等级+3。"),
+    effect(6, "命ノ星座6", "Constellation 6", "命之座6", "チルドモード中、通常・重撃・落下攻撃命中時に攻撃力500%分の氷範囲ダメージを追加で放つ（最大6回）。", "While Chilled Mode is active, Normal/Charged/Plunge hits fire bonus AoE Cryo DMG equal to 500% ATK, up to 6 times.", "冷藏模式期间，普攻、重击或下落命中时额外造成攻击力500%的冰元素范围伤害，最多6次。"),
+  ] },
+  "genshin:10000099": { ...SOURCE.genshin, sourceUrl: "https://game8.jp/genshin/574298", dataAsOf: "2026-08-13", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "元素スキルと固有追撃ダメージ+20%。燃焼または燃焼敵への草攻撃時に芳香を追加生成する。", "Skill and passive follow-up DMG +20%; Burning reactions or Dendro hits on Burning enemies create extra Fragrance.", "元素战技与固有追击伤害提高20%；触发燃烧或攻击燃烧敌人时额外生成芳香。"),
+    effect(2, "命ノ星座2", "Constellation 2", "命之座2", "スキル・爆発・固有追撃命中時、敵の草元素耐性-30%（10秒）。", "Skill, Burst, or passive follow-up hits reduce enemy Dendro RES by 30% for 10s.", "战技、爆发或固有追击命中时，敌方草元素抗性降低30%，持续10秒。"),
+    effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素スキルLv.+3。", "Elemental Skill Lv. +3.", "元素战技等级+3。"),
+    effect(4, "命ノ星座4", "Constellation 4", "命之座4", "元素爆発の継続時間+2秒、標的選択間隔-0.3秒。", "Burst duration +2s and target-selection interval -0.3s.", "元素爆发持续时间+2秒，目标选择间隔缩短0.3秒。"),
+    effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素爆発Lv.+3。", "Elemental Burst Lv. +3.", "元素爆发等级+3。"),
+    effect(6, "命ノ星座6", "Constellation 6", "命之座6", "スキルまたは爆発時に溜まる香りを得て、通常・重撃を草元素化し、与ダメージを攻撃力300%分上げる。", "Using Skill or Burst grants a state that infuses Normal and Charged Attacks with Dendro and adds 300% ATK damage.", "施放战技或爆发获得状态，使普攻和重击转为草元素伤害，并额外提高攻击力300%的伤害。"),
+  ] },
+});
+
+Object.assign(CURATED, {
+  "zzz:1051": { ...SOURCE.zzz, sourceUrl: "https://gamewith.jp/zenless/514877", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "強化特殊に必要なアドレナリン-10。HP回復の代わりに強化特殊へ繋げられ、回復量+100%、氷耐性20%無視を得る。", "EX Special needs 10 less Adrenaline; enables a chained EX Special with 100% more healing and 20% Ice RES ignore.", "强化特殊所需肾上腺素减少10点；可衔接强化特殊，治疗量提高100%，并无视20%冰抗。"),
+    effect(2, "心象映画2", "Mindscape 2", "会心电影2", "会心ダメージ+40%。寒風または追砕成功時、アドレナリンを毎秒0.5回復する（最大30秒）。", "CRIT DMG +40%; successful Cold Wind or follow-up restores 0.5 Adrenaline per second for up to 30s.", "暴击伤害提高40%；成功触发寒风或追击时，每秒恢复0.5点肾上腺素，最多30秒。"),
+    effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・回避・支援・特殊・連携スキルLv.+2。", "Basic, Dodge, Assist, Special, and Chain skills Lv. +2.", "普攻、闪避、支援、特殊技与连携技等级+2。"),
+    effect(4, "心象映画4", "Mindscape 4", "心象电影4", "HP低下時のデシベル獲得+10。エーテルベール・湧泉中、最大HP+5%。", "Gains 10 more Decibels when HP drops; while Ether Veil: Well is active, Max HP +5%.", "生命降低时额外获得10点喧响值；以太帷幕·涌泉期间最大生命提高5%。"),
+    effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・回避・支援・特殊・連携スキルLv.+2。", "Basic, Dodge, Assist, Special, and Chain skills Lv. +2.", "普攻、闪避、支援、特殊技与连携技等级+2。"),
+    effect(6, "心象映画6", "Mindscape 6", "心象电影6", "エーテルベール・湧泉の発動または延長後、透徹ダメージ+25%（30秒）。初回致命傷後5秒間は戦闘不能にならずHP25%を回復する。", "After activating or extending Ether Veil: Well, Sheer DMG +25% for 30s; the first fatal hit grants 5s of survival and restores 25% HP.", "发动或延长以太帷幕·涌泉后，透彻伤害提高25%，持续30秒；首次致命伤后5秒内不会倒下并恢复25%生命。"),
+  ] },
+});
+
+Object.assign(CURATED, {
+  "zzz:1561": { ...SOURCE.zzz, sourceUrl: "https://www.prydwen.gg/zenless/characters/velina", dataAsOf: "2026-08-19", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "追加能力の旋風によるブレイク+20%。渦発動時に敵全属性耐性20%を無視し、風襲ダメージ時は風耐性も20%無視する。", "Additional Ability cyclone Daze +20%; Vortex ignores 20% All-Attribute RES and Windswept DMG ignores 20% Wind RES.", "额外能力旋风的失衡值提高20%；触发涡流时无视20%全属性抗性，风咬伤害额外无视20%风抗。"),
+    effect(2, "心象映画2", "Mindscape 2", "心象电影2", "風襲発動時に風咬みを1点得る。色彩変化後の旋風は対応属性の異常蓄積を行い、追加能力の風襲・渦ダメージ上昇をさらに15%上げる。", "Windswept grants Windbite; Chromatic Tint cyclones build matching Anomaly and Additional Ability Windswept/Vortex DMG gains another 15%.", "触发风咬时获得1点风咬；色彩变换后的旋风积累对应异常，额外能力的风咬与涡流增伤再提高15%。"),
+    effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・回避・支援・特殊・連携スキルLv.+2。", "Basic, Dodge, Assist, Special, and Chain skills Lv. +2.", "普攻、闪避、支援、特殊技与连携技等级+2。"),
+    effect(4, "心象映画4", "Mindscape 4", "心象电影4", "強化特殊スキル使用後、攻撃力+15%（40秒）。", "After using EX Special Attack, ATK +15% for 40s.", "使用强化特殊技后，攻击力提高15%，持续40秒。"),
+    effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・回避・支援・特殊・連携スキルLv.+2。", "Basic, Dodge, Assist, Special, and Chain skills Lv. +2.", "普攻、闪避、支援、特殊技与连携技等级+2。"),
+    effect(6, "心象映画6", "Mindscape 6", "心象电影6", "渦の強化時に風咬みを1点回復する。風異常の敵への異常蓄積+20%、既存風襲への再付与は残り時間に応じてダメージを最大40%上げる。", "Enhanced Vortex restores Windbite; Wind Anomaly buildup against Wind-Anomalied enemies +20%, and refreshing Windswept can raise its DMG up to 40% based on remaining duration.", "强化涡流时恢复1点风咬；对风异常敌人的异常积累提高20%，刷新风咬时按剩余时间最多提高40%伤害。"),
+  ] },
+});
+
+Object.assign(CURATED, {
+  "genshin:10000051": { ...SOURCE.genshin, sourceUrl: "https://game8.jp/genshin/383079", dataAsOf: "2026-08-13", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "冷酷な心を消費すると物理ダメージ+30%（6秒）。1つ消費するごとに継続時間+6秒、最大18秒。", "Consuming Grimheart grants 30% Physical DMG for 6s; each stack consumed extends it by 6s, up to 18s.", "消耗冷酷之心后物理伤害提高30%，持续6秒；每消耗1层延长6秒，最多18秒。"),
+    effect(2, "命ノ星座2", "Constellation 2", "命之座2", "元素スキル長押しのクールタイムを一回押しと同じに短縮する。", "Reduces Hold Skill cooldown to match Press Skill cooldown.", "使长按元素战技的冷却时间与点按相同。"),
+    effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素爆発Lv.+3。", "Elemental Burst Lv. +3.", "元素爆发等级+3。"),
+    effect(4, "命ノ星座4", "Constellation 4", "命之座4", "HP50%未満の敵に対する光臨の剣ダメージ+25%。", "Lightfall Sword DMG against enemies below 50% HP +25%.", "对生命低于50%的敌人，光降之剑伤害提高25%。"),
+    effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素スキルLv.+3。", "Elemental Skill Lv. +3.", "元素战技等级+3。"),
+    effect(6, "命ノ星座6", "Constellation 6", "命之座6", "元素爆発の光臨の剣は即時にエネルギーを5つ得る。通常・スキル・爆発でエネルギー獲得時、50%でさらに1つ得る。", "The Lightfall Sword immediately gains 5 stacks; when gaining stacks from Normal, Skill, or Burst, has a 50% chance to gain one extra.", "元素爆发的光降之剑立即获得5层能量；通过普攻、战技或爆发获得能量时，有50%概率额外获得1层。"),
+  ] },
+});
+
+Object.assign(CURATED, {
+  "zzz:1301": { ...SOURCE.zzz, sourceUrl: "https://gamewith.jp/zenless/511491", dataAsOf: "2026-08-25", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "特定の特殊・強化特殊の炎ダメージは炎耐性を15%無視する。フォーカス状態メンバーの与ダメージ+20%。", "Specified Special and EX Special Fire DMG ignores 15% Fire RES; Focused agents deal 20% more DMG.", "特定特殊技和强化特殊技的火伤无视15%火抗；处于聚焦状态的成员造成伤害提高20%。"),
+    effect(2, "心象映画2", "Mindscape 2", "追加攻撃発動ごとにデシベル65を得る（4秒に1回）。終結スキル後、攻撃力+20%（最大45秒）。", "Each Aftershock grants 65 Decibels once every 4s; after Ultimate, ATK +20% for up to 45s.", "每次追加攻击获得65点喧响值，每4秒最多一次；终结技后攻击力提高20%，最多45秒。"),
+    effect(3, "心象映画3", "Mindscape 3", "通常・回避・支援・特殊・連携スキルLv.+2。", "Basic, Dodge, Assist, Special, and Chain skills Lv. +2.", "普攻、闪避、支援、特殊技与连携技等级+2。"),
+    effect(4, "心象映画4", "Mindscape 4", "フォーカスの基本継続時間を16秒にし、指定の強化特殊または終結スキルダメージ+40%。", "Sets Focus base duration to 16s and increases specified EX Special or Ultimate DMG by 40%.", "将聚焦基础持续时间设为16秒，并使指定强化特殊技或终结技伤害提高40%。"),
+    effect(5, "心象映画5", "Mindscape 5", "通常・回避・支援・特殊・連携スキルLv.+2。", "Basic, Dodge, Assist, Special, and Chain skills Lv. +2.", "普攻、闪避、支援、特殊技与连携技等级+2。"),
+    effect(6, "心象映画6", "Mindscape 6", "エネルギー十分時に指定通常後から強化特殊へ連携できる。蓄炎を10得て、指定ビーム命中時に攻撃力250%分の炎ダメージを追加する。", "With sufficient Energy, chains a specified Basic into EX Special; gains 10 Bottled Heat and specified beam hits add Fire DMG equal to 250% ATK.", "能量充足时可由指定普攻衔接强化特殊；获得10点蓄炎，指定光束命中时额外造成攻击力250%的火伤。"),
+  ] },
+});
+
 export function constellationProfileFor(identity: CharacterIdentity, rank: number | null): ConstellationProfile {
   const entry = CURATED[identity.key] ?? CURATED[`${identity.game}:${identity.displayName}`];
   const acquiredRank = Math.max(0, Math.min(6, rank ?? 0));

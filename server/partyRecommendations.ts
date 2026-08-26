@@ -185,6 +185,12 @@ const batch9Options = (game: PartyGameId, name: string, sourceUrl: string, selec
   updatedAt: "2026-08-26",
   communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
 }));
+const batch10Options = (game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: [ManualPlan, ManualPlan, ManualPlan]) => manualOptions(game, name, sourceUrl, selectedRole, plans).map((entry) => ({
+  ...entry,
+  dataAsOf: "2026-08-26",
+  updatedAt: "2026-08-26",
+  communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
+}));
 
 /**
  * 公開使用率・現行エンドコンテンツ・更新日付きチームガイドを照合した上位20の手動精査データ。
@@ -635,6 +641,56 @@ const MANUALLY_CURATED_HIGH_USAGE_CATALOG: Record<string, PartyRecommendation[]>
     plan(["イヴリン", "千夏", "ノルムー"], "炎主力へ支援とブレイクを重ね、連携スキルの火力窓を作る。", "Stacks support and stun for a Fire carry's Chain Attack damage window.", "为火系主C叠加辅助与失衡，创造连携技输出窗口。"),
     plan(["イヴリン", "アストラ", "ライト"], "炎・支援・ブレイクで高い連携スキル倍率を活かす。", "Uses Fire support and stun to capitalize on high Chain Attack multipliers.", "以火系辅助与失衡发挥高连携技能倍率。"),
     plan(["イヴリン", "アストラ", "ニコ"], "支援・集敵・防御低下を組む代替の炎直撃案。", "An alternative Fire direct-damage team using support, grouping, and DEF reduction.", "结合辅助、聚怪与减防的炎系直伤替代方案。"),
+  ]),
+  "hsr:ジェイド": batch10Options("hsr", "ジェイド", "https://game8.jp/houkaistarrail/605745", t("範囲・追加攻撃", "AoE & follow-up", "群攻与追加攻击"), [
+    plan(["ジェイド", "マダム・ヘルタ", "トリビー", "ヒアンシー"], "範囲攻撃と追加攻撃を重ね、ジェイドのチャージと全体火力を確保する。", "Stacks AoE and follow-ups to sustain Jade's charges and team damage.", "叠加范围攻击与追加攻击，维持翡翠充能和全队输出。"),
+    plan(["ジェイド", "姫子", "ロビン", "アベンチュリン"], "追加攻撃の頻度と全体支援を重ね、虚構叙事向けの範囲火力を作る。", "Combines frequent follow-ups and team support for AoE content.", "结合高频追加攻击与全队辅助，应对群怪环境。"),
+    plan(["ジェイド", "刃", "ルアン・メェイ", "フォフォ"], "HP消費を伴う範囲主力と支援・回復を組み、債権回収者の条件を活かす。", "Pairs an HP-consuming AoE carry with support and healing to use Debt Collector conditions.", "搭配消耗生命的范围主C及辅助治疗，利用收债人条件。"),
+  ]),
+  "hsr:ジェパード": batch10Options("hsr", "ジェパード", "https://game8.jp/houkaistarrail/524685", t("耐久・バリア", "Sustain & shields", "生存与护盾"), [
+    plan(["ジェパード", "彦卿", "ペラ", "停雲"], "氷主力の会心・単体火力をバリア、敵防御低下、EP支援で支える。", "Supports a Cryo carry with shields, DEF shred, and Energy support.", "用护盾、减防和能量辅助支撑冰系主C。"),
+    plan(["ジェパード", "黄泉", "椒丘", "銀狼"], "耐久を確保しながら複数デバフで必殺技主体の主力を支える。", "Provides sustain while multiple debuffs support an Ultimate-focused carry.", "在保证生存的同时，以多重减益辅助终结技主C。"),
+    plan(["ジェパード", "ヴェルト", "アスター", "ナターシャ"], "減速・行動順支援・追加回復を組み合わせる所持対応案。", "A roster-friendly team combining Slow, action support, and backup healing.", "结合减速、行动辅助与额外治疗的易获取方案。"),
+  ]),
+  "hsr:セイバー": batch10Options("hsr", "セイバー", "https://game8.jp/houkaistarrail/686759", mainDps, [
+    plan(["セイバー", "サンデー", "トリビー", "丹恒・騰荒"], "行動順・必殺技回転・全体支援を重ね、必殺技主体の火力窓を作る。", "Stacks action advance, Ultimate rotation, and team support for Saber’s damage window.", "叠加拉条、终结技循环与全队辅助，创造以终结技为核心的输出窗口。"),
+    plan(["ギルガメッシュ", "セイバー", "千冶・刃", "フォフォ"], "EP支援と耐久を組み、必殺技を連続して使う構成。", "Combines Energy support and sustain for repeated Ultimate use.", "结合能量辅助与生存，支持连续施放终结技。"),
+    plan(["セイバー", "停雲", "記憶主人公", "ギャラガー"], "EP供給・記憶支援・回復をまとめる代替案。", "An alternative that combines Energy supply, Remembrance support, and healing.", "结合能量供给、记忆辅助与治疗的替代方案。"),
+  ]),
+  "hsr:セイレンス": batch10Options("hsr", "セイレンス", "https://game8.jp/houkaistarrail/698610", t("持続ダメージ", "DoT", "持续伤害"), [
+    plan(["セイレンス", "カフカ", "ルアン・メェイ", "フォフォ"], "持続ダメージの付与・起爆・全体支援・回復を重ねる基本構成。", "A core DoT team that layers application, detonation, support, and healing.", "叠加持续伤害附加、引爆、全队辅助与治疗的基础队伍。"),
+    plan(["セイレンス", "カフカ", "ブラックスワン", "ギャラガー"], "複数の持続ダメージとカフカの起爆を組み合わせる攻撃的な案。", "An offensive option combining multiple DoTs with Kafka detonation.", "结合多种持续伤害与卡芙卡引爆的进攻方案。"),
+    plan(["セイレンス", "椒丘", "トリビー", "ルオチャ"], "デバフ・全体支援・耐久を組み、結界と持続ダメージを維持する代替案。", "A sustain alternative using debuffs and team support to maintain the field and DoTs.", "以减益、全队辅助与生存维持结界和持续伤害的替代方案。"),
+  ]),
+  "genshin:エウルア": batch10Options("genshin", "エウルア", "https://www.icy-veins.com/genshin-impact/eula-guide-best-builds", mainDps, [
+    plan(["エウルア", "雷電将軍", "ロサリア", "鍾離"], "雷・氷で超電導を維持し、会心補助・耐性低下・護盾で物理爆発を支える。", "Maintains Superconduct with Electro-Cryo while adding CRIT support, RES shred, and shielding.", "以雷冰维持超导，并提供暴击辅助、减抗和护盾。"),
+    plan(["エウルア", "エスコフィエ", "夜蘭", "フリーナ"], "水・氷の控え火力と回復を組み、元素爆発の火力窓を支える。", "Uses off-field Hydro-Cryo damage and healing to support Burst damage windows.", "以后台水冰输出和治疗支撑终结技输出窗口。"),
+    plan(["エウルア", "雷電将軍", "ミカ", "フリーナ"], "超電導、物理支援、HP変動支援を組み合わせる代替案。", "An alternative combining Superconduct, Physical support, and HP fluctuation support.", "结合超导、物理辅助与生命波动辅助的替代方案。"),
+  ]),
+  "genshin:エスコフィエ": batch10Options("genshin", "エスコフィエ", "https://game8.jp/genshin/678671", support, [
+    plan(["エスコフィエ", "スカーク", "フリーナ", "申鶴"], "水・氷4人統一で耐性低下、凍結、回復、氷主力の火力を重ねる。", "A Hydro-Cryo core stacking RES shred, Freeze, healing, and Cryo carry damage.", "以水冰核心叠加减抗、冻结、治疗与冰系主C输出。"),
+    plan(["エスコフィエ", "神里綾華", "フリーナ", "申鶴"], "凍結と氷支援を重ねる神里綾華向けの代替案。", "An Ayaka alternative that layers Freeze and Cryo support.", "为神里绫华叠加冻结与冰系辅助的替代方案。"),
+    plan(["エスコフィエ", "リオセスリ", "フリーナ", "夜蘭"], "氷・水統一の回復と控え火力でオンフィールド氷主力を支える。", "Supports an on-field Cryo carry with Hydro-Cryo synergy, healing, and off-field damage.", "通过水冰协同、治疗和后台输出支撑站场冰系主C。"),
+  ]),
+  "genshin:エミリエ": batch10Options("genshin", "エミリエ", "https://game8.jp/genshin/574298", t("燃焼サブ火力", "Burning sub DPS", "燃烧副C"), [
+    plan(["エミリエ", "アルレッキーノ", "楓原万葉", "ベネット"], "炎共鳴と燃焼を維持し、風支援と攻撃支援で炎主力・草サブ火力を支える。", "Maintains Burning with Pyro resonance while Anemo and ATK support amplify the core.", "以火共鸣维持燃烧，并由风系和攻击辅助强化核心。"),
+    plan(["エミリエ", "リオセスリ", "トーマ", "ベネット"], "燃焼付着を利用して氷主力の溶解と草サブ火力を両立する。", "Uses Burning application for Cryo carry Melt while retaining Dendro sub DPS damage.", "利用燃烧附着兼顾冰主C融化与草系副C输出。"),
+    plan(["エミリエ", "クロリンデ", "香菱", "ベネット"], "燃焼と激化を併用し、炎共鳴で攻撃力も確保する。", "Combines Burning and Aggravate while Pyro resonance supports ATK.", "结合燃烧与激化，并以火共鸣保障攻击力。"),
+  ]),
+  "zzz:イドリー": batch10Options("zzz", "イドリー", "https://game8.jp/zenless/712545", mainDps, [
+    plan(["イドリー", "リュシア", "ダイアリン"], "命破支援と高速ブレイクを重ね、カウンターと透徹火力を支える。", "Combines Rupture support and fast stun for counter and Sheer damage.", "结合命破辅助与高速失衡，支撑反击和透彻输出。"),
+    plan(["イドリー", "パン", "フーフー"], "透徹力支援と撃破を組み、モチーフなしでも安定する代替案。", "An alternative using Sheer support and stun for a stable non-signature setup.", "以透彻辅助和失衡构成的无专武稳定替代方案。"),
+    plan(["イドリー", "リュシア", "ライカン"], "命破支援と氷属性撃破を組み合わせる代替案。", "An alternative combining Rupture support with Ice stun.", "结合命破辅助与冰系失衡的替代方案。"),
+  ]),
+  "zzz:ヴェリナ": batch10Options("zzz", "ヴェリナ", "https://game8.jp/zenless/614253", anomaly, [
+    plan(["ヴェリナ", "レミエール", "アリア"], "異常3名で風・エーテル・複合異常を連鎖させる主案。", "A three-Anomaly core chaining Wind, Ether, and composite Anomalies.", "三异常核心，连锁风、以太和复合异常。"),
+    plan(["ヴェリナ", "プロメイア", "アリア"], "乱流と狂咲を組み合わせ、異常蓄積と控え火力を支える。", "Combines Vortex and Abloom to support Anomaly buildup and off-field damage.", "结合乱流与狂咲，支撑异常积累和后台输出。"),
+    plan(["ヴェリナ", "レミエール", "プロメイア"], "風異常と異常主力を組み、状態異常の回転を維持する代替案。", "An alternative pairing Wind Anomaly with Anomaly carries to sustain rotations.", "以风异常与异常主C维持循环的替代方案。"),
+  ]),
+  "zzz:オルペウス&「鬼火」": batch10Options("zzz", "オルペウス&「鬼火」", "https://game8.jp/zenless/695654", mainDps, [
+    plan(["オルペウス&「鬼火」", "アストラ", "ライト"], "炎キャリーへ支援と撃破を重ね、追加攻撃と連携スキルの火力窓を作る。", "Stacks support and stun for a Fire carry's Aftershock and Chain Attack windows.", "为火系主C叠加辅助与失衡，创造追加攻击和连携技窗口。"),
+    plan(["オルペウス&「鬼火」", "0号・アンビー", "トリガー"], "追加攻撃相性と撃破支援を重ねるAftershock寄りの案。", "An Aftershock-oriented team stacking follow-up synergy and stun support.", "叠加追加攻击协同与失衡辅助的Aftershock方案。"),
+    plan(["オルペウス&「鬼火」", "アストラ", "フーフー"], "支援と撃破を組み、炎直撃・追加攻撃を安定させる代替案。", "An alternative using support and stun to stabilize Fire direct and follow-up damage.", "以辅助和失衡稳定火系直伤与追加攻击的替代方案。"),
   ]),
 };
 

@@ -21,6 +21,10 @@ describe("ガイド更新履歴", () => {
     expect(history.characters.find((item) => item.name === "クラーラ")?.events).toEqual(expect.arrayContaining([
       expect.objectContaining({ title: "第9バッチ：個別ビルド・凸・推奨PTを再精査", date: "2026-08-26T18:00:00+09:00" }),
     ]));
+    const batch10Names = ["ジェイド", "ジェパード", "セイバー", "セイレンス", "エウルア", "エスコフィエ", "エミリエ", "イドリー", "ヴェリナ", "オルペウス&「鬼火」"];
+    const batch10Characters = history.characters.filter((item) => batch10Names.includes(item.name));
+    expect(batch10Characters).toHaveLength(10);
+    expect(batch10Characters.every((item) => item.events.some((event) => event.title === "第10バッチ：個別ビルド・凸・推奨PTを再精査" && event.date === "2026-08-26T19:00:00+09:00"))).toBe(true);
     expect(history.characters.find((item) => item.name === "アンビー")?.updatedAt).toBe("2026-08-26");
   });
 });

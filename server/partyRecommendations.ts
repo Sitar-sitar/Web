@@ -167,6 +167,12 @@ const batch6Options = (game: PartyGameId, name: string, sourceUrl: string, selec
   updatedAt: "2026-08-26",
   communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
 }));
+const batch7Options = (game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: [ManualPlan, ManualPlan, ManualPlan]) => manualOptions(game, name, sourceUrl, selectedRole, plans).map((entry) => ({
+  ...entry,
+  dataAsOf: "2026-08-26",
+  updatedAt: "2026-08-26",
+  communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
+}));
 
 /**
  * 公開使用率・現行エンドコンテンツ・更新日付きチームガイドを照合した上位20の手動精査データ。
@@ -467,6 +473,56 @@ const MANUALLY_CURATED_HIGH_USAGE_CATALOG: Record<string, PartyRecommendation[]>
     plan(["青衣", "アストラ", "朱鳶"], "畏服によるブレイク倍率と支援バフを重ね、朱鳶の爆発窓を作る。", "Stacks Subjugation's stun multiplier with support buffs to create Zhu Yuan burst windows.", "叠加威服的失衡倍率与辅助增益，为朱鸢创造爆发窗口。"),
     plan(["青衣", "アストラ", "浅羽悠真"], "電気主力へブレイク時間と支援を渡し、短時間の連続攻撃を支える。", "Passes stun windows and support to an Electric carry for short burst sequences.", "为电系主C提供失衡窗口与辅助，支撑短时间连段爆发。"),
     plan(["青衣", "ニコ", "ビリー"], "集敵・防御低下・ブレイクを遠距離主力へ繋ぐ入手しやすい案。", "An accessible option linking grouping, DEF reduction, and stun to a ranged carry.", "将聚怪、减防与失衡衔接给远程主C的易获取方案。"),
+  ]),
+  "hsr:アーチャー": batch7Options("hsr", "アーチャー", "https://game8.co/games/Honkai-Star-Rail/archives/519877", mainDps, [
+    plan(["アーチャー", "花火", "開拓者（記憶）", "パーマンソー・テラエ"], "SP供給と行動順支援を重ね、スキル連射と量子単体火力を安定させる。", "Combines Skill Point supply and action support to stabilize repeated Skills and Quantum single-target damage.", "叠加战技点供给与行动辅助，稳定战技连发和量子单体输出。"),
+    plan(["アーチャー", "開拓者（記憶）", "寒鴉", "リンクス"], "SP回復・行動順補助・回復を組み、限定支援の所持状況に対応する。", "Uses SP recovery, action support, and healing as a roster-friendly alternative.", "结合战技点回复、行动辅助与治疗，适配限定辅助持有情况。"),
+    plan(["アーチャー", "花火", "爻光", "パーマンソー・テラエ"], "高SP環境と支援を重ね、主力のターン内スキル回数を伸ばす。", "Stacks high-SP conditions and support to increase the carry's in-turn Skill uses.", "叠加高战技点环境与辅助，增加主C单回合战技次数。"),
+  ]),
+  "hsr:アーラン": batch7Options("hsr", "アーラン", "https://game8.co/games/Honkai-Star-Rail/archives/405754", mainDps, [
+    plan(["アーラン", "御空", "アスター", "開拓者（存護）"], "速度・攻撃支援とシールドを組み、低HP運用の火力と生存を両立する。", "Combines SPD/ATK support with shielding for low-HP damage and survival.", "结合速度、攻击辅助与护盾，兼顾低血量输出与生存。"),
+    plan(["アーラン", "ブローニャ", "停雲", "アベンチュリン"], "再行動とEP支援を高耐久シールドで守り、攻撃機会を増やす。", "Protects extra actions and Energy support with strong shielding to create more attack windows.", "以高强度护盾保护再行动与能量辅助，增加输出机会。"),
+    plan(["アーラン", "サンデー", "丹恒・騰荒", "フォフォ"], "行動順・耐久・回復を重ね、低HP依存の主力を継続させる。", "Stacks action support, sustain, and healing to keep a low-HP-dependent carry active.", "叠加行动辅助、生存与治疗，维持低血量主C的持续输出。"),
+  ]),
+  "hsr:アスター": batch7Options("hsr", "アスター", "https://game8.co/games/Honkai-Star-Rail/archives/405743", support, [
+    plan(["アスター", "姫子", "トパーズ&カブ", "符玄"], "炎弱点・追加攻撃の手数を、速度と攻撃力支援・耐久で支える。", "Supports Fire weakness and follow-up frequency with SPD/ATK buffs and sustain.", "以速度、攻击辅助与生存支撑火弱点和追击频率。"),
+    plan(["アスター", "フック", "銀狼", "アベンチュリン"], "炎主力への速度支援と弱点付与を重ね、単体戦を安定させる。", "Combines SPD support for a Fire carry with Weakness Implant for stable single-target play.", "将炎系主C的速度辅助与弱点植入结合，稳定单体战。"),
+    plan(["アスター", "ホタル", "開拓者（調和）", "ギャラガー"], "速度支援と超撃破を組み、撃破主力の行動回数を補う。", "Pairs SPD support with Super Break to add actions for a Break carry.", "结合速度辅助与超击破，补足击破主C的行动次数。"),
+  ]),
+  "hsr:アルジェンティ": batch7Options("hsr", "アルジェンティ", "https://game8.co/games/Honkai-Star-Rail/archives/428046", mainDps, [
+    plan(["アルジェンティ", "サンデー", "トリビー", "フォフォ"], "行動順・全体支援・EP回復を重ね、180EP必殺技の回転を支える。", "Stacks action support, team buffs, and Energy recovery for 180-Energy Ultimate rotations.", "叠加行动辅助、全队增益与能量回复，支撑180能量终结技循环。"),
+    plan(["アルジェンティ", "マダム・ヘルタ", "トリビー", "フォフォ"], "範囲火力を並べ、複数敵への必殺技価値と耐久を両立する。", "Pairs AoE damage dealers to raise Ultimate value against multiple enemies while retaining sustain.", "组合范围输出角色，提高多目标终结技价值并保留生存。"),
+    plan(["アルジェンティ", "御空", "開拓者（記憶）", "ナターシャ"], "会心・行動順・回復を組む所持対応の必殺技回転案。", "A roster-friendly Ultimate rotation using CRIT support, action support, and healing.", "使用暴击辅助、行动辅助与治疗的持有适配终结技循环队。"),
+  ]),
+  "genshin:アーロイ": batch7Options("genshin", "アーロイ", "https://www.icy-veins.com/genshin-impact/aloy-team-guide", mainDps, [
+    plan(["アーロイ", "フリーナ", "ジン", "甘雨"], "水付着・HP変動支援・回復・氷粒子を組み、爆発クイックスワップを回す。", "Combines Hydro, HP-fluctuation support, healing, and Cryo particles for Burst quickswap rotations.", "结合挂水、生命波动辅助、治疗与冰元素微粒，循环爆发速切。"),
+    plan(["アーロイ", "神里綾華", "珊瑚宮心海", "申鶴"], "凍結・氷粒子・氷支援を重ね、氷チームの爆発枠として扱う。", "Layers Freeze, Cryo particles, and Cryo support to use Aloy as a Burst slot in a Cryo team.", "叠加冻结、冰元素微粒与冰系辅助，将埃洛伊作为冰队爆发位。"),
+    plan(["アーロイ", "ベネット", "香菱", "楓原万葉"], "炎付着と集敵で溶解を狙い、爆発を主軸にする。", "Uses Pyro application and grouping for Melt-focused Burst damage.", "利用火元素附着与聚怪打出融化，以元素爆发为核心。"),
+  ]),
+  "genshin:アイノ": batch7Options("genshin", "アイノ", "https://game8.co/games/Genshin-Impact/archives/537903", support, [
+    plan(["アイノ", "フリンズ", "イネファ", "スクロース"], "水・雷・風の反応と元素熟知支援を組み、月感電の主力を補助する。", "Combines Hydro-Electro-Anemo reactions and Elemental Mastery support for a Lunar-Charged carry.", "结合水雷风反应与元素精通辅助，支撑月感电主C。"),
+    plan(["アイノ", "ナヒーダ", "ニィロウ", "白朮"], "草水のみで開花を回し、元素熟知支援と継続回復を両立する。", "Runs Bloom with Dendro and Hydro only, balancing Elemental Mastery support and sustained healing.", "以草水角色运行绽放，兼顾元素精通辅助与持续治疗。"),
+    plan(["アイノ", "アルレッキーノ", "イネファ", "ベネット"], "水・雷反応支援と攻撃支援を組み、炎主力の行動時間を確保する。", "Combines Hydro-Electro reaction support and ATK support for a Pyro carry's field time.", "结合水雷反应辅助与攻击辅助，保障火系主C的站场时间。"),
+  ]),
+  "genshin:アルベド": batch7Options("genshin", "アルベド", "https://game8.co/games/Genshin-Impact/archives/312182", support, [
+    plan(["アルベド", "ナヴィア", "ドゥリン", "ベネット"], "岩共鳴と結晶反応を支え、控え岩火力と主力の元素スキル火力を重ねる。", "Supports Geo Resonance and Crystallize while stacking off-field Geo damage with the carry's Skill damage.", "支撑岩元素共鸣与结晶反应，叠加后台岩伤与主C元素战技伤害。"),
+    plan(["アルベド", "荒瀧一斗", "ゴロー", "鍾離"], "岩共鳴・防御支援・護盾を揃え、陽華の控え火力を岩主力へ重ねる。", "Uses Geo Resonance, DEF support, and shielding to layer Solar Isotoma damage into a Geo carry team.", "组合岩元素共鸣、防御辅助与护盾，将阳华后台伤害叠加至岩系主C队。"),
+    plan(["アルベド", "胡桃", "行秋", "鍾離"], "結晶と護盾で中断を抑え、蒸発主力へ控え火力を足す。", "Uses Crystallize and shielding to reduce interruption while adding off-field damage to a Vaporize carry.", "以结晶与护盾减少打断，并为蒸发主C补充后台输出。"),
+  ]),
+  "zzz:「11号」": batch7Options("zzz", "「11号」", "https://game8.co/games/Zenless-Zone-Zero/archives/436882", mainDps, [
+    plan(["「11号」", "ライト", "アストラ"], "炎耐性低下・ブレイク・全体支援を重ね、炎抑制中の通常攻撃を伸ばす。", "Stacks Fire RES shred, stun, and team support for stronger Fire Suppression Basic Attacks.", "叠加火抗降低、失衡与全队辅助，强化火力镇压期间的普攻。"),
+    plan(["「11号」", "トリガー", "アストラ"], "短い表時間でブレイク倍率と支援を渡し、炎主力の火力窓を作る。", "Passes stun multiplier and support through low field time to create Fire carry damage windows.", "以短站场提供失衡倍率和辅助，为火系主C创造输出窗口。"),
+    plan(["「11号」", "ベン", "ニコ"], "炎追加能力の条件と護盾・集敵を組み、入手しやすい炎直撃編成にする。", "Meets the Fire additional-ability condition while adding shielding and grouping in an accessible Fire team.", "满足火系额外能力条件，并以护盾、聚怪构成易获取火系直伤队。"),
+  ]),
+  "zzz:「シード」": batch7Options("zzz", "「シード」", "https://www.prydwen.gg/zenless/characters/seed", mainDps, [
+    plan(["「シード」", "0号・アンビー", "トリガー"], "強攻ヴァンガードとオフフィールドブレイクを組み、相互のEX特殊を回して鋼鉄チャージを確保する。", "Pairs an Attack Vanguard with off-field stun to cycle both EX Specials and build Steel Charge.", "结合强攻先锋与后台失衡，通过双方强化特殊循环积累钢铁蓄力。"),
+    plan(["「シード」", "オルペウス&「鬼火」", "トリガー"], "オボルス隊の強攻2名とブレイクを重ね、素早い交代で主力2名の火力を活かす。", "Combines two Obol Squad Attack agents with stun for quick swaps and dual-carry damage.", "组合两名奥波勒斯小队强攻与失衡，以快速切换发挥双主C伤害。"),
+    plan(["「シード」", "「11号」", "アストラ"], "炎・電気の強攻2名と支援を組み、ヴァンガード条件と持続的なEX特殊循環を満たす。", "Uses two Attack agents and support to meet Vanguard requirements and sustain EX Special cycles.", "使用两名强攻与辅助，满足先锋条件并维持强化特殊循环。"),
+  ]),
+  "zzz:「トリガー」": batch7Options("zzz", "「トリガー」", "https://game8.co/games/Zenless-Zone-Zero/archives/495167", t("撃破", "Stun", "击破"), [
+    plan(["「トリガー」", "アストラ", "0号・アンビー"], "オフフィールドAftershockと支援を重ね、電気主力の短い火力窓を増幅する。", "Combines off-field Aftershocks and support to amplify an Electric carry's burst windows.", "结合后台追击与辅助，放大电系主C的爆发窗口。"),
+    plan(["「トリガー」", "アストラ", "浅羽悠真"], "電気主力の連続攻撃をAftershockのブレイク支援と全体バフで補助する。", "Supports an Electric carry's attack strings with Aftershock stun support and team buffs.", "以追击失衡辅助和全队增益支撑电系主C的连续攻击。"),
+    plan(["「トリガー」", "ニコ", "ビリー"], "集敵・防御低下・遠距離主力をAftershockで補助する所持対応案。", "A roster-friendly option where Aftershocks support grouping, DEF reduction, and a ranged carry.", "以追击辅助聚怪、减防和远程主C的持有适配方案。"),
   ]),
 };
 

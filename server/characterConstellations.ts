@@ -610,6 +610,81 @@ Object.assign(CURATED, {
   ] },
 });
 
+Object.assign(CURATED, {
+  "hsr:1015": { ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/519877", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "同一ターンにスキルを3回使用後、味方SPを2回復する。", "After using Skill 3 times in one turn, restores 2 Skill Points for allies.", "同一回合施放3次战技后，为队伍恢复2点战技点。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "必殺技時、対象の量子耐性を20%下げ、量子弱点を付与する（2ターン）。", "Ultimate reduces the target's Quantum RES by 20% and implants Quantum Weakness for 2 turns.", "施放终结技时，目标量子抗性降低20%，并植入量子弱点，持续2回合。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "必殺技ダメージを150%上げる。", "Increases Ultimate DMG by 150%.", "终结技伤害提高150%。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "ターン開始時に味方SPを1回復し、スキルの与ダメージ上昇上限を1増やし、防御力20%無視を得る。", "At turn start recovers 1 Skill Point, raises the Skill DMG-boost cap by 1, and grants 20% DEF ignore.", "回合开始时恢复1点战技点，战技伤害提升上限增加1层，并获得20%无视防御。"),
+  ] },
+  "hsr:1008": { ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/405754", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "HP50%以下時、スキルダメージを10%上げる。", "Increases Skill DMG by 10% while HP is at or below 50%.", "生命值低于或等于50%时，战技伤害提高10%。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "スキルまたは必殺技使用時、自身のデバフを1個解除する。", "Using Skill or Ultimate removes 1 debuff from Arlan.", "施放战技或终结技时，解除自身1个负面效果。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "致死ダメージ時、HP25%で1度だけ耐える（発動または2ターンで消失）。", "Once prevents lethal damage at 25% HP; the effect ends after triggering or 2 turns.", "受到致命伤害时以25%生命值存活一次；触发后或2回合后失效。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "HP50%以下時、必殺技ダメージを20%上げ、隣接敵への倍率を主対象と同等へ上げる。", "Below 50% HP, raises Ultimate DMG by 20% and makes adjacent-target scaling equal to the main target.", "生命值低于50%时，终结技伤害提高20%，相邻目标倍率提升至与主目标相同。"),
+  ] },
+  "hsr:1009": { ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/405743", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "スキルの追加ヒット回数を1増やす。", "Adds 1 extra hit to Skill.", "战技额外命中次数增加1次。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "必殺技後、次のターンにチャージ段階が減少しない。", "After Ultimate, Charge stacks do not decrease on the next turn.", "施放终结技后，下回合蓄能层数不会减少。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルと天賦を2レベル上げる。", "Raises Skill and Talent by 2.", "战技与天赋提高2级。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "チャージ2以上でEP回復効率を15%上げる。", "At 2 or more Charge stacks, increases Energy Regeneration Rate by 15%.", "蓄能层数不少于2时，能量恢复效率提高15%。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技を2、通常攻撃を1レベル上げる。", "Raises Ultimate by 2 and Basic ATK by 1.", "终结技提高2级，普攻提高1级。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "毎ターン失うチャージ段階を1減らす。", "Reduces Charge stacks lost each turn by 1.", "每回合损失的蓄能层数减少1层。"),
+  ] },
+  "hsr:1302": { ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/428046", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "崇高1層ごとに会心ダメージを4%上げる。", "Each Apotheosis stack increases CRIT DMG by 4%.", "每层升格使暴击伤害提高4%。"),
+    effect(2, "星魂2", "Eidolon 2", "星魂2", "必殺技時に敵が3体以上なら、攻撃力を1ターン40%上げる。", "When using Ultimate against 3 or more enemies, increases ATK by 40% for 1 turn.", "施放终结技时若敌人不少于3名，攻击力提高40%，持续1回合。"),
+    effect(3, "星魂3", "Eidolon 3", "星魂3", "戦闘スキルと天賦を2レベル上げる。", "Raises Skill and Talent by 2.", "战技与天赋提高2级。"),
+    effect(4, "星魂4", "Eidolon 4", "星魂4", "戦闘開始時に崇高を2得て、上限を2上げる。", "At battle start gains 2 Apotheosis stacks and raises their maximum by 2.", "战斗开始时获得2层升格，并使上限提高2层。"),
+    effect(5, "星魂5", "Eidolon 5", "星魂5", "必殺技を2、通常攻撃を1レベル上げる。", "Raises Ultimate by 2 and Basic ATK by 1.", "终结技提高2级，普攻提高1级。"),
+    effect(6, "星魂6", "Eidolon 6", "星魂6", "必殺技時、敵の防御力を30%無視する。", "Ultimate ignores 30% of enemy DEF.", "终结技无视敌人30%防御力。"),
+  ] },
+  "genshin:10000121": { ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/537903", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "スキルまたは爆発後、自身と近くの味方の元素熟知を80上げる（15秒）。", "After Skill or Burst, increases Aino and nearby allies' Elemental Mastery by 80 for 15s.", "施放战技或元素爆发后，自身与附近队友元素精通提高80点，持续15秒。"),
+    effect(2, "命ノ星座2", "Constellation 2", "命之座2", "元素爆発領域中に待機していると、一定間隔で追加の水弾を放つ。", "While waiting within the Burst field, periodically fires additional Hydro projectiles.", "待在元素爆发领域内时，会间隔发射额外水弹。"),
+    effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+    effect(4, "命ノ星座4", "Constellation 4", "命之座4", "スキル命中時、10秒ごとにEPを10回復する。", "Skill hits restore 10 Energy once every 10s.", "战技命中时每10秒恢复10点元素能量。"),
+    effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+    effect(6, "命ノ星座6", "Constellation 6", "命之座6", "爆発後15秒、近くの出場キャラの感電・開花・月感電・月開花ダメージを15%上げ、Ascendant Gleam中はさらに20%上げる。", "For 15s after Burst, increases nearby active characters' Electro-Charged, Bloom, Lunar-Charged, and Lunar-Bloom DMG by 15%, plus 20% during Ascendant Gleam.", "元素爆发后15秒，附近场上角色的感电、绽放、月感电和月绽放伤害提高15%，处于升耀状态时额外提高20%。"),
+  ] },
+  "genshin:10000038": { ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/312182", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "刹那の花が生成するエネルギーを1.2回復し、スキル後20秒間、防御力を50%上げる。", "Transient Blossoms restore 1.2 Energy and Skill grants 50% DEF for 20s.", "刹那之花回复1.2点能量，施放战技后防御力提高50%，持续20秒。"),
+    effect(2, "命ノ星座2", "Constellation 2", "命之座2", "刹那の花でFatal Reckoningを得て、爆発時に最大4層を消費し防御力基準のダメージを強化する。", "Transient Blossoms grant Fatal Reckoning; Burst consumes up to 4 stacks to enhance DEF-scaling damage.", "刹那之花获得命运之核，元素爆发时消耗最多4层以强化基于防御力的伤害。"),
+    effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+    effect(4, "命ノ星座4", "Constellation 4", "命之座4", "陽華領域内の出場キャラの落下攻撃ダメージを30%上げる。", "Increases active characters' Plunging Attack DMG by 30% inside Solar Isotoma.", "阳华领域内场上角色的下落攻击伤害提高30%。"),
+    effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+    effect(6, "命ノ星座6", "Constellation 6", "命之座6", "結晶シールド下で陽華領域内の与ダメージを17%上げ、爆発で追加のFatal Reckoningを消費して刹那の花を強化する。", "Under a Crystallize shield, increases DMG by 17% in Solar Isotoma and lets Burst consume extra Fatal Reckoning to enhance Blossoms.", "处于结晶护盾下时，阳华领域内造成的伤害提高17%，元素爆发可额外消耗命运之核强化刹那之花。"),
+  ] },
+  "zzz:1041": { ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/436882", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "出場・交代時にEPを80まで回復する（50秒ごと）。", "On entry or switch-in, restores Energy up to 80 once every 50s.", "入场或切换上场时，将能量回复至80点，每50秒一次。"),
+    effect(2, "心象映画2", "Mindscape 2", "心象电影2", "炎抑制発動時、通常・ダッシュ・回避反撃のダメージを最大12層まで上げる。", "Activating Fire Suppression increases Basic, Dash, and Dodge Counter DMG by up to 12 stacks.", "触发火力镇压时，提高普攻、冲刺攻击和闪避反击伤害，最多12层。"),
+    effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(4, "心象映画4", "Mindscape 4", "心象电影4", "特定の通常・ダッシュ攻撃中に被ダメージ軽減と無敵効果を得る。", "Gains damage reduction and invulnerability during specified Basic and Dash attacks.", "在特定普攻和冲刺攻击期间获得减伤与无敌效果。"),
+    effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(6, "心象映画6", "Mindscape 6", "心象电影6", "EX特殊・連携・終結でChargeを8層得て、炎抑制中に消費すると敵炎耐性を25%無視する。", "EX Special, Chain Attack, and Ultimate grant 8 Charge; spending it during Fire Suppression ignores 25% Fire RES.", "强化特殊技、连携技和终结技获得8层蓄能，火力镇压期间消耗时无视25%火抗。"),
+  ] },
+  "zzz:1461": { ...SOURCE.zzz, sourceUrl: "https://www.prydwen.gg/zenless/characters/seed", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "Downfallの鋼鉄チャージ必要量を100へ下げ、出場/終結時の鋼鉄チャージを増やし、会心ダメージを上げる。", "Lowers Downfall's Steel Charge requirement to 100, grants extra Steel Charge on entry/Ultimate, and raises its CRIT DMG.", "将坠落攻击所需钢铁蓄力降至100，入场或终结技时获得额外钢铁蓄力，并提高其暴击伤害。"),
+    effect(2, "心象映画2", "Mindscape 2", "心象电影2", "Besiege中、対象エージェントのダメージは防御力を20%無視し、EX特殊の消費上限を拡張する。", "While Besiege is active, the affected agent ignores 20% DEF and EX Special can consume more Energy.", "围攻状态下，受影响代理人无视20%防御，强化特殊技可消耗更多能量。"),
+    effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(4, "心象映画4", "Mindscape 4", "心象电影4", "Besiege中、デシベル生成率を10%、終結ダメージを20%上げる。", "While Besiege is active, increases Decibel generation by 10% and Ultimate DMG by 20%.", "围攻状态下，喧响值获取率提高10%，终结技伤害提高20%。"),
+    effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(6, "心象映画6", "Mindscape 6", "心象电影6", "会心ダメージを50%上げ、Slaughter時に追加レーザー3本を発射する。", "Increases CRIT DMG by 50% and fires 3 additional lasers when using Slaughter.", "暴击伤害提高50%，施放屠戮时额外发射3道激光。"),
+  ] },
+  "zzz:1361": { ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/495167", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "コアのブレイク倍率を追加で20%上げ、Purge上限を125へ引き上げる。", "Raises the Core stun multiplier by an additional 20% and increases the Purge cap to 125.", "核心技的失衡倍率额外提高20%，净化值上限提高至125。"),
+    effect(2, "心象映画2", "Mindscape 2", "心象电影2", "Aftershock等で得るHunter's Gazeにより、全隊の会心ダメージを最大24%上げる。", "Hunter's Gaze gained through Aftershocks and related actions raises squad CRIT DMG by up to 24%.", "通过追击等获得猎人凝视，使全队暴击伤害最多提高24%。"),
+    effect(3, "心象映画3", "Mindscape 3", "心象电影3", "通常・支援・回避・特殊・連携スキルを2レベル上げる。", "Raises Basic, Assist, Dodge, Special, and Chain skills by 2.", "普攻、支援、闪避、特殊技和连携技提高2级。"),
+    effect(4, "心象映画4", "Mindscape 4", "心象电影4", "Coordinated Support中のAftershockで追加ダメージとブレイクを与える。", "Aftershocks during Coordinated Support deal additional damage and Daze.", "协同支援期间的追击造成额外伤害与失衡值。"),
+    effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・支援・回避・特殊・連携スキルを2レベル上げる。", "Raises Basic, Assist, Dodge, Special, and Chain skills by 2.", "普攻、支援、闪避、特殊技和连携技提高2级。"),
+    effect(6, "心象映画6", "Mindscape 6", "心象电影6", "Armor Break Roundsを使う狙撃に追加の電気ダメージを与える。", "Sniper attacks using Armor Break Rounds deal additional Electric DMG.", "使用破甲弹的狙击造成额外电气伤害。"),
+  ] },
+});
+
 const LABELS: Record<CharacterIdentity["game"], LocalizedText> = {
   hsr: t("星魂", "Eidolons", "星魂"),
   genshin: t("命ノ星座", "Constellations", "命之座"),

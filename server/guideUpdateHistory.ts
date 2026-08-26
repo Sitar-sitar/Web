@@ -111,6 +111,12 @@ const BATCH_6_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["シーザー", "リナ", "青衣"],
 };
 
+const BATCH_7_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["アーチャー", "アーラン", "アスター", "アルジェンティ"],
+  genshin: ["アーロイ", "アイノ", "アルベド"],
+  zzz: ["「11号」", "「シード」", "「トリガー」"],
+};
+
 function batch2UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
   if (!BATCH_2_UPDATED_NAMES[game].includes(name)) return undefined;
   return {
@@ -189,6 +195,19 @@ function batch6UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent 
   };
 }
 
+function batch7UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
+  if (!BATCH_7_UPDATED_NAMES[game].includes(name)) return undefined;
+  return {
+    date: "2026-08-26T16:00:00+09:00",
+    scope: "character",
+    title: "第7バッチ：個別ビルド・凸・推奨PTを再精査",
+    summary: `${name}の公開プロフィール目標、確認可能な全6段階の凸効果、最大3案の推奨PTを更新日付き個別ガイドで照合しました。アーロイは公式に命ノ星座が未実装のため準備中表示を維持します。`,
+    changes: ["ロール共通の旧目標を個別ビルドへ置換", "ID優先の全6段階凸を追加（アーロイは未実装として安全表示）", "戦闘中・編成・条件付き効果を公開値から分離", "最新の個別根拠で最大3案の推奨PTを更新", "公開UIDは明示検索のみで検証"],
+    rationale: "キャラクター固有の公開値目標と編成条件を明示し、戦闘内バフと公開プロフィールを混同しない比較にするため。",
+    games: [game],
+  };
+}
+
 export function guideUpdateHistory() {
   const games: CatalogGameId[] = ["hsr", "genshin", "zzz"];
   const characters = games.flatMap((game) => CHARACTER_GUIDE_CATALOG[game].map((name) => {
@@ -208,6 +227,7 @@ export function guideUpdateHistory() {
         ...(batch4UpdateEvent(game, name) ? [batch4UpdateEvent(game, name)!] : []),
         ...(batch5UpdateEvent(game, name) ? [batch5UpdateEvent(game, name)!] : []),
         ...(batch6UpdateEvent(game, name) ? [batch6UpdateEvent(game, name)!] : []),
+        ...(batch7UpdateEvent(game, name) ? [batch7UpdateEvent(game, name)!] : []),
         {
         date: metadata.updatedAt,
         scope: "character" as const,

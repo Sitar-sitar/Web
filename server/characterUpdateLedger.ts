@@ -45,12 +45,17 @@ const REVIEWED_BATCHES: Record<number, Record<CatalogGameId, readonly string[]>>
     genshin: ["行秋", "香菱", "フィッシュル"],
     zzz: ["グレース", "バーニス", "ルーシー"],
   },
+  6: {
+    hsr: ["ブローニャ", "銀狼", "符玄", "羅刹"],
+    genshin: ["白朮", "八重神子", "宵宮"],
+    zzz: ["シーザー", "リナ", "青衣"],
+  },
 };
 
 const NEXT_BATCH: Record<CatalogGameId, readonly string[]> = {
-  hsr: ["ブローニャ", "銀狼", "符玄", "羅刹"],
-  genshin: ["白朮", "八重神子", "宵宮"],
-  zzz: ["シーザー", "リナ", "青衣"],
+  hsr: ["アーチャー", "アーラン", "アスター", "アルジェンティ"],
+  genshin: ["アーロイ", "アイノ", "アルベド"],
+  zzz: ["「11号」", "「シード」", "「トリガー」"],
 };
 
 function batchFor(game: CatalogGameId, name: string) {
@@ -79,7 +84,7 @@ export function characterUpdateLedger(): CharacterUpdateLedger {
     reviewed,
     pending: entries.length - reviewed,
     byGame,
-    nextBatch: { id: 6, names: nextBatch },
+    nextBatch: { id: 7, names: nextBatch },
     criteria: "各キャラクターについて、更新日付き個別ビルド根拠、全6段階の凸効果、最大3案の推奨PT、戦闘内補正の公開値分離、回帰テスト、公開UID画面確認を完了してから公開する。",
     entries,
   };

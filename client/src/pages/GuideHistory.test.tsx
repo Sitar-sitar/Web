@@ -15,7 +15,7 @@ vi.mock("@/lib/trpc", () => ({
             currentBaseline: "2026-08-18",
             characters: [{ game: "zzz", name: "エレン", profileId: "crit", dataAsOf: "2026-08-18", sourceLabel: "public data", events: [] }],
             siteEvents: [{ date: "2026-08-18", title: "更新", summary: "summary", changes: ["change"], rationale: "reason", games: ["zzz"] }],
-            updateLedger: { total: 248, reviewed: 20, pending: 228, nextBatch: { id: 3, names: [{ name: "サンデー" }, { name: "ブートヒル" }] }, criteria: "test criteria" },
+            updateLedger: { total: 248, reviewed: 60, pending: 188, nextBatch: { id: 7, names: [{ name: "アーチャー" }, { name: "アーラン" }] }, criteria: "test criteria" },
           },
         }),
       },
@@ -31,7 +31,7 @@ describe("更新履歴の多言語表示", () => {
     expect(screen.getByRole("heading", { name: "Update History" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Site-wide Changes" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Individual Update Coverage" })).toBeTruthy();
-    expect(screen.getByText("20 / 248 Reviewed")).toBeTruthy();
+    expect(screen.getByText("60 / 248 Reviewed")).toBeTruthy();
     expect(screen.getByPlaceholderText("Search character")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "简体中文" }));

@@ -161,6 +161,12 @@ const batch5Options = (game: PartyGameId, name: string, sourceUrl: string, selec
   updatedAt: "2026-08-26",
   communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
 }));
+const batch6Options = (game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: [ManualPlan, ManualPlan, ManualPlan]) => manualOptions(game, name, sourceUrl, selectedRole, plans).map((entry) => ({
+  ...entry,
+  dataAsOf: "2026-08-26",
+  updatedAt: "2026-08-26",
+  communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
+}));
 
 /**
  * 公開使用率・現行エンドコンテンツ・更新日付きチームガイドを照合した上位20の手動精査データ。
@@ -411,6 +417,56 @@ const MANUALLY_CURATED_HIGH_USAGE_CATALOG: Record<string, PartyRecommendation[]>
     plan(["ルーシー", "バーニス", "ジェーン"], "Cheer On!の攻撃支援で異常2名の混沌と控え火力を伸ばす。", "Cheer On! ATK support raises two Anomaly agents' Disorder and off-field damage.", "以加油攻击辅助提升双异常角色的紊乱与后台伤害。"),
     plan(["ルーシー", "「11号」", "ライト"], "炎主力・ブレイク・攻撃支援を重ねる炎属性の直撃編成。", "A Fire direct-damage core layering a Fire carry, stun, and ATK support.", "叠加火系主C、失衡与攻击辅助的火属性直伤队。"),
     plan(["ルーシー", "パイパー", "バーニス"], "カリュドーンの異常連携で物理・炎の混沌と長時間の支援を両立する。", "Sons of Calydon Anomaly synergy sustains Physical-Fire Disorder and long support uptime.", "卡吕冬异常联动兼顾物理火紊乱与长时间辅助覆盖。"),
+  ]),
+  "hsr:ブローニャ": batch6Options("hsr", "ブローニャ", "https://game8.co/games/Honkai-Star-Rail/archives/405750", support, [
+    plan(["ブローニャ", "ファイノン", "サンデー", "開拓者（記憶）"], "行動順操作を主力と記憶支援へ集約し、ブローニャの再行動で火力窓を増やす。", "Concentrates action control on the carry and Remembrance support, using Bronya's Advance Forward for more damage windows.", "将行动控制集中给主C与记忆辅助，通过布洛妮娅拉条增加输出窗口。"),
+    plan(["ブローニャ", "刃", "トリビー", "ヒアンシー"], "単体主力の再行動とHP変動支援を重ね、刃の行動価値を高める。", "Combines Advance Forward with HP-fluctuation support to raise Blade's turn value.", "结合拉条与生命波动辅助，提高刃每次行动的价值。"),
+    plan(["ブローニャ", "ゼーレ", "開拓者（存護）", "ナターシャ"], "単体主力へスキルを集中する所持対応案。耐久枠で再行動中の被弾を補う。", "A roster-friendly hypercarry option that focuses Skill use on a single-target carry while covering survival.", "将战技集中给单体主C、并用生存位保障再行动窗口的持有适配方案。"),
+  ]),
+  "hsr:銀狼": batch6Options("hsr", "銀狼", "https://game8.co/games/Honkai-Star-Rail/archives/405757", support, [
+    plan(["銀狼", "黄泉", "椒丘", "ギャラガー"], "敵デバフを重ねて黄泉の必殺技回転を支え、銀狼は弱点付与と防御低下を担う。", "Stacks enemy debuffs for Acheron's Ultimate rotation while Silver Wolf supplies Weakness Implant and DEF shred.", "叠加敌方减益支撑黄泉终结技循环，由银狼提供弱点植入与减防。"),
+    plan(["銀狼", "ゼーレ", "花火", "符玄"], "量子主力への弱点付与と行動順支援を重ねる量子寄せ編成。", "A Quantum-leaning team that pairs Weakness Implant with action-order support for the carry.", "为量子主C叠加弱点植入与行动辅助的量子倾向队。"),
+    plan(["銀狼", "Dr.レイシオ", "トパーズ&カブ", "羅刹"], "単体デバフでレイシオとカブの追加攻撃条件を満たす案。", "Uses single-target debuffs to satisfy follow-up conditions for Dr. Ratio and Numby.", "以单体减益满足真理医生与账账追击条件的方案。"),
+  ]),
+  "hsr:符玄": batch6Options("hsr", "符玄", "https://game8.co/games/Honkai-Star-Rail/archives/405760", t("耐久", "Sustain", "生存位"), [
+    plan(["符玄", "ゼーレ", "花火", "銀狼"], "量子主力の単体火力と弱点付与を守り、被ダメージ分配で行動を継続させる。", "Protects a Quantum single-target core and preserves its actions through damage redistribution.", "保护量子单体核心，并以伤害分摊维持行动。"),
+    plan(["符玄", "ゼーレ", "花火", "停雲"], "行動順支援とEP支援を重ね、ゼーレの高頻度行動を安定させる。", "Combines action-order and Energy support to stabilize Seele's frequent turns.", "叠加行动辅助与能量辅助，稳定希儿的高频行动。"),
+    plan(["符玄", "丹恒", "アスター", "御空"], "速度・攻撃支援と耐久を組む所持対応の単体火力案。", "A roster-friendly single-target team combining SPD, ATK support, and sustain.", "结合速度、攻击辅助与生存的持有适配单体队。"),
+  ]),
+  "hsr:羅刹": batch6Options("hsr", "羅刹", "https://game8.co/games/Honkai-Star-Rail/archives/405764", t("耐久", "Sustain", "生存位"), [
+    plan(["羅刹", "キャストリス", "開拓者（記憶）", "トリビー"], "HP消費と記憶支援を継続回復で支え、主力と召喚物の行動を守る。", "Sustains HP consumption and Remembrance support with continuous healing for the carry and summon.", "以持续治疗支撑生命消耗和记忆辅助，保护主C与忆灵行动。"),
+    plan(["羅刹", "モーディス", "サンデー", "トリビー"], "行動順支援を重ねるHP参照主力を、結界回復と解除で安定させる。", "Stabilizes an HP-scaling carry with stacked action support through field healing and cleansing.", "以结界治疗和解除保障叠加行动辅助的生命倍率主C。"),
+    plan(["羅刹", "クラーラ", "停雲", "アスター"], "反撃主力への継続回復とEP・速度支援を組み合わせる所持対応案。", "A roster-friendly option combining sustain for a counter carry with Energy and SPD support.", "为反击主C提供持续治疗并结合能量、速度辅助的持有适配方案。"),
+  ]),
+  "genshin:白朮": batch6Options("genshin", "白朮", "https://game8.co/games/Genshin-Impact/archives/314348", support, [
+    plan(["白朮", "セノ", "ナヒーダ", "夜蘭"], "草・水・雷の付着を維持し、白朮の回復と中断耐性で激化・開花の主力行動を守る。", "Maintains Dendro, Hydro, and Electro application while Baizhu's healing and interruption resistance protect the carry.", "维持草水雷附着，并以白术的治疗和抗打断保护主C行动。"),
+    plan(["白朮", "アルハイゼン", "八重神子", "フィッシュル"], "草激化・超激化の付着と控え雷火力を、草支援と回復で安定させる。", "Stabilizes Spread/Aggravate application and off-field Electro damage with Dendro support and healing.", "以草系辅助与治疗稳定蔓激化、超激化附着和后台雷伤。"),
+    plan(["白朮", "ニィロウ", "ナヒーダ", "行秋"], "豊穣の核を草・水だけで回し、継続回復で開花の自傷を補う。", "Runs Bountiful Cores with Dendro and Hydro only, offsetting Bloom self-damage with continuous healing.", "仅以草水角色运行丰穰之核，并用持续治疗抵消绽放自伤。"),
+  ]),
+  "genshin:八重神子": batch6Options("genshin", "八重神子", "https://game8.co/games/Genshin-Impact/archives/327533", anomaly, [
+    plan(["八重神子", "アルハイゼン", "ナヒーダ", "白朮"], "草付着と雷追撃を重ね、激化反応と回復で控え・表火力を両立する。", "Layers Dendro application and Electro follow-ups for Aggravate damage with reliable healing.", "叠加草附着与雷追击，以激化伤害和稳定治疗兼顾前后台输出。"),
+    plan(["八重神子", "クロリンデ", "シュヴルーズ", "ベネット"], "炎・雷限定で過負荷と耐性低下を有効化し、八重神子は控え雷火力を担う。", "Uses a Pyro-Electro-only core to enable Overload and RES shred, with Yae supplying off-field Electro damage.", "使用纯火雷核心触发超载与减抗，由八重神子提供后台雷伤。"),
+    plan(["八重神子", "雷電将軍", "楓原万葉", "珊瑚宮心海"], "二雷の粒子と耐性低下・回復を組み、殺生櫻と元素爆発の循環を支える。", "Combines double-Electro particles, RES shred, and healing to support Sesshou Sakura and Burst rotations.", "结合双雷粒子、减抗与治疗，支撑杀生樱和元素爆发循环。"),
+  ]),
+  "genshin:宵宮": batch6Options("genshin", "宵宮", "https://game8.co/games/Genshin-Impact/archives/333497", mainDps, [
+    plan(["宵宮", "行秋", "ベネット", "雲菫"], "継続水付着と通常攻撃支援を重ね、宵宮の蒸発通常攻撃を中断しにくくする。", "Combines sustained Hydro application and Normal Attack support for stable Vaporize strings.", "叠加持续挂水与普攻辅助，使宵宫的蒸发普攻连段更稳定。"),
+    plan(["宵宮", "夜蘭", "雲菫", "鍾離"], "水付着・通常攻撃支援・護盾で単体主力の連射を保つ。", "Uses Hydro application, Normal Attack support, and a shield to preserve single-target attack strings.", "以挂水、普攻辅助与护盾维持单体主C连射。"),
+    plan(["宵宮", "八重神子", "フィッシュル", "シュヴルーズ"], "炎・雷限定の過負荷で、遠距離通常攻撃と控え雷火力を組み合わせる。", "A Pyro-Electro-only Overload team combining ranged Normal Attacks with off-field Electro damage.", "火雷限定超载队，结合远程普攻与后台雷伤。"),
+  ]),
+  "zzz:シーザー": batch6Options("zzz", "シーザー", "https://game8.co/games/Zenless-Zone-Zero/archives/464303", t("防護", "Defense", "防护"), [
+    plan(["シーザー", "エレン", "蒼角"], "防護支援でエレンの通常攻撃を守り、氷支援とブレイクで直撃火力を伸ばす。", "Defense support protects Ellen's attacks while Ice support and stun improve direct-damage windows.", "防护辅助保护艾莲的攻击，并以冰系辅助和失衡强化直伤窗口。"),
+    plan(["シーザー", "ビビアン", "月城柳"], "防護で異常主力の行動を守り、エーテル・電気の混沌を継続する。", "Protects Anomaly rotations while sustaining Ether-Electric Disorder.", "以防护保障异常循环，并维持以太、电气紊乱。"),
+    plan(["シーザー", "ビリー", "ニコ"], "護盾・集敵・遠距離主力を組む所持対応の物理直撃案。", "A roster-friendly Physical direct-damage team with shielding, grouping, and a ranged carry.", "结合护盾、聚怪与远程主C的持有适配物理直伤队。"),
+  ]),
+  "zzz:リナ": batch6Options("zzz", "リナ", "https://game8.co/games/Zenless-Zone-Zero/archives/436876", support, [
+    plan(["リナ", "星見雅", "月城柳"], "人形の貫通率支援と電気異常を重ね、烈霜・極性混沌の回転を補助する。", "Pairs puppet-based PEN support with Electric Anomaly to assist Frost and Polarized Disorder rotations.", "将人偶穿透辅助与电气异常结合，辅助烈霜与极性紊乱循环。"),
+    plan(["リナ", "浅羽悠真", "青衣"], "電気主力・ブレイク・貫通率支援を組み、短いブレイク時間の直撃火力を伸ばす。", "Combines an Electric carry, stun, and PEN support for stronger direct damage during short stun windows.", "结合电系主C、失衡与穿透辅助，提高短暂失衡期的直伤。"),
+    plan(["リナ", "アンビー", "ビリー"], "感電付着・ブレイク・遠距離主力を組み合わせる入手しやすい電気案。", "An accessible Electric team combining Shock application, stun, and a ranged carry.", "结合感电附着、失衡与远程主C的易获取电气队。"),
+  ]),
+  "zzz:青衣": batch6Options("zzz", "青衣", "https://game8.co/games/Zenless-Zone-Zero/archives/460407", t("撃破", "Stun", "击破"), [
+    plan(["青衣", "アストラ", "朱鳶"], "畏服によるブレイク倍率と支援バフを重ね、朱鳶の爆発窓を作る。", "Stacks Subjugation's stun multiplier with support buffs to create Zhu Yuan burst windows.", "叠加威服的失衡倍率与辅助增益，为朱鸢创造爆发窗口。"),
+    plan(["青衣", "アストラ", "浅羽悠真"], "電気主力へブレイク時間と支援を渡し、短時間の連続攻撃を支える。", "Passes stun windows and support to an Electric carry for short burst sequences.", "为电系主C提供失衡窗口与辅助，支撑短时间连段爆发。"),
+    plan(["青衣", "ニコ", "ビリー"], "集敵・防御低下・ブレイクを遠距離主力へ繋ぐ入手しやすい案。", "An accessible option linking grouping, DEF reduction, and stun to a ranged carry.", "将聚怪、减防与失衡衔接给远程主C的易获取方案。"),
   ]),
 };
 

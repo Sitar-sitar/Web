@@ -155,6 +155,12 @@ const batch4Options = (game: PartyGameId, name: string, sourceUrl: string, selec
   updatedAt: "2026-08-26",
   communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
 }));
+const batch5Options = (game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: [ManualPlan, ManualPlan, ManualPlan]) => manualOptions(game, name, sourceUrl, selectedRole, plans).map((entry) => ({
+  ...entry,
+  dataAsOf: "2026-08-26",
+  updatedAt: "2026-08-26",
+  communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
+}));
 
 /**
  * 公開使用率・現行エンドコンテンツ・更新日付きチームガイドを照合した上位20の手動精査データ。
@@ -355,6 +361,56 @@ const MANUALLY_CURATED_HIGH_USAGE_CATALOG: Record<string, PartyRecommendation[]>
     plan(["蒼角", "星見雅", "月城柳"], "旗揚げの攻撃力・氷ダメージ支援と異常連鎖で、霜灼・烈霜の回転を支える。", "Fly the Flag’s ATK/Ice support and Anomaly chains sustain Frostburn and Fallen Frost rotations.", "以旗扬的攻击力、冰伤辅助和异常连锁支撑霜灼与落霜循环。"),
     plan(["蒼角", "エレン", "ライト"], "氷ダメージ支援と氷耐性低下・ブレイク延長を重ね、エレンの直撃火力を伸ばす。", "Stacks Ice support with Ice RES shred and longer stun windows for Ellen’s direct damage.", "叠加冰系辅助、冰抗降低与延长失衡窗口，提高艾莲直伤。"),
     plan(["蒼角", "星見雅", "ライカン"], "氷軸の耐性低下・ブレイクと旗揚げを組む実戦代替案。", "A practical Ice alternative combining RES shred, stun, and Fly the Flag.", "结合减抗、失衡与旗扬的实战冰系替代队。"),
+  ]),
+  "hsr:Dr.レイシオ": batch5Options("hsr", "Dr.レイシオ", "https://game8.co/games/Honkai-Star-Rail/archives/431768", mainDps, [
+    plan(["Dr.レイシオ", "サフェル", "ロビン", "アベンチュリン"], "デバフと追加攻撃を重ね、敵デバフ数を満たしてレイシオの追撃を安定させる。", "Stacks debuffs and follow-ups to stabilize Ratio's Talent follow-up conditions.", "叠加减益与追击，稳定满足真理医生天赋追击条件。"),
+    plan(["Dr.レイシオ", "トパーズ&カブ", "銀狼", "羅刹"], "単体デバフと追加攻撃を組み、カブとレイシオ双方の追撃条件を満たす。", "Combines single-target debuffs and follow-ups for both Numby and Ratio.", "组合单体减益与追击，满足账账和真理医生的追击条件。"),
+    plan(["Dr.レイシオ", "三月なのか（巡狩）", "アスター", "ナターシャ"], "デバフ供給を補助しつつ行動回数を確保する所持対応案。", "A roster-friendly option that supports debuffs and action frequency.", "兼顾减益供给与行动次数的持有适配方案。"),
+  ]),
+  "hsr:カフカ": batch5Options("hsr", "カフカ", "https://game8.co/games/Honkai-Star-Rail/archives/405755", anomaly, [
+    plan(["カフカ", "ヒアンシー", "ルアン・メェイ", "フォフォ"], "DoTの付与と起爆、全体支援、EP回復を重ねて持続ダメージ循環を整える。", "Combines DoT application and detonation with team support and Energy recovery.", "结合持续伤害施加、引爆、全队辅助与能量回复，稳定循环。"),
+    plan(["カフカ", "ブラックスワン", "椒丘", "ギャラガー"], "アルカナ・燃焼・感電の起爆を重ねるDoT／デバフ案。", "A DoT and debuff option layering Arcana, Burn, and Shock detonation.", "叠加奥迹、灼烧与触电引爆的持续伤害减益方案。"),
+    plan(["カフカ", "サンポ", "アスター", "ナターシャ"], "入手しやすいDoT付与と速度支援で起爆頻度を確保する。", "An accessible DoT core with SPD support for frequent detonation.", "以易获取的持续伤害与速度辅助保证引爆频率。"),
+  ]),
+  "hsr:ブラックスワン": batch5Options("hsr", "ブラックスワン", "https://game8.co/games/Honkai-Star-Rail/archives/Black-Swan-Best-Builds", anomaly, [
+    plan(["ブラックスワン", "カフカ", "ルアン・メェイ", "フォフォ"], "アルカナを先行付与してカフカの起爆へつなげ、DoT支援とEP回復を重ねる。", "Applies Arcana before Kafka detonates it while adding DoT support and Energy recovery.", "先施加奥迹再由卡芙卡引爆，并叠加持续伤害辅助与能量回复。"),
+    plan(["ブラックスワン", "カフカ", "椒丘", "ギャラガー"], "複数デバフとDoTを重ね、単体・範囲の継続ダメージを同時に支える。", "Layers multiple debuffs and DoTs for single-target and AoE damage over time.", "叠加多种减益与持续伤害，同时支撑单体和群体输出。"),
+    plan(["ブラックスワン", "セーバル", "アスター", "ナターシャ"], "雷DoTと速度支援を使う入手しやすい代替案。", "An accessible alternative using Lightning DoT and SPD support.", "利用雷属性持续伤害与速度辅助的易获取替代队。"),
+  ]),
+  "hsr:鏡流": batch5Options("hsr", "鏡流", "https://game8.co/games/Honkai-Star-Rail/archives/411783", mainDps, [
+    plan(["鏡流", "サンデー", "トリビー", "ヒアンシー"], "行動順支援とHP変動支援で特殊状態とHP参照火力を維持する。", "Action support and HP fluctuation support maintain her special state and HP-scaling damage.", "以行动辅助与生命波动辅助维持特殊状态和生命倍率输出。"),
+    plan(["鏡流", "刃", "トリビー", "ヒアンシー"], "HP消費を共有するダブルDPSで、味方HP変動の価値を高める。", "A double-DPS option that shares HP consumption to maximize HP fluctuation value.", "共享生命消耗的双C方案，提高队伍生命波动收益。"),
+    plan(["鏡流", "アスター", "開拓者（記憶）", "リンクス"], "行動補助・HP管理・回復を組み合わせる所持対応案。", "A roster-friendly option combining action aid, HP management, and healing.", "结合行动辅助、生命管理与治疗的持有适配方案。"),
+  ]),
+  "genshin:行秋": batch5Options("genshin", "行秋", "https://game8.co/games/Genshin-Impact/archives/297531", support, [
+    plan(["行秋", "胡桃", "夜蘭", "鍾離"], "二重水の水付着と護盾で蒸発重撃の中断を抑え、元素爆発を安定させる。", "Double Hydro application and a shield stabilize Vaporize Charged Attacks and Bursts.", "双水挂水与护盾稳定蒸发重击和元素爆发。"),
+    plan(["行秋", "アルハイゼン", "ナヒーダ", "久岐忍"], "水・草・雷の高頻度付着で超開花を回し、水付着と軽減を担う。", "Frequent Hydro, Dendro, and Electro application sustains Hyperbloom while Xingqiu supplies mitigation.", "高频水草雷附着维持超绽放，并由行秋提供挂水与减伤。"),
+    plan(["行秋", "雷電将軍", "香菱", "ベネット"], "元素爆発の相互回復と水付着で雷電ナショナルの蒸発循環を作る。", "Mutual Burst recovery and Hydro application support Raiden National rotations.", "以元素爆发互充和水附着支持雷神国家队循环。"),
+  ]),
+  "genshin:香菱": batch5Options("genshin", "香菱", "https://game8.co/games/Genshin-Impact/archives/297530", anomaly, [
+    plan(["香菱", "行秋", "雷電将軍", "ベネット"], "水付着・EP回復・攻撃支援で旋火輪の蒸発と循環を安定させる。", "Hydro application, Energy recovery, and ATK support stabilize Pyronado Vaporize rotations.", "挂水、能量回复与攻击辅助稳定旋火轮蒸发循环。"),
+    plan(["香菱", "タルタリヤ", "楓原万葉", "ベネット"], "高頻度水付着と炎耐性低下で国際編成の範囲蒸発を伸ばす。", "High-frequency Hydro and Pyro RES shred amplify International-team AoE Vaporize.", "高频挂水与火抗降低强化国际队的范围蒸发。"),
+    plan(["香菱", "クロリンデ", "フィッシュル", "シュヴルーズ"], "炎・雷限定の過負荷軸で控え炎と雷副火力を重ねる。", "A Pyro-Electro Overload core layering off-field Pyro and Electro damage.", "火雷限定超载核心，叠加后台火与雷伤害。"),
+  ]),
+  "genshin:フィッシュル": batch5Options("genshin", "フィッシュル", "https://game8.co/games/Genshin-Impact/archives/297524", anomaly, [
+    plan(["フィッシュル", "クロリンデ", "ナヒーダ", "楓原万葉"], "オズの雷付着と草激化を重ね、主力の反応火力と控えダメージを補助する。", "Oz's Electro application supports Aggravate, reaction damage, and off-field output.", "奥兹的雷附着支持超激化、反应伤害与后台输出。"),
+    plan(["フィッシュル", "行秋", "北斗", "スクロース"], "感電と集敵を重ねる入手しやすい感電編成。", "An accessible Electro-Charged option combining reaction damage and grouping.", "叠加感电与聚怪的易获取感电队。"),
+    plan(["フィッシュル", "雷電将軍", "行秋", "楓原万葉"], "2雷の粒子と水付着・耐性低下で元素爆発とオズを維持する。", "Double Electro particles, Hydro, and RES shred maintain Burst and Oz uptime.", "双雷粒子、挂水与减抗维持元素爆发和奥兹覆盖。"),
+  ]),
+  "zzz:グレース": batch5Options("zzz", "グレース", "https://game8.co/games/Zenless-Zone-Zero/archives/436878", anomaly, [
+    plan(["グレース", "星見雅", "浮波柚葉"], "電気・氷の異常と支援を重ね、感電・混沌の発生を安定させる。", "Layers Electric and Ice Anomaly with support to stabilize Shock and Disorder.", "叠加电、冰异常与辅助，稳定触电和紊乱。"),
+    plan(["グレース", "浅羽悠真", "リナ"], "感電の蓄積と電気主力・貫通支援を組み合わせる電気軸。", "An Electric core combining Shock buildup, an Electric carry, and PEN support.", "结合触电积蓄、电系主C与穿透辅助的电气核心队。"),
+    plan(["グレース", "アンビー", "蒼角"], "ブレイク・氷支援を併用する入手しやすい代替案。", "An accessible alternative using stun and Ice support.", "使用失衡与冰系辅助的易获取替代队。"),
+  ]),
+  "zzz:バーニス": batch5Options("zzz", "バーニス", "https://game8.co/games/Zenless-Zone-Zero/archives/464323", anomaly, [
+    plan(["バーニス", "星見雅", "浮波柚葉"], "控え燃焼と氷異常を重ね、混沌とAfterburnを同時に回す。", "Layers off-field Burn and Ice Anomaly for Disorder and Afterburn.", "叠加后台燃烧与冰异常，循环紊乱和余烬。"),
+    plan(["バーニス", "ジェーン", "シーザー"], "炎・物理の異常を交互に起こし、防護で混沌の主力行動を守る。", "Alternates Fire and Physical Anomaly while Defense support protects Disorder rotations.", "交替触发火与物理异常，并以防护保障紊乱循环。"),
+    plan(["バーニス", "「11号」", "ルーシー"], "燃焼と炎主力の直撃を共存させ、ルーシーの支援で炎属性案を組む。", "Combines Burn with a Fire carry and Lucy's support in a Fire-focused option.", "结合燃烧、火系主C和露西辅助的火属性方案。"),
+  ]),
+  "zzz:ルーシー": batch5Options("zzz", "ルーシー", "https://game8.co/games/Zenless-Zone-Zero/archives/459730", support, [
+    plan(["ルーシー", "バーニス", "ジェーン"], "Cheer On!の攻撃支援で異常2名の混沌と控え火力を伸ばす。", "Cheer On! ATK support raises two Anomaly agents' Disorder and off-field damage.", "以加油攻击辅助提升双异常角色的紊乱与后台伤害。"),
+    plan(["ルーシー", "「11号」", "ライト"], "炎主力・ブレイク・攻撃支援を重ねる炎属性の直撃編成。", "A Fire direct-damage core layering a Fire carry, stun, and ATK support.", "叠加火系主C、失衡与攻击辅助的火属性直伤队。"),
+    plan(["ルーシー", "パイパー", "バーニス"], "カリュドーンの異常連携で物理・炎の混沌と長時間の支援を両立する。", "Sons of Calydon Anomaly synergy sustains Physical-Fire Disorder and long support uptime.", "卡吕冬异常联动兼顾物理火紊乱与长时间辅助覆盖。"),
   ]),
 };
 

@@ -62,10 +62,10 @@ describe("原神公開プロフィールの正規化", () => {
     });
     const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
 
-    expect(byName["香菱"]?.comparisons.map((comparison) => comparison.key)).toEqual(["critRate", "critDmg", "energyRecharge"]);
+    expect(byName["香菱"]?.comparisons.map((comparison) => comparison.key)).toEqual(["energyRecharge", "critRate", "critDmg", "elementalMastery"]);
     expect(byName["久岐忍"]?.comparisons.map((comparison) => comparison.key)).toEqual(["elementalMastery", "hp", "energyRecharge"]);
     expect(byName["ノエル"]?.comparisons.map((comparison) => comparison.key)).toEqual(["defense", "critRate", "critDmg"]);
-    expect(byName["香菱"]?.guide.targetContext).toContain("香菱用");
+    expect(byName["香菱"]?.guide.targetContext).toContain("香菱専用");
     expect(byName["久岐忍"]?.guide.dataAsOf).toBe("2026-08-26");
     expect(byName["ノエル"]?.guide.sourceLabel).toContain("GameWith");
   });
@@ -189,9 +189,9 @@ describe("ZZZ公開プロフィールの正規化", () => {
     const byName = Object.fromEntries(result.characters.map((character) => [character.name, character]));
 
     expect(byName["アンビー"]?.comparisons.map((comparison) => comparison.key)).toEqual(["impact", "attack"]);
-    expect(byName["グレース"]?.comparisons.map((comparison) => comparison.key)).toEqual(["anomalyMastery", "attack"]);
+    expect(byName["グレース"]?.comparisons.map((comparison) => comparison.key)).toEqual(["anomalyProficiency", "anomalyMastery", "attack", "penRatio"]);
     expect(byName["クレタ"]?.guide.targetContext).toContain("クレタ用");
-    expect(byName["グレース"]?.guide.dataAsOf).toBe("2026-08-18");
+    expect(byName["グレース"]?.guide.dataAsOf).toBe("2026-08-26");
     expect(byName["アンビー"]?.guide.sourceLabel).toContain("Prydwen");
   });
 

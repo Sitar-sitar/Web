@@ -76,6 +76,12 @@ const BATCH_7_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["「11号」", "「シード」", "「トリガー」"],
 };
 
+const BATCH_8_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["ヴェルト", "ギャラガー", "キュレネ", "ギルガメッシュ"],
+  genshin: ["アンバー", "イアンサ", "イネファ"],
+  zzz: ["0号・アンビー", "アリア", "アリス"],
+};
+
 Object.entries(BATCH_2_UPDATED_NAMES).forEach(([game, names]) => {
   const gameId = game as CatalogGameId;
   names.forEach((name) => {
@@ -177,6 +183,21 @@ Object.entries(BATCH_7_UPDATED_NAMES).forEach(([game, names]) => {
       ? "Game8・Prydwenの更新日付き個別ビルド・PTガイドを照合"
       : gameId === "genshin"
         ? "Game8・Icy Veinsの更新日付き個別ビルド・PTガイドを照合"
+        : "Game8・Prydwen・Icy Veinsの更新日付き個別エージェントガイドを照合";
+  });
+});
+
+Object.entries(BATCH_8_UPDATED_NAMES).forEach(([game, names]) => {
+  const gameId = game as CatalogGameId;
+  names.forEach((name) => {
+    const record = CHARACTER_GUIDE_METADATA[gameId][name];
+    if (!record) return;
+    record.dataAsOf = "2026-08-26";
+    record.updatedAt = "2026-08-26";
+    record.sourceLabel = gameId === "hsr"
+      ? "Game8・Prydwen・KeqingMainsの更新日付き個別ビルド・PTガイドを照合"
+      : gameId === "genshin"
+        ? "Game8・KeqingMains・Icy Veinsの更新日付き個別ビルド・PTガイドを照合"
         : "Game8・Prydwen・Icy Veinsの更新日付き個別エージェントガイドを照合";
   });
 });

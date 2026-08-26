@@ -50,10 +50,11 @@ describe("constellationProfileFor", () => {
     }
   });
 
-  it("uses the verified source IDs for Xilonen and Yuzuha without mapping a neighboring implementation by name", () => {
+  it("uses verified source IDs for Xilonen、Yuzuha、Iansan without mapping a neighboring implementation by name", () => {
     expect(constellationProfileFor(identity("genshin", "10000103", "シロネン"), 6).dataStatus).toBe("curated");
     expect(constellationProfileFor(identity("zzz", "1411", "浮波柚葉"), 6).dataStatus).toBe("curated");
-    expect(constellationProfileFor(identity("genshin", "10000110", "イアンサ"), 6).dataStatus).toBe("preparing");
+    expect(constellationProfileFor(identity("genshin", "10000110", "イアンサ"), 6).dataStatus).toBe("curated");
+    expect(constellationProfileFor(identity("genshin", "10000903", "イネファ"), 6).dataStatus).toBe("preparing");
   });
 
   it("returns all six reviewed Firefly Eidolons while showing only unlocked effects as active", () => {

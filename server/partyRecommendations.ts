@@ -173,6 +173,12 @@ const batch7Options = (game: PartyGameId, name: string, sourceUrl: string, selec
   updatedAt: "2026-08-26",
   communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
 }));
+const batch8Options = (game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: [ManualPlan, ManualPlan, ManualPlan]) => manualOptions(game, name, sourceUrl, selectedRole, plans).map((entry) => ({
+  ...entry,
+  dataAsOf: "2026-08-26",
+  updatedAt: "2026-08-26",
+  communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
+}));
 
 /**
  * 公開使用率・現行エンドコンテンツ・更新日付きチームガイドを照合した上位20の手動精査データ。
@@ -523,6 +529,56 @@ const MANUALLY_CURATED_HIGH_USAGE_CATALOG: Record<string, PartyRecommendation[]>
     plan(["「トリガー」", "アストラ", "0号・アンビー"], "オフフィールドAftershockと支援を重ね、電気主力の短い火力窓を増幅する。", "Combines off-field Aftershocks and support to amplify an Electric carry's burst windows.", "结合后台追击与辅助，放大电系主C的爆发窗口。"),
     plan(["「トリガー」", "アストラ", "浅羽悠真"], "電気主力の連続攻撃をAftershockのブレイク支援と全体バフで補助する。", "Supports an Electric carry's attack strings with Aftershock stun support and team buffs.", "以追击失衡辅助和全队增益支撑电系主C的连续攻击。"),
     plan(["「トリガー」", "ニコ", "ビリー"], "集敵・防御低下・遠距離主力をAftershockで補助する所持対応案。", "A roster-friendly option where Aftershocks support grouping, DEF reduction, and a ranged carry.", "以追击辅助聚怪、减防和远程主C的持有适配方案。"),
+  ]),
+  "hsr:ヴェルト": batch8Options("hsr", "ヴェルト", "https://game8.co/games/Honkai-Star-Rail/archives/405763", mainDps, [
+    plan(["ヴェルト", "花火", "トリビー", "丹恒・騰荒"], "会心支援と行動順操作を虚数主力へ集約し、必殺技・戦闘スキルの火力窓を作る。", "Focuses CRIT support and action control on the Imaginary carry to create Ultimate and Skill damage windows.", "将暴击辅助与行动控制集中给虚数主C，创造终结技和战技输出窗口。"),
+    plan(["ヴェルト", "黄泉", "銀狼", "丹恒・騰荒"], "減速・禁錮とデバフを重ね、黄泉の必殺技回転を補助する。", "Layers slow, Imprisonment, and debuffs to support Acheron's Ultimate rotation.", "叠加减速、禁锢与减益，辅助黄泉的终结技循环。"),
+    plan(["ヴェルト", "開拓者（記憶）", "アスター", "丹恒・騰荒"], "行動順支援と耐久を組み合わせる所持対応の虚数火力案。", "A roster-friendly Imaginary damage option combining action support and sustain.", "结合行动辅助与生存位的持有适配虚数输出方案。"),
+  ]),
+  "hsr:ギャラガー": batch8Options("hsr", "ギャラガー", "https://game8.co/games/Honkai-Star-Rail/archives/437255", t("耐久・撃破", "Sustain & Break", "生存与击破"), [
+    plan(["ギャラガー", "ホタル", "帰忘の流離人", "ダリア"], "撃破特効・弱点撃破・回復を重ね、超撃破主力の継続火力を支える。", "Combines Break, weakness breaking, and healing to sustain a Super Break carry.", "结合击破、弱点击破与治疗，支撑超击破主C的持续输出。"),
+    plan(["ギャラガー", "黄泉", "椒丘", "ペラ"], "デバフ付与と回復を両立し、黄泉の必殺技回転を補助する。", "Pairs debuff application with healing to support Acheron's Ultimate rotation.", "兼顾减益施加与治疗，辅助黄泉的终结技循环。"),
+    plan(["ギャラガー", "三月なのか（巡狩）", "開拓者（調和）", "アスター"], "撃破と速度支援を入手しやすい枠で組む代替案。", "An accessible alternative combining Break and SPD support.", "以易获取角色结合击破与速度辅助的替代方案。"),
+  ]),
+  "hsr:キュレネ": batch8Options("hsr", "キュレネ", "https://game8.co/games/Honkai-Star-Rail/archives/541348", support, [
+    plan(["キュレネ", "キャストリス", "長夜月", "ヒアンシー"], "ChrysosのHP消費・記憶精霊・回復を連動させ、長い火力循環を支える。", "Links Chrysos HP expenditure, memosprites, and healing for sustained rotations.", "联动Chrysos生命消耗、忆灵与治疗，支撑持续循环。"),
+    plan(["キュレネ", "アグライア", "サンデー", "丹恒・騰荒"], "記憶主力の行動順と記憶精霊支援を重ね、手数を確保する。", "Stacks action control and memosprite support for a Remembrance carry.", "叠加行动控制与忆灵辅助，保证记忆主C的行动次数。"),
+    plan(["キュレネ", "アナイクス", "ケリュドラ", "丹恒・騰荒"], "弱点付与とChrysos支援を組み、風知恵主力の範囲火力を支える。", "Combines weakness application and Chrysos support for an Erudition carry's AoE damage.", "结合弱点附加与Chrysos辅助，支撑智识主C的范围输出。"),
+  ]),
+  "hsr:ギルガメッシュ": batch8Options("hsr", "ギルガメッシュ", "https://game8.co/games/Honkai-Star-Rail/archives/601941", mainDps, [
+    plan(["ギルガメッシュ", "セイバー", "モーテナックス・ブレード", "フォフォ"], "Fate連携の追撃・EP回復・耐久を重ね、Interestの消費機会を増やす。", "Stacks Fate follow-ups, Energy recovery, and sustain to create more Interest spending windows.", "叠加Fate联动追击、能量回复与生存位，增加消耗Interest的机会。"),
+    plan(["ギルガメッシュ", "セイバー", "開拓者（記憶）", "フォフォ"], "記憶支援とEP回復を組み、限定補助の所持状況に対応する。", "Pairs Remembrance support and Energy recovery as a roster-flexible alternative.", "结合记忆辅助与能量回复，适配限定辅助持有情况。"),
+    plan(["ギルガメッシュ", "アシュヴェイル", "モーテナックス・ブレード", "フォフォ"], "追撃の連鎖と耐久を組み、雷主力の必殺技回転を支える。", "Combines follow-up chains and sustain to support the Lightning carry's Ultimate rotation.", "结合追击连锁与生存位，支撑雷系主C的终结技循环。"),
+  ]),
+  "genshin:アンバー": batch8Options("genshin", "アンバー", "https://game8.co/games/Genshin-Impact/archives/297535", mainDps, [
+    plan(["アンバー", "シトラリ", "シロネン", "ベネット"], "氷付着・耐性低下・攻撃支援を重ね、溶解重撃を主軸にする。", "Stacks Cryo application, RES shred, and ATK support for Melt Charged Shots.", "叠加冰附着、减抗与攻击辅助，以融化重击为核心。"),
+    plan(["アンバー", "ロサリア", "鍾離", "ベネット"], "氷付着と中断耐性を確保し、重撃を安全に継続する。", "Provides Cryo application and interruption resistance for safer sustained Charged Shots.", "提供冰附着与抗打断，使重击更稳定持续。"),
+    plan(["アンバー", "シトラリ", "スクロース", "ベネット"], "拡散と元素熟知支援を加え、C4以降の爆弾人形連携も活かす。", "Adds Swirl and Elemental Mastery support while enabling C4+ Baron Bunny sequences.", "加入扩散与元素精通辅助，并利用C4后的兔兔伯爵连携。"),
+  ]),
+  "genshin:イアンサ": batch8Options("genshin", "イアンサ", "https://game8.co/games/Genshin-Impact/archives/345881", support, [
+    plan(["イアンサ", "マーヴィカ", "シトラリ", "シロネン"], "夜魂・炎・氷・岩の相性を重ね、主力への攻撃支援と耐性低下を両立する。", "Combines Nightsoul, Pyro, Cryo, and Geo synergies for ATK support and RES shred.", "结合夜魂、火、冰、岩的协同，兼顾攻击辅助与减抗。"),
+    plan(["イアンサ", "ヴァレサ", "フリーナ", "閑雲"], "雷主力の移動条件とHP変動支援・回復を組み、ハイパー運用を支える。", "Supports an Electro carry's movement conditions with HP-fluctuation buffs and healing.", "以生命波动增益与治疗支撑雷系主C的移动条件和强化输出。"),
+    plan(["イアンサ", "クロリンデ", "ベネット", "シュヴルーズ"], "炎・雷限定の過負荷で攻撃支援と耐性低下を組み合わせる。", "Uses a Pyro-Electro-only Overload core for ATK support and RES shred.", "使用纯火雷超载核心，结合攻击辅助与减抗。"),
+  ]),
+  "genshin:イネファ": batch8Options("genshin", "イネファ", "https://game8.co/games/Genshin-Impact/archives/531360", t("月感電サブDPS", "Lunar-Charged sub DPS", "月感电副C"), [
+    plan(["イネファ", "フリンズ", "アイノ", "スクロース"], "水・雷・風の反応と元素熟知支援を重ね、月感電の主力を補助する。", "Combines Hydro-Electro-Anemo reactions and Elemental Mastery support for a Lunar-Charged carry.", "结合水雷风反应与元素精通辅助，支撑月感电主C。"),
+    plan(["イネファ", "イファ", "オロルン", "フリーナ"], "水・雷の控え火力と回復・HP変動支援を組み、反応を継続する。", "Uses off-field Hydro-Electro damage with healing and HP-fluctuation support for sustained reactions.", "利用后台水雷伤害、治疗与生命波动辅助维持反应。"),
+    plan(["イネファ", "ラウマ", "ヌヴィレット", "フリーナ"], "水主力と草・雷反応を組み、月反応複合の控え火力を加える。", "Pairs a Hydro carry with Dendro-Electro reactions and off-field Lunar reaction damage.", "结合水系主C、草雷反应与后台月反应伤害。"),
+  ]),
+  "zzz:0号・アンビー": batch8Options("zzz", "0号・アンビー", "https://game8.co/games/Zenless-Zone-Zero/archives/495109", mainDps, [
+    plan(["0号・アンビー", "トリガー", "アストラ"], "Aftershockのブレイク支援と全体バフを重ね、電気主力の短い火力窓を伸ばす。", "Stacks Aftershock stun support and team buffs for an Electric carry's burst windows.", "叠加追击失衡辅助与全队增益，强化电系主C的爆发窗口。"),
+    plan(["0号・アンビー", "アンビー", "ニコ"], "電気・ブレイク・集敵を組む所持対応の直撃案。", "An accessible direct-damage option combining Electric synergy, stun, and grouping.", "结合电系协同、失衡与聚怪的易获取直伤方案。"),
+    plan(["0号・アンビー", "オルペウス&「鬼火」", "トリガー"], "Aftershockと強攻2名の交代を組み、電気・炎の手数を活かす。", "Pairs Aftershocks with two Attack agents for rapid Electric-Fire swaps.", "结合追击与双强攻，通过电火快速切换发挥手数。"),
+  ]),
+  "zzz:アリア": batch8Options("zzz", "アリア", "https://game8.co/games/Zenless-Zone-Zero/archives/572601", anomaly, [
+    plan(["アリア", "スンナ", "南宮羽"], "同陣営の異常・支援を組み、エーテル異常とAbloomを継続させる。", "Uses faction synergy to sustain Ether Anomaly and Abloom rotations.", "利用同阵营协同，维持以太异常与Abloom循环。"),
+    plan(["アリア", "プロメイア", "南宮羽"], "異常蓄積と支援を重ね、Abloomの発動回数を確保する。", "Stacks Anomaly buildup and support to increase Abloom triggers.", "叠加异常积蓄与辅助，确保Abloom的触发次数。"),
+    plan(["アリア", "アンビー", "ニコ"], "ブレイク・集敵・エーテル主力を組む入手しやすい代替案。", "An accessible alternative combining stun, grouping, and an Ether carry.", "结合失衡、聚怪与以太主C的易获取替代方案。"),
+  ]),
+  "zzz:アリス": batch8Options("zzz", "アリス", "https://game8.co/games/Zenless-Zone-Zero/archives/527839", anomaly, [
+    plan(["アリス", "ヴェリナ", "レミエール"], "異常3名の反応連鎖を組み、極性強襲・混沌の回転を支える。", "Combines three Anomaly agents for Polarized Assault and Disorder rotations.", "组合三名异常角色，支撑极性强击与紊乱循环。"),
+    plan(["アリス", "カリン", "ニコ"], "物理主力・集敵・防御低下を組む入手しやすい代替案。", "An accessible alternative combining a Physical carry, grouping, and DEF reduction.", "结合物理主C、聚怪与减防的易获取替代方案。"),
+    plan(["アリス", "アストラ", "セス"], "支援・護盾・異常補助を組み、前線での強襲蓄積を安定させる。", "Uses support, shielding, and Anomaly aid to stabilize Assault buildup on field.", "结合辅助、护盾与异常补助，稳定前线强击积蓄。"),
   ]),
 };
 

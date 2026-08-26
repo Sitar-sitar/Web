@@ -9,7 +9,7 @@ describe("ガイド更新履歴", () => {
     expect(history.currentBaseline).toBe("2026-08-18");
     expect(history.siteEvents.length).toBeGreaterThan(0);
     expect(history.characters).toHaveLength(expectedCount);
-    expect(history.characters.find((item) => item.name === "0号・アンビー")).toMatchObject({ profileId: "crit", dataAsOf: "2026-08-18" });
+    expect(history.characters.find((item) => item.name === "0号・アンビー")).toMatchObject({ profileId: "crit", dataAsOf: "2026-08-26" });
     expect(history.characters.find((item) => item.name === "レミエール")?.events).toEqual(expect.arrayContaining([
       expect.objectContaining({ title: "第2バッチ：個別ビルド・凸・推奨PTを再精査", date: "2026-08-25T12:14:00+09:00" }),
     ]));

@@ -31,7 +31,26 @@ export type ConstellationProfile = {
 
 const t = (ja: string, en: string, zh: string): LocalizedText => ({ ja, en, "zh-CN": zh });
 const target = (key: StatKey, ja: string, en: string, zh: string, unit: "%" | "", strict: number, goal: number, baseline: number, reasonJa: string, reasonEn: string, reasonZh: string): ConstellationTargetChange => ({ key, label: t(ja, en, zh), unit, targets: { "厳選": strict, "目標": goal, "妥協": baseline }, reason: t(reasonJa, reasonEn, reasonZh) });
-const effect = (level: 1 | 2 | 3 | 4 | 5 | 6, jaName: string, enName: string, zhName: string, ja: string, en: string, zh: string, options: Pick<ConstellationEffect, "targetChanges" | "caution"> = {}): ConstellationEffect => ({ level, name: t(jaName, enName, zhName), description: t(ja, en, zh), ...options });
+function effect(
+  level: 1 | 2 | 3 | 4 | 5 | 6,
+  jaName: string,
+  enName: string,
+  zhNameOrJa: string,
+  jaOrEn: string,
+  enOrZh: string,
+  zhOrOptions?: string | Pick<ConstellationEffect, "targetChanges" | "caution">,
+  maybeOptions: Pick<ConstellationEffect, "targetChanges" | "caution"> = {},
+): ConstellationEffect {
+  const shorthand = typeof zhOrOptions !== "string";
+  const zhName = shorthand
+    ? jaName.replaceAll("命ノ星座", "命之座").replaceAll("心象映画", "心象电影")
+    : zhNameOrJa;
+  const ja = shorthand ? zhNameOrJa : jaOrEn;
+  const en = shorthand ? jaOrEn : enOrZh;
+  const zh = shorthand ? enOrZh : zhOrOptions;
+  const options = (shorthand ? zhOrOptions : maybeOptions) ?? {};
+  return { level, name: t(jaName, enName, zhName), description: t(ja, en, zh), ...options };
+}
 
 type CuratedEntry = Omit<ConstellationProfile, "rankLabel" | "acquiredRank" | "dataStatus" | "activeTargetChanges">;
 
@@ -682,6 +701,86 @@ Object.assign(CURATED, {
     effect(4, "心象映画4", "Mindscape 4", "心象电影4", "Coordinated Support中のAftershockで追加ダメージとブレイクを与える。", "Aftershocks during Coordinated Support deal additional damage and Daze.", "协同支援期间的追击造成额外伤害与失衡值。"),
     effect(5, "心象映画5", "Mindscape 5", "心象电影5", "通常・支援・回避・特殊・連携スキルを2レベル上げる。", "Raises Basic, Assist, Dodge, Special, and Chain skills by 2.", "普攻、支援、闪避、特殊技和连携技提高2级。"),
     effect(6, "心象映画6", "Mindscape 6", "心象电影6", "Armor Break Roundsを使う狙撃に追加の電気ダメージを与える。", "Sniper attacks using Armor Break Rounds deal additional Electric DMG.", "使用破甲弹的狙击造成额外电气伤害。"),
+  ] },
+  "hsr:1004": { ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/405763", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "必殺技後、次の通常攻撃またはスキル2回に追加虚数ダメージを与える。", "After Ultimate, the next 2 Basic ATKs or Skills deal additional Imaginary DMG.", "施放终结技后，接下来的2次普攻或战技造成额外虚数伤害。"),
+    effect(2, "星魂2", "Eidolon 2", "天賦発動時にEPを3回復する。", "When Talent triggers, restores 3 Energy.", "天赋触发时回复3点能量。"),
+    effect(3, "星魂3", "Eidolon 3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "戦闘スキルの速度低下の基礎確率を35%上げる。", "Raises Skill's base chance to reduce SPD by 35%.", "战技降低速度的基础概率提高35%。"),
+    effect(5, "星魂5", "Eidolon 5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+    effect(6, "星魂6", "Eidolon 6", "戦闘スキルがランダムな敵へ追加で1ヒットする。", "Skill deals 1 additional hit to a random enemy.", "战技额外随机攻击1名敌人一次。"),
+  ] },
+  "hsr:1301": { ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/437255", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "戦闘開始時にEPを20回復し、効果抵抗を50%上げる。", "At battle start restores 20 Energy and gains 50% Effect RES.", "战斗开始时回复20点能量，效果抵抗提高50%。"),
+    effect(2, "星魂2", "Eidolon 2", "戦闘スキルでデバフを1つ解除し、効果抵抗を2ターン30%上げる。", "Skill removes 1 debuff and grants 30% Effect RES for 2 turns.", "战技解除1个负面效果，并使效果抵抗提高30%，持续2回合。"),
+    effect(3, "星魂3", "Eidolon 3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "酩酊状態の持続時間を1ターン延長する。", "Extends Besotted's duration by 1 turn.", "延长酩酊状态1回合。"),
+    effect(5, "星魂5", "Eidolon 5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+    effect(6, "星魂6", "Eidolon 6", "撃破特効を20%上げ、弱点撃破効率を20%上げる。", "Increases Break Effect by 20% and Weakness Break Efficiency by 20%.", "击破特攻提高20%，削韧效率提高20%。"),
+  ] },
+  "hsr:1415": { ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/541348", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "Ode to Ego中に追憶を6得て、跳弾数を12増やす。", "During Ode to Ego, gains 6 Remembrance and 12 additional bounces.", "自我颂歌期间获得6点追忆，跳弹次数增加12次。"),
+    effect(2, "星魂2", "Eidolon 2", "開幕時に追憶を12得て、固有バフ対象数に応じ真ダメージ倍率を上げる。", "Starts with 12 Remembrance and raises True DMG scaling by the number of innate-buff targets.", "开场获得12点追忆，并按固有增益目标数提高真实伤害倍率。"),
+    effect(3, "星魂3", "Eidolon 3", "必殺技と天賦を2、記憶霊スキルを1レベル上げる。", "Raises Ultimate and Talent by 2 and Memosprite Skill by 1.", "终结技与天赋提高2级，忆灵技提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "Minuet使用ごとにOde to Egoの跳弾倍率を6%上げる（最大4層）。", "Each Minuet increases Ode to Ego bounce scaling by 6%, up to 4 stacks.", "每次使用小步舞曲使自我颂歌跳弹倍率提高6%，最多4层。"),
+    effect(5, "星魂5", "Eidolon 5", "戦闘スキルを2、通常攻撃と記憶霊天賦を1レベル上げる。", "Raises Skill by 2 and Basic ATK plus Memosprite Talent by 1.", "战技提高2级，普攻与忆灵天赋提高1级。"),
+    effect(6, "星魂6", "Eidolon 6", "初回必殺技で全体行動順を100%早め、以後は防御低下と行動順前進を付与する。", "The first Ultimate advances all allies by 100%; later effects grant DEF reduction and action advance.", "首次终结技使全队行动提前100%，后续赋予减防与行动提前。"),
+  ] },
+  "hsr:1509": { ...SOURCE.hsr, sourceUrl: "https://game8.co/games/Honkai-Star-Rail/archives/601941", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "星魂1", "Eidolon 1", "星魂1", "王の承認の防御無視を味方へ共有し、自身の攻撃力を60%上げ、スキル時にEPを40回復する。", "Shares King's Approval DEF ignore with allies, gains 60% ATK, and restores 40 Energy on Skill.", "与队友共享王之认可的无视防御，自身攻击力提高60%，施放战技回复40点能量。"),
+    effect(2, "星魂2", "Eidolon 2", "開幕または必殺技時にInterestを5得て、スキル倍率を上げる。", "At battle start or on Ultimate, gains 5 Interest and increases Skill scaling.", "战斗开始或施放终结技时获得5点Interest，并提高战技倍率。"),
+    effect(3, "星魂3", "Eidolon 3", "戦闘スキルを2、通常攻撃を1レベル上げる。", "Raises Skill by 2 and Basic ATK by 1.", "战技提高2级，普攻提高1级。"),
+    effect(4, "星魂4", "Eidolon 4", "EP回復効率を20%上げる。", "Increases Energy Regeneration Rate by 20%.", "能量恢复效率提高20%。"),
+    effect(5, "星魂5", "Eidolon 5", "必殺技と天賦を2レベル上げる。", "Raises Ultimate and Talent by 2.", "终结技与天赋提高2级。"),
+    effect(6, "星魂6", "Eidolon 6", "必殺技の跳弾倍率を80%上げ、味方全体に全属性耐性貫通20%を与える。", "Raises Ultimate bounce scaling by 80% and grants allies 20% All-Type RES PEN.", "终结技跳弹倍率提高80%，全队获得20%全属性抗性穿透。"),
+  ] },
+  "genshin:10000021": { ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/297535", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "狙い撃ちが2本になり、2本目は20%ダメージを与える。", "Aimed Shot fires 2 arrows; the second deals 20% DMG.", "瞄准射击变为2支箭，第二支造成20%伤害。"),
+    effect(2, "命ノ星座2", "Constellation 2", "命之座2", "フルチャージ狙い撃ちでウサギ伯爵を手動起爆し、200%追加ダメージを与える。", "A fully charged Aimed Shot can manually detonate Baron Bunny for 200% extra DMG.", "满蓄力瞄准射击可手动引爆兔兔伯爵，造成200%额外伤害。"),
+    effect(3, "命ノ星座3", "Constellation 3", "命之座3", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+    effect(4, "命ノ星座4", "Constellation 4", "爆弾人形のクールダウンを20%短縮し、使用回数を1増やす。", "Reduces Baron Bunny cooldown by 20% and grants 1 extra charge.", "兔兔伯爵冷却时间缩短20%，使用次数增加1次。"),
+    effect(5, "命ノ星座5", "Constellation 5", "命之座5", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+    effect(6, "命ノ星座6", "Constellation 6", "元素爆発後、味方全体の移動速度を15%、攻撃力を15%上げる（10秒）。", "After Burst, increases party Movement SPD and ATK by 15% for 10s.", "元素爆发后，全队移动速度和攻击力提高15%，持续10秒。"),
+  ] },
+  "genshin:10000110": { ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/345881", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "夜魂値を6消費するごとに元素エネルギーを15回復する（18秒ごと）。", "Every 6 Nightsoul points consumed restores 15 Energy, once every 18s.", "每消耗6点夜魂值回复15点元素能量，每18秒一次。"),
+    effect(2, "命ノ星座2", "Constellation 2", "元素爆発時に精密な動きを得て、待機中の出場キャラの攻撃力を30%上げる。", "Burst grants Precise Movement and raises the active character's ATK by 30%.", "施放元素爆发获得精准动作，并使场上角色攻击力提高30%。"),
+    effect(3, "命ノ星座3", "Constellation 3", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+    effect(4, "命ノ星座4", "Constellation 4", "味方の元素爆発後に夜魂値の回復量を増やし、余剰分を次回へ繰り越す。", "After an ally's Burst, improves Nightsoul recovery and carries excess to the next use.", "队友施放元素爆发后提高夜魂值回复，溢出部分可继承至下次。"),
+    effect(5, "命ノ星座5", "Constellation 5", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+    effect(6, "命ノ星座6", "Constellation 6", "動力エネルギースケールの持続を3秒延長し、条件達成時に出場キャラの与ダメージを25%上げる。", "Extends Kinetic Energy Scale by 3s and conditionally raises the active character's DMG by 25%.", "动力能量标尺持续时间延长3秒，满足条件时场上角色伤害提高25%。"),
+  ] },
+  "genshin:10000116": { ...SOURCE.genshin, sourceUrl: "https://game8.co/games/Genshin-Impact/archives/531360", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "命ノ星座1", "Constellation 1", "命之座1", "シールド展開後、攻撃力に応じて月感電ダメージを最大50%上げる。", "After deploying a shield, increases Lunar-Charged DMG by up to 50% based on ATK.", "展开护盾后，按攻击力使月感电伤害最多提高50%。"),
+    effect(2, "命ノ星座2", "Constellation 2", "元素爆発命中後に裁きの布告で月感電範囲ダメージを与え、味方にシールドを張る。", "After Burst hits, Verdict Decree deals AoE Lunar-Charged DMG and shields allies.", "元素爆发命中后，裁决宣告造成月感电范围伤害并为队友提供护盾。"),
+    effect(3, "命ノ星座3", "Constellation 3", "元素スキルを3レベル上げる。", "Raises Elemental Skill by 3.", "元素战技提高3级。"),
+    effect(4, "命ノ星座4", "Constellation 4", "月感電発生時に元素エネルギーを5回復する（4秒ごと）。", "Lunar-Charged restores 5 Energy once every 4s.", "触发月感电时回复5点元素能量，每4秒一次。"),
+    effect(5, "命ノ星座5", "Constellation 5", "元素爆発を3レベル上げる。", "Raises Elemental Burst by 3.", "元素爆发提高3级。"),
+    effect(6, "命ノ星座6", "Constellation 6", "C1の効果中、雷雲発生後に攻撃力135%の月感電範囲ダメージを与える。", "During C1's effect, after a thundercloud appears, deals AoE Lunar-Charged DMG equal to 135% ATK.", "C1效果期间，雷云生成后造成相当于攻击力135%的月感电范围伤害。"),
+  ] },
+  "zzz:1381": { ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/495109", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "EX特殊で白雷追加ダメージを3回発動し、白雷を消費しない。", "EX Special triggers White Thunder bonus DMG 3 times without consuming White Thunder.", "强化特殊技触发3次白雷追加伤害，且不消耗白雷。"),
+    effect(2, "心象映画2", "Mindscape 2", "会心率を12%上げ、必殺技後にThunder's Cryを6層得る。", "Increases CRIT Rate by 12% and grants 6 Thunder's Cry stacks after Ultimate.", "暴击率提高12%，施放终结技后获得6层雷鸣。"),
+    effect(3, "心象映画3", "Mindscape 3", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(4, "心象映画4", "Mindscape 4", "銀星状態の敵に対して電気耐性を12%無視する。", "Ignores 12% Electric RES against Silver Star enemies.", "对银星状态敌人无视12%电气抗性。"),
+    effect(5, "心象映画5", "Mindscape 5", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(6, "心象映画6", "Mindscape 6", "白雷追加ダメージ6回後、攻撃力1,000%の電気Aftershockを与える。", "After 6 White Thunder bonus hits, deals an Electric Aftershock equal to 1,000% ATK.", "白雷追加伤害累计6次后，造成相当于攻击力1000%的电气追击。"),
+  ] },
+  "zzz:1501": { ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/572601", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "エーテル異常蓄積耐性を10%無視し、Abloomが会心可能になる。", "Ignores 10% Ether Anomaly buildup RES and lets Abloom CRIT.", "无视10%以太异常积蓄抗性，并使Abloom能够暴击。"),
+    effect(2, "心象映画2", "Mindscape 2", "攻撃とAbloomで防御力を16%無視し、妄想の瞬間中はさらに8%無視する。", "Attacks and Abloom ignore 16% DEF, plus 8% more during Delusional Moment.", "攻击与Abloom无视16%防御，妄想时刻期间额外无视8%。"),
+    effect(3, "心象映画3", "Mindscape 3", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(4, "心象映画4", "Mindscape 4", "Abloom発生時にエネルギー4とデシベル70を回復する（10秒ごと）。", "Abloom restores 4 Energy and 70 Decibels once every 10s.", "触发Abloom时回复4点能量和70点喧响值，每10秒一次。"),
+    effect(5, "心象映画5", "Mindscape 5", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(6, "心象映画6", "Mindscape 6", "開幕時にデシベルを1,200得て、妄想の瞬間中の強化通常・必殺のエーテルダメージを40%上げる。", "Starts with 1,200 Decibels and raises Ether DMG of enhanced Basic and Ultimate by 40% during Delusional Moment.", "开场获得1200点喧响值，妄想时刻期间强化普攻与终结技的以太伤害提高40%。"),
+  ] },
+  "zzz:1401": { ...SOURCE.zzz, sourceUrl: "https://game8.co/games/Zenless-Zone-Zero/archives/527839", dataAsOf: "2026-08-26", updatedAt: "2026-08-26", effects: [
+    effect(1, "心象映画1", "Mindscape 1", "心象电影1", "極性強襲でブレードエチケットを25獲得し、強襲時に敵防御力を20%下げる（30秒）。", "Polarized Assault grants 25 Blade Etiquette and Assault reduces enemy DEF by 20% for 30s.", "极性强击获得25点刃之礼仪，强击使敌方防御降低20%，持续30秒。"),
+    effect(2, "心象映画2", "Mindscape 2", "必殺技最終段で極性強襲を発動し、全体強襲・物理異常中の混沌ダメージを15%上げる。", "Ultimate's final hit triggers Polarized Assault and raises squad Assault and Disorder DMG by 15% while Physical Anomaly is active.", "终结技最后一段触发极性强击，物理异常期间全队强击与紊乱伤害提高15%。"),
+    effect(3, "心象映画3", "Mindscape 3", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(4, "心象映画4", "Mindscape 4", "物理耐性を10%無視し、強化通常の物理異常蓄積を25%上げる。", "Ignores 10% Physical RES and raises enhanced Basic's Physical Anomaly buildup by 25%.", "无视10%物理抗性，强化普攻物理异常积蓄提高25%。"),
+    effect(5, "心象映画5", "Mindscape 5", "通常・回避・支援・特殊・連携スキルを2レベル上げる。", "Raises Basic, Dodge, Assist, Special, and Chain skills by 2.", "普攻、闪避、支援、特殊技和连携技提高2级。"),
+    effect(6, "心象映画6", "Mindscape 6", "3段チャージ通常または必殺技後に勝利状態となり、味方命中時の追撃を最大6回発動する。", "After a 3-stage charged Basic or Ultimate, enters Victory state and triggers up to 6 ally-hit follow-ups.", "三段蓄力普攻或终结技后进入胜利状态，队友命中时最多触发6次追击。"),
   ] },
 });
 

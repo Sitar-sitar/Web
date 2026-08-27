@@ -100,6 +100,12 @@ const BATCH_11_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["カリン", "クレタ", "シーシィア", "シグリッド", "スターライト･ビリー", "ダイアリン"],
 };
 
+const BATCH_12_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["フック", "ペラ", "ヘルタ", "マダム・ヘルタ", "ミーシャ", "モーディス", "モゼ", "リンクス"],
+  genshin: ["クレー", "クロリンデ", "コレイ", "ゴロー", "コロンビーナ", "シグウィン"],
+  zzz: ["ニコ", "ノルムー", "ヒューゴ", "ピュロイス", "ビリー", "プルクラ"],
+};
+
 Object.entries(BATCH_2_UPDATED_NAMES).forEach(([game, names]) => {
   const gameId = game as CatalogGameId;
   names.forEach((name) => {
@@ -278,6 +284,28 @@ Object.entries(BATCH_11_UPDATED_NAMES).forEach(([game, names]) => {
       : gameId === "genshin"
         ? "Game8・GameWith・KeqingMainsの更新日付き個別ビルド・PTガイドを照合"
         : "Game8・GameWith・Prydwenの更新日付き個別エージェントガイドを照合";
+  });
+});
+
+Object.entries(BATCH_12_UPDATED_NAMES).forEach(([game, names]) => {
+  const gameId = game as CatalogGameId;
+  names.forEach((name) => {
+    const record = CHARACTER_GUIDE_METADATA[gameId][name];
+    if (!record) return;
+    record.dataAsOf = name === "フック" || name === "ヘルタ" || name === "モーディス" || name === "リンクス" ? "2026-08-11"
+      : name === "ペラ" || name === "ミーシャ" || name === "モゼ" ? "2026-08-21"
+        : name === "マダム・ヘルタ" ? "2026-08-25"
+          : name === "ヒューゴ" || name === "プルクラ" ? "2026-07-31"
+            : name === "ビリー" ? "2026-06-05"
+              : name === "ニコ" ? "2026-08-19"
+                : name === "クレー" || name === "クロリンデ" || name === "コレイ" || name === "ゴロー" || name === "シグウィン" ? "2026-08-13"
+                  : "2026-08-27";
+    record.updatedAt = "2026-08-27";
+    record.sourceLabel = gameId === "hsr"
+      ? "Game8の更新日付き個別ビルド・PTガイドを照合"
+      : gameId === "genshin"
+        ? "Game8の更新日付き個別ビルド・PTガイドを照合"
+        : "Game8の更新日付き個別エージェントガイドを照合";
   });
 });
 

@@ -29,6 +29,11 @@ describe("ガイド更新履歴", () => {
     expect(batch11Characters).toHaveLength(20);
     expect(batch11Characters.every((item) => item.events.some((event) => event.title === "第11バッチ：個別ビルド・凸・推奨PTを再精査" && event.date === "2026-08-27T01:15:00+09:00"))).toBe(true);
     expect(history.characters.find((item) => item.name === "シーシィア")?.updatedAt).toBe("2026-08-27");
+    const batch12Names = ["フック", "ペラ", "ヘルタ", "マダム・ヘルタ", "ミーシャ", "モーディス", "モゼ", "リンクス", "クレー", "クロリンデ", "コレイ", "ゴロー", "コロンビーナ", "シグウィン", "ニコ", "ノルムー", "ヒューゴ", "ピュロイス", "ビリー", "プルクラ"];
+    const batch12Characters = history.characters.filter((item) => batch12Names.includes(item.name));
+    expect(batch12Characters).toHaveLength(20);
+    expect(batch12Characters.every((item) => item.events.some((event) => event.title === "第12バッチ：個別ビルド・凸・推奨PTを再精査" && event.date === "2026-08-27T01:50:00+09:00"))).toBe(true);
+    expect(batch12Characters.every((item) => item.events.some((event) => event.changes.includes("公開UIDは明示Searchのみで検証")))).toBe(true);
     expect(history.characters.find((item) => item.name === "アンビー")?.updatedAt).toBe("2026-08-26");
   });
 });

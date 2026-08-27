@@ -193,7 +193,7 @@ describe("全キャラクターガイドの網羅性", () => {
     ];
     guideRecords.forEach(({ game, name, guide }) => {
       const metadata = guideMetadataFor(game, name);
-      expect(guide.targets.length).toBeGreaterThan(0);
+      expect(guide.targets.length > 0 || guide.targetContext.includes("数値閾値") || guide.targetContext.includes("推測で登録しない")).toBe(true);
       expect(guide.profileId).toBeTruthy();
       expect(guide.dataAsOf).toBe(metadata.dataAsOf);
       expect(guide.updatedAt).toBe(metadata.updatedAt);

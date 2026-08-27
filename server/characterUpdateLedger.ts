@@ -75,12 +75,17 @@ const REVIEWED_BATCHES: Record<number, Record<CatalogGameId, readonly string[]>>
     genshin: ["オロルン", "カーヴェ", "ガイア", "カチーナ", "キィニチ", "キャンディス"],
     zzz: ["カリン", "クレタ", "シーシィア", "シグリッド", "スターライト･ビリー", "ダイアリン"],
   },
+  12: {
+    hsr: ["フック", "ペラ", "ヘルタ", "マダム・ヘルタ", "ミーシャ", "モーディス", "モゼ", "リンクス"],
+    genshin: ["クレー", "クロリンデ", "コレイ", "ゴロー", "コロンビーナ", "シグウィン"],
+    zzz: ["ニコ", "ノルムー", "ヒューゴ", "ピュロイス", "ビリー", "プルクラ"],
+  },
 };
 
 const NEXT_BATCH: Record<CatalogGameId, readonly string[]> = {
-  hsr: ["フック", "ペラ", "ヘルタ", "マダム・ヘルタ", "ミーシャ", "モーディス", "モゼ", "リンクス"],
-  genshin: ["クレー", "クロリンデ", "コレイ", "ゴロー", "コロンビーナ", "シグウィン"],
-  zzz: ["ニコ", "ノルムー", "ヒューゴ", "ピュロイス", "ビリー", "プルクラ"],
+  hsr: ["ルカ", "雲璃", "遠坂凛", "火花", "寒鴉", "帰忘の流離人", "景元", "桂乃芬"],
+  genshin: ["シトラリ", "シャルロット", "シュヴルーズ", "ジン", "スカーク", "スクロース"],
+  zzz: ["プロメイア", "ベン", "ライカン", "リュシア", "儀玄", "橘福福"],
 };
 
 function batchFor(game: CatalogGameId, name: string) {
@@ -109,7 +114,7 @@ export function characterUpdateLedger(): CharacterUpdateLedger {
     reviewed,
     pending: entries.length - reviewed,
     byGame,
-    nextBatch: { id: 12, names: nextBatch },
+    nextBatch: { id: 13, names: nextBatch },
     criteria: "20キャラクター単位で、各キャラクターの更新日付き個別ビルド根拠、全6段階の凸効果、最大3案の推奨PT、戦闘内補正の公開値分離、回帰テスト、公開UID画面確認を完了してから公開する。",
     entries,
   };

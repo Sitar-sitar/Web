@@ -141,6 +141,12 @@ const BATCH_11_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["カリン", "クレタ", "シーシィア", "シグリッド", "スターライト･ビリー", "ダイアリン"],
 };
 
+const BATCH_12_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["フック", "ペラ", "ヘルタ", "マダム・ヘルタ", "ミーシャ", "モーディス", "モゼ", "リンクス"],
+  genshin: ["クレー", "クロリンデ", "コレイ", "ゴロー", "コロンビーナ", "シグウィン"],
+  zzz: ["ニコ", "ノルムー", "ヒューゴ", "ピュロイス", "ビリー", "プルクラ"],
+};
+
 function batch2UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
   if (!BATCH_2_UPDATED_NAMES[game].includes(name)) return undefined;
   return {
@@ -284,6 +290,19 @@ function batch11UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent
   };
 }
 
+function batch12UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
+  if (!BATCH_12_UPDATED_NAMES[game].includes(name)) return undefined;
+  return {
+    date: "2026-08-27T01:50:00+09:00",
+    scope: "character",
+    title: "第12バッチ：個別ビルド・凸・推奨PTを再精査",
+    summary: `${name}の公開プロフィール目標、更新日付き個別根拠、最大3案の推奨PTを照合しました。確認済みsource IDかつ全6段階本文を確認できた実装のみ凸を登録し、コロンビーナ、ニコ、ピュロイスの未解決・未公開部分は準備中を維持します。`,
+    changes: ["ロール共通の旧目標を個別ビルドへ置換", "確認済みIDかつ全6段階本文を確認できた実装のみ凸をID優先で追加", "未解決source ID・未公開心象映画本文は推測で補わず安全表示", "戦闘中・編成・条件付き効果を公開値から分離", "根拠で確認できた最大3案の推奨PTを更新", "公開UIDは明示Searchのみで検証"],
+    rationale: "キャラクター固有の公開値目標と編成条件を明示し、不確かなID・効果や戦闘内バフを公開プロフィールへ混入させないため。",
+    games: [game],
+  };
+}
+
 export function guideUpdateHistory() {
   const games: CatalogGameId[] = ["hsr", "genshin", "zzz"];
   const characters = games.flatMap((game) => CHARACTER_GUIDE_CATALOG[game].map((name) => {
@@ -308,6 +327,7 @@ export function guideUpdateHistory() {
         ...(batch9UpdateEvent(game, name) ? [batch9UpdateEvent(game, name)!] : []),
         ...(batch10UpdateEvent(game, name) ? [batch10UpdateEvent(game, name)!] : []),
         ...(batch11UpdateEvent(game, name) ? [batch11UpdateEvent(game, name)!] : []),
+        ...(batch12UpdateEvent(game, name) ? [batch12UpdateEvent(game, name)!] : []),
         {
         date: metadata.updatedAt,
         scope: "character" as const,

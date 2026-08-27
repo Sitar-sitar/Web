@@ -190,7 +190,7 @@ describe("ZZZ公開プロフィールの正規化", () => {
 
     expect(byName["アンビー"]?.comparisons.map((comparison) => comparison.key)).toEqual(["impact", "critRate", "critDmg"]);
     expect(byName["グレース"]?.comparisons.map((comparison) => comparison.key)).toEqual(["anomalyProficiency", "anomalyMastery", "attack", "penRatio"]);
-    expect(byName["クレタ"]?.guide.targetContext).toContain("クレタ用");
+    expect(byName["クレタ"]?.guide.targetContext).toContain("クレタ専用");
     expect(byName["グレース"]?.guide.dataAsOf).toBe("2026-08-26");
     expect(byName["アンビー"]?.guide.sourceLabel).toContain("Prydwen");
   });

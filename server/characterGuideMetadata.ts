@@ -94,6 +94,12 @@ const BATCH_10_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["イドリー", "ヴェリナ", "オルペウス&「鬼火」"],
 };
 
+const BATCH_11_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["セーバル", "ゼーレ", "ダリア", "トリビー", "ナターシャ", "ヒアンシー", "ファイノン", "フォフォ"],
+  genshin: ["オロルン", "カーヴェ", "ガイア", "カチーナ", "キィニチ", "キャンディス"],
+  zzz: ["カリン", "クレタ", "シーシィア", "シグリッド", "スターライト･ビリー", "ダイアリン"],
+};
+
 Object.entries(BATCH_2_UPDATED_NAMES).forEach(([game, names]) => {
   const gameId = game as CatalogGameId;
   names.forEach((name) => {
@@ -251,6 +257,27 @@ Object.entries(BATCH_10_UPDATED_NAMES).forEach(([game, names]) => {
       : gameId === "genshin"
         ? "Game8・Icy Veinsの更新日付き個別ビルド・PTガイドを照合"
         : "Game8・Prydwenの更新日付き個別エージェントガイドを照合";
+  });
+});
+
+Object.entries(BATCH_11_UPDATED_NAMES).forEach(([game, names]) => {
+  const gameId = game as CatalogGameId;
+  names.forEach((name) => {
+    const record = CHARACTER_GUIDE_METADATA[gameId][name];
+    if (!record) return;
+    record.dataAsOf = name === "ファイノン" ? "2026-05-31"
+      : name === "フォフォ" ? "2026-08-19"
+        : name === "セーバル" || name === "ゼーレ" || name === "ナターシャ" ? "2026-08-21"
+          : name === "クレタ" ? "2026-07-31"
+            : name === "カリン" ? "2026-08-19"
+              : name === "シグリッド" || name === "ダイアリン" ? "2026-08-26"
+                : "2026-08-27";
+    record.updatedAt = "2026-08-27";
+    record.sourceLabel = gameId === "hsr"
+      ? "Game8・Prydwenの更新日付き個別ビルド・PTガイドを照合"
+      : gameId === "genshin"
+        ? "Game8・GameWith・KeqingMainsの更新日付き個別ビルド・PTガイドを照合"
+        : "Game8・GameWith・Prydwenの更新日付き個別エージェントガイドを照合";
   });
 });
 

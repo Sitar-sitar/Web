@@ -121,7 +121,7 @@ const manualMember = (name: string, index: number, selectedRole: LocalizedText):
   ? { name: t(name, name, name), role: selectedRole }
   : member(name, name, name, index === 1 ? "主力・副火力" : index === 2 ? "支援・反応" : "耐久・補助", index === 1 ? "DPS / Sub DPS" : index === 2 ? "Support / Reaction" : "Sustain / utility", index === 1 ? "主C/副C" : index === 2 ? "辅助/反应" : "生存/功能位");
 
-function manualOptions(game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: [ManualPlan, ManualPlan, ManualPlan]): PartyRecommendation[] {
+function manualOptions(game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: readonly ManualPlan[]): PartyRecommendation[] {
   const planTitles = [t("実戦・高相性", "Curated High Synergy", "实战高协同"), t("実戦・代替編成", "Curated Alternative", "实战替代队"), t("実戦・所持対応", "Curated Roster Option", "实战配队适配")];
   const profile = genericProfileFor(game, name);
   return plans.map((plan, index) => {
@@ -190,6 +190,12 @@ const batch10Options = (game: PartyGameId, name: string, sourceUrl: string, sele
   dataAsOf: "2026-08-26",
   updatedAt: "2026-08-26",
   communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-26" })),
+}));
+const batch11Options = (game: PartyGameId, name: string, sourceUrl: string, selectedRole: LocalizedText, plans: readonly ManualPlan[]) => manualOptions(game, name, sourceUrl, selectedRole, plans).map((entry) => ({
+  ...entry,
+  dataAsOf: "2026-08-27",
+  updatedAt: "2026-08-27",
+  communitySources: entry.communitySources.map((source) => ({ ...source, checkedAt: "2026-08-27" })),
 }));
 
 /**
@@ -691,6 +697,93 @@ const MANUALLY_CURATED_HIGH_USAGE_CATALOG: Record<string, PartyRecommendation[]>
     plan(["オルペウス&「鬼火」", "アストラ", "ライト"], "炎キャリーへ支援と撃破を重ね、追加攻撃と連携スキルの火力窓を作る。", "Stacks support and stun for a Fire carry's Aftershock and Chain Attack windows.", "为火系主C叠加辅助与失衡，创造追加攻击和连携技窗口。"),
     plan(["オルペウス&「鬼火」", "0号・アンビー", "トリガー"], "追加攻撃相性と撃破支援を重ねるAftershock寄りの案。", "An Aftershock-oriented team stacking follow-up synergy and stun support.", "叠加追加攻击协同与失衡辅助的Aftershock方案。"),
     plan(["オルペウス&「鬼火」", "アストラ", "フーフー"], "支援と撃破を組み、炎直撃・追加攻撃を安定させる代替案。", "An alternative using support and stun to stabilize Fire direct and follow-up damage.", "以辅助和失衡稳定火系直伤与追加攻击的替代方案。"),
+  ]),
+  "hsr:セーバル": batch11Options("hsr", "セーバル", "https://game8.jp/houkaistarrail/524686", mainDps, [
+    plan(["セーバル", "サンデー", "トリビー", "丹恒・騰荒"], "行動順・全体支援・耐久を組み、雷範囲火力を回す。", "Uses action support, team buffs, and sustain for Lightning AoE rotations.", "结合行动辅助、全队增益与生存位，循环雷系范围输出。"),
+    plan(["セーバル", "停雲", "記憶主人公", "ギャラガー"], "EP支援・記憶支援・回復を重ねる代替案。", "An alternative layering Energy, Remembrance support, and healing.", "叠加能量、记忆辅助与治疗的替代方案。"),
+  ]),
+  "hsr:ゼーレ": batch11Options("hsr", "ゼーレ", "https://game8.jp/houkaistarrail/524687", mainDps, [
+    plan(["ゼーレ", "サンデー", "ケリュドラ", "丹恒・騰荒"], "再行動・追加火力・耐久で単体会心主力を支える。", "Advance, extra damage, and sustain support a single-target CRIT carry.", "以拉条、追加输出与生存位支撑单体暴击主C。"),
+  ]),
+  "hsr:ダリア": batch11Options("hsr", "ダリア", "https://game8.jp/houkaistarrail/732480", support, [
+    plan(["ホタル", "ダリア", "帰忘の流離人", "霊砂"], "超撃破・弱点撃破・回復を組み、炎撃破主力を支える。", "Combines Super Break, weakness breaking, and healing for a Fire Break carry.", "结合超击破、弱点击破与治疗，支撑火系击破主C。"),
+    plan(["ホタル", "ダリア", "帰忘の流離人", "ルアン・メェイ"], "撃破支援を重ねる耐久枠なしの高火力案。", "A high-output no-sustain option stacking Break support.", "叠加击破辅助的无生存位高输出方案。"),
+  ]),
+  "hsr:トリビー": batch11Options("hsr", "トリビー", "https://game8.jp/houkaistarrail/662211", support, [
+    plan(["マダム・ヘルタ", "アナイクス", "トリビー", "ヒアンシー"], "範囲火力・全体支援・回復を組む知恵編成。", "An Erudition team combining AoE damage, team support, and healing.", "结合范围输出、全队辅助与治疗的智识队。"),
+    plan(["キャストリス", "長夜月", "トリビー", "ヒアンシー"], "HP変動型の記憶主力を全体支援と回復で支える。", "Supports HP-fluctuation Remembrance carries with team buffs and healing.", "以全队辅助与治疗支撑生命波动型记忆主C。"),
+    plan(["モーディス", "サンデー", "トリビー", "ヒアンシー"], "再行動と全体支援を重ねるHP参照主力の案。", "An HP-scaling carry team with advance and team support.", "为生命倍率主C叠加拉条与全队辅助的方案。"),
+  ]),
+  "hsr:ナターシャ": batch11Options("hsr", "ナターシャ", "https://game8.jp/houkaistarrail/524684", t("耐久・回復", "Sustain & healing", "生存与治疗"), [
+    plan(["緋英", "銀狼Lv.999", "爻光", "ナターシャ"], "デバフと支援を重ね、ナターシャが回復・解除を担う。", "Stacks debuffs and support while Natasha supplies healing and cleanse.", "叠加减益与辅助，由娜塔莎承担治疗和解除。"),
+    plan(["不死途", "千冶・刃", "トリビー", "ナターシャ"], "HP変動型の主力と支援を継続回復で支える。", "Sustains an HP-fluctuation carry and support with continuous healing.", "以持续治疗支撑生命波动型主C及辅助。"),
+  ]),
+  "hsr:ヒアンシー": batch11Options("hsr", "ヒアンシー", "https://game8.jp/houkaistarrail/677023", t("耐久・記憶", "Sustain & Remembrance", "生存与记忆"), [
+    plan(["キュレネ", "長夜月", "ヒアンシー", "ロビン・夏空の歌"], "記憶精霊・HP変動・全体支援を回復で支える。", "Supports memosprites, HP fluctuation, and team buffs with healing.", "以治疗支撑忆灵、生命波动与全队增益。"),
+    plan(["キュレネ", "長夜月", "ヒアンシー", "キャストリス"], "記憶主力2名を回復とHP参照支援で組む。", "Pairs two Remembrance carries with healing and HP-scaling support.", "以治疗和生命倍率辅助搭配两名记忆主C。"),
+    plan(["キュレネ", "モーディス", "ヒアンシー", "トリビー"], "HP変動主力に全体支援と回復を渡す。", "Provides team buffs and healing to an HP-fluctuation carry.", "为生命波动主C提供全队辅助与治疗。"),
+  ]),
+  "hsr:ファイノン": batch11Options("hsr", "ファイノン", "https://www.prydwen.gg/star-rail/characters/phainon", mainDps, [
+    plan(["ファイノン", "ケリュドラ", "サンデー", "丹恒・騰荒"], "行動順・追加火力・耐久を変身型主力へ集約する。", "Focuses advance, extra damage, and sustain on the transforming carry.", "将拉条、追加输出与生存位集中给变身型主C。"),
+    plan(["ファイノン", "ケリュドラ", "キュレネ", "記憶主人公"], "記憶支援と行動回数を重ねる案。", "A plan layering Remembrance support and actions.", "叠加记忆辅助与行动次数的方案。"),
+    plan(["ファイノン", "ケリュドラ", "花火", "サンデー"], "SP・行動順支援を重ねる高頻度行動案。", "A high-action option stacking Skill Point and advance support.", "叠加战技点与拉条辅助的高频行动方案。"),
+  ]),
+  "hsr:フォフォ": batch11Options("hsr", "フォフォ", "https://game8.jp/houkaistarrail/556584", t("耐久・EP支援", "Sustain & Energy", "生存与能量辅助"), [
+    plan(["銀狼Lv.999", "火花", "爻光", "フォフォ"], "デバフと支援に回復・EP供給を合わせる汎用例。", "A general team pairing debuffs and support with healing and Energy supply.", "将减益、辅助与治疗、能量供给结合的通用例。"),
+  ]),
+  "genshin:オロルン": batch11Options("genshin", "オロルン", "https://game8.jp/genshin/654393", t("雷サブ火力・支援", "Electro sub DPS & support", "雷系副C与辅助"), [
+    plan(["ムアラニ", "オロルン", "フリーナ", "シロネン"], "水・雷の反応と夜魂・耐性低下を重ねる。", "Combines Hydro-Electro reactions, Nightsoul, and RES shred.", "结合水雷反应、夜魂与减抗。"),
+    plan(["ヌヴィレット", "オロルン", "フリーナ", "シロネン"], "水主力へ雷の控え火力と支援を加える。", "Adds off-field Electro damage and support to a Hydro carry.", "为水系主C加入后台雷伤和辅助。"),
+    plan(["クロリンデ", "オロルン", "行秋", "シロネン"], "雷主力・水付着・夜魂支援を組む。", "Pairs an Electro carry with Hydro application and Nightsoul support.", "结合雷系主C、挂水与夜魂辅助。"),
+  ]),
+  "genshin:カーヴェ": batch11Options("genshin", "カーヴェ", "https://game8.jp/genshin/560164", t("開花ドライバー", "Bloom driver", "绽放驾驶员"), [
+    plan(["カーヴェ", "ニィロウ", "ナヒーダ", "珊瑚宮心海"], "草水のみで豊穣の核と回復を安定させる。", "Uses Dendro-Hydro only for Bountiful Cores and healing.", "仅用草水角色稳定丰穰之核与治疗。"),
+    plan(["カーヴェ", "フリーナ", "珊瑚宮心海", "白朮"], "水・草付着と回復を重ねる開花案。", "A Bloom team layering Hydro/Dendro application and healing.", "叠加水草附着与治疗的绽放方案。"),
+    plan(["カーヴェ", "行秋", "主人公（草）", "バーバラ"], "水付着・草共鳴・回復を組む所持対応案。", "A roster-friendly plan with Hydro, Dendro Resonance, and healing.", "结合挂水、草共鸣与治疗的持有适配方案。"),
+  ]),
+  "genshin:ガイア": batch11Options("genshin", "ガイア", "https://game8.jp/genshin/561395", t("氷サブ火力", "Cryo sub DPS", "冰系副C"), [
+    plan(["神里綾華", "ガイア", "楓原万葉", "珊瑚宮心海"], "凍結・氷粒子・耐性低下で氷爆発を支える。", "Supports Cryo Burst with Freeze, particles, and RES shred.", "以冻结、冰元素微粒与减抗支撑冰系爆发。"),
+    plan(["アルレッキーノ", "ガイア", "楓原万葉", "ベネット"], "氷付着と風支援で炎主力の溶解を補助する。", "Cryo application and Anemo support enable Pyro carry Melt.", "以冰附着与风系辅助帮助火系主C打融化。"),
+    plan(["ロサリア", "香菱", "ガイア", "ベネット"], "氷・炎付着と攻撃支援を重ねる溶解案。", "Layers Cryo/Pyro application and ATK support for Melt.", "叠加冰火附着与攻击辅助的融化方案。"),
+  ]),
+  "genshin:カチーナ": batch11Options("genshin", "カチーナ", "https://game8.jp/genshin/636264", t("岩サブ火力・支援", "Geo sub DPS & support", "岩系副C与辅助"), [
+    plan(["ナヴィア", "香菱", "カチーナ", "ベネット"], "結晶・炎共鳴・攻撃支援で岩主力を補助する。", "Uses Crystallize, Pyro Resonance, and ATK support for a Geo carry.", "以结晶、火共鸣与攻击辅助支撑岩系主C。"),
+    plan(["ノエル", "カチーナ", "フリーナ", "ゴロー"], "岩共鳴・防御支援・HP変動支援を組む。", "Combines Geo Resonance, DEF support, and HP-fluctuation buffs.", "结合岩共鸣、防御辅助与生命波动增益。"),
+    plan(["ムアラニ", "カチーナ", "キャンディス", "鍾離"], "水・岩の支援と中断耐性を組む。", "Pairs Hydro-Geo support with interruption resistance.", "结合水岩辅助与抗打断。"),
+  ]),
+  "genshin:キィニチ": batch11Options("genshin", "キィニチ", "https://game8.jp/genshin/640184", mainDps, [
+    plan(["キィニチ", "エミリエ", "マーヴィカ", "トーマ"], "燃焼・草控え火力・炎共鳴・耐久を組む。", "Combines Burning, Dendro off-field damage, Pyro Resonance, and sustain.", "结合燃烧、草系后台输出、火共鸣与生存位。"),
+    plan(["キィニチ", "フリーナ", "マーヴィカ", "白朮"], "水・炎反応と回復を伴う代替案。", "An alternative with Hydro-Pyro reactions and healing.", "结合水火反应与治疗的替代方案。"),
+  ]),
+  "genshin:キャンディス": batch11Options("genshin", "キャンディス", "https://game8.jp/genshin/560314", support, [
+    plan(["キャンディス", "楓原万葉", "香菱", "ベネット"], "水付与・拡散・炎控え火力・攻撃支援を組む。", "Combines Hydro infusion, Swirl, off-field Pyro, and ATK support.", "结合水附魔、扩散、后台火伤与攻击辅助。"),
+    plan(["キャンディス", "ナヒーダ", "ニィロウ", "白朮"], "水・草だけで開花と回復を回す。", "Runs Bloom and healing with Hydro and Dendro only.", "仅用水草角色循环绽放与治疗。"),
+  ]),
+  "zzz:カリン": batch11Options("zzz", "カリン", "https://www.prydwen.gg/zenless/characters/corin", mainDps, [
+    plan(["カリン", "ダイアリン", "アストラ"], "公開ガイドの基準チームで、高速ブレイクと支援を持続斬撃へつなぐ。", "The guide's baseline team links fast stun and support to sustained slashes.", "采用公开指南的基准队伍，以快速失衡和辅助衔接持续斩击。"),
+  ]),
+  "zzz:クレタ": batch11Options("zzz", "クレタ", "https://www.prydwen.gg/zenless/characters/koleda", t("撃破", "Stun", "击破"), [
+    plan(["イヴリン", "クレタ", "アストラ"], "炎主力への高速ブレイクと全体支援を組む。", "Provides fast stun and team support for a Fire carry.", "为火系主C提供快速失衡与全队辅助。"),
+    plan(["スターライト･ビリー", "クレタ", "シーシィア"], "命破主力へブレイクと電気支援を組む。", "Pairs stun and Electric support with a Rupture carry.", "为命破主C搭配失衡和电系辅助。"),
+    plan(["スターライト･ビリー", "クレタ", "潘引壺"], "命破・撃破・防護を組む代替案。", "An alternative combining Rupture, stun, and Defense.", "结合命破、失衡与防护的替代方案。"),
+  ]),
+  "zzz:シーシィア": batch11Options("zzz", "シーシィア", "https://gamewith.jp/zenless/545038", mainDps, [
+    plan(["シーシィア", "「シード」", "「トリガー」"], "電気強攻とオフフィールド撃破を組む基本案。", "A core with Electric Attack and off-field stun.", "结合电系强攻与后台失衡的基础方案。"),
+    plan(["シーシィア", "「シード」", "千夏"], "本文の撃破枠代替を用いる支援重視案。", "A support-focused option using the guide's stun-slot alternative.", "采用本文击破位替代的辅助向方案。"),
+    plan(["シーシィア", "「シード」", "アストラ"], "本文の支援代替を用いる火力補助案。", "A damage-support option using the guide's listed alternative.", "采用本文列出辅助替代的增伤方案。"),
+  ]),
+  "zzz:シグリッド": batch11Options("zzz", "シグリッド", "https://gamewith.jp/zenless/560635", mainDps, [
+    plan(["シグリッド", "ダイアリン", "千夏"], "高速ブレイクと攻撃支援で氷主力の爆発窓を作る。", "Fast stun and ATK support create burst windows for the Ice carry.", "以快速失衡与攻击辅助为冰系主C创造爆发窗口。"),
+    plan(["シグリッド", "ライカン", "リナ"], "氷耐性低下と貫通率支援を重ねる恒常中心案。", "A standard-focused team layering Ice RES shred and PEN support.", "叠加冰抗降低与穿透辅助的常驻角色方案。"),
+  ]),
+  "zzz:スターライト･ビリー": batch11Options("zzz", "スターライト･ビリー", "https://gamewith.jp/zenless/551848", t("命破", "Rupture", "命破"), [
+    plan(["スターライト･ビリー", "ダイアリン", "リュシア"], "命破主力へ撃破と支援を組む。", "Pairs stun and support with a Rupture carry.", "为命破主C搭配失衡与辅助。"),
+    plan(["スターライト･ビリー", "潘引壺", "クレタ"], "防護と炎撃破を組む代替案。", "An alternative with Defense and Fire stun.", "结合防护与火系失衡的替代方案。"),
+  ]),
+  "zzz:ダイアリン": batch11Options("zzz", "ダイアリン", "https://gamewith.jp/zenless/522882", t("撃破", "Stun", "击破"), [
+    plan(["ダイアリン", "照", "葉瞬光"], "ブレイク弱体と支援を、物理撃破の連携へつなぐ。", "Links stun vulnerability and support to Physical chain rotations.", "将失衡易伤与辅助衔接至物理击破连携循环。"),
+    plan(["ダイアリン", "リュシア", "儀玄"], "命破支援と物理撃破を組む。", "Combines Rupture support with Physical stun.", "结合命破辅助与物理失衡。"),
+    plan(["ダイアリン", "ニコ", "カリン"], "防御低下・集敵・物理主力を組む代替案。", "An alternative using DEF shred, grouping, and a Physical carry.", "结合减防、聚怪与物理主C的替代方案。"),
   ]),
 };
 

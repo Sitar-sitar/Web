@@ -39,6 +39,10 @@ describe("ガイド更新履歴", () => {
     expect(batch13Characters).toHaveLength(20);
     expect(batch13Characters.every((item) => item.events.some((event) => event.title === "第13バッチ：個別ビルド・凸・推奨PTを再精査" && event.date === "2026-08-27T02:30:00+09:00"))).toBe(true);
     expect(batch13Characters.every((item) => item.events.some((event) => event.changes.includes("根拠に明示されない数値の補間を行わず、公開値比較の目標のみ登録")))).toBe(true);
+    const batch14Characters = history.characters.filter((item) => item.events.some((event) => event.title === "第14バッチ：個別ビルド・凸・推奨PTを再精査"));
+    expect(batch14Characters).toHaveLength(20);
+    expect(batch14Characters.every((item) => item.events.some((event) => event.title === "第14バッチ：個別ビルド・凸・推奨PTを再精査" && event.date === "2026-08-27T03:00:00+09:00"))).toBe(true);
+    expect(batch14Characters.every((item) => item.events.some((event) => event.changes.includes("保存UIDの復元・ゲーム切替・再読み込みで照会せず、明示Searchのみで検証")))).toBe(true);
     expect(history.characters.find((item) => item.name === "アンビー")?.updatedAt).toBe("2026-08-26");
   });
 });

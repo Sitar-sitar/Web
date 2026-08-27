@@ -153,6 +153,12 @@ const BATCH_13_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["プロメイア", "ベン", "ライカン", "リュシア", "儀玄", "橘福福"],
 };
 
+const BATCH_14_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["刃", "青雀", "雪衣", "素裳", "丹恒", "丹恒・騰荒"],
+  genshin: ["セトス", "セノ", "ダリア", "タルタリヤ", "チャスカ", "ディオナ", "ディシア", "ティナリ"],
+  zzz: ["狛野真斗", "朱鳶", "照", "千夏", "浅羽悠真", "南宮羽"],
+};
+
 function batch2UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
   if (!BATCH_2_UPDATED_NAMES[game].includes(name)) return undefined;
   return {
@@ -322,6 +328,19 @@ function batch13UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent
   };
 }
 
+function batch14UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
+  if (!BATCH_14_UPDATED_NAMES[game].includes(name)) return undefined;
+  return {
+    date: "2026-08-27T03:00:00+09:00",
+    scope: "character",
+    title: "第14バッチ：個別ビルド・凸・推奨PTを再精査",
+    summary: `${name}の公開プロフィール目標、更新日付き個別根拠、ID優先の全6段階凸、最大3案の推奨PTを照合しました。固定値の根拠がない場合は数値を推測せず、戦闘中・条件付き効果は公開プロフィール値から分離しています。`,
+    changes: ["ロール共通の旧目標を個別ビルドへ置換", "確認済みsource IDの全6段階凸をID優先で追加", "固定値根拠のないステータスは推測で補わず、優先項目として記録", "戦闘中・編成・条件付き効果を公開値から分離", "根拠で確認できた最大3案の推奨PTを更新", "保存UIDの復元・ゲーム切替・再読み込みで照会せず、明示Searchのみで検証"],
+    rationale: "キャラクター固有の根拠とsource IDを優先し、同名別実装・未根拠数値・戦闘内バフを公開プロフィール評価へ混入させないため。",
+    games: [game],
+  };
+}
+
 export function guideUpdateHistory() {
   const games: CatalogGameId[] = ["hsr", "genshin", "zzz"];
   const characters = games.flatMap((game) => CHARACTER_GUIDE_CATALOG[game].map((name) => {
@@ -348,6 +367,7 @@ export function guideUpdateHistory() {
         ...(batch11UpdateEvent(game, name) ? [batch11UpdateEvent(game, name)!] : []),
         ...(batch12UpdateEvent(game, name) ? [batch12UpdateEvent(game, name)!] : []),
         ...(batch13UpdateEvent(game, name) ? [batch13UpdateEvent(game, name)!] : []),
+        ...(batch14UpdateEvent(game, name) ? [batch14UpdateEvent(game, name)!] : []),
         {
         date: metadata.updatedAt,
         scope: "character" as const,

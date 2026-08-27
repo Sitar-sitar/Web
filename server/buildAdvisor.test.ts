@@ -77,7 +77,7 @@ describe("MiHoMoデータ正規化", () => {
     expect(data.characters[0]?.guide.targetContext).toContain("開拓者（虚数・調和）");
   });
 
-  it("既存の精密定義がないキャラクターにも個別プロファイルとデータ時点を付与する", () => {
+  it("未監査キャラクターには汎用プロファイルを維持し、個別更新済みの丹恒には個別データ時点を付与する", () => {
     const data = normalizeMihomoPayload({
       player: { uid: "800000003", nickname: "テスト開拓者" },
       characters: [
@@ -87,9 +87,9 @@ describe("MiHoMoデータ正規化", () => {
     });
     const byName = Object.fromEntries(data.characters.map((character) => [character.name, character]));
 
-    expect(byName["丹恒"]?.guide.targetContext).toContain("丹恒用");
+    expect(byName["丹恒"]?.guide.targetContext).toContain("丹恒専用");
     expect(byName["白露"]?.comparisons.map((comparison) => comparison.key)).toEqual(["speed", "effectRes", "hpPercent"]);
-    expect(byName["丹恒"]?.guide.dataAsOf).toBe("2026-08-18");
+    expect(byName["丹恒"]?.guide.dataAsOf).toBe("2026-08-11");
     expect(byName["白露"]?.guide.sourceLabel).toContain("KQM");
   });
 });

@@ -112,6 +112,12 @@ const BATCH_13_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["プロメイア", "ベン", "ライカン", "リュシア", "儀玄", "橘福福"],
 };
 
+const BATCH_14_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["刃", "青雀", "雪衣", "素裳", "丹恒", "丹恒・騰荒"],
+  genshin: ["セトス", "セノ", "ダリア", "タルタリヤ", "チャスカ", "ディオナ", "ディシア", "ティナリ"],
+  zzz: ["狛野真斗", "朱鳶", "照", "千夏", "浅羽悠真", "南宮羽"],
+};
+
 Object.entries(BATCH_2_UPDATED_NAMES).forEach(([game, names]) => {
   const gameId = game as CatalogGameId;
   names.forEach((name) => {
@@ -331,6 +337,30 @@ Object.entries(BATCH_13_UPDATED_NAMES).forEach(([game, names]) => {
       : gameId === "genshin"
         ? "Game8・Game8英語版・KeqingMainsの更新日付き個別ビルド・PTガイドを照合"
         : "Game8・GameWith・Prydwenの更新日付き個別エージェントガイドを照合";
+  });
+});
+
+Object.entries(BATCH_14_UPDATED_NAMES).forEach(([game, names]) => {
+  const gameId = game as CatalogGameId;
+  names.forEach((name) => {
+    const record = CHARACTER_GUIDE_METADATA[gameId][name];
+    if (!record) return;
+    record.dataAsOf = name === "刃" ? "2026-08-26"
+      : name === "青雀" || name === "雪衣" || name === "素裳" || name === "丹恒" ? "2026-08-11"
+        : name === "丹恒・騰荒" || name === "セノ" || name === "ディオナ" || name === "千夏" || name === "浅羽悠真" || name === "南宮羽" ? "2026-08-27"
+          : name === "タルタリヤ" ? "2026-08-25"
+            : name === "狛野真斗" || name === "朱鳶" ? "2026-06-05"
+              : name === "照" ? "2026-08-26"
+                : "2026-08-13";
+    record.updatedAt = "2026-08-27";
+    record.sourceLabel = gameId === "hsr"
+      ? name === "刃" ? "Game8・GameWith・Prydwenの更新日付き個別ビルド・PTガイドを照合"
+        : name === "丹恒・騰荒" ? "Game8・GameWithの更新日付き個別ビルド・PTガイドを照合"
+          : "Game8の更新日付き個別ビルド・PTガイドを照合"
+      : gameId === "genshin"
+        ? "Game8の更新日付き個別ビルド・PTガイドを照合"
+        : name === "狛野真斗" || name === "朱鳶" ? "Game8の更新日付き個別エージェント・PTガイドを照合"
+          : "Game8・GameWithの更新日付き個別エージェント・PTガイドを照合";
   });
 });
 

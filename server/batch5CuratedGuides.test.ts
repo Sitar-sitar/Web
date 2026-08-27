@@ -63,7 +63,7 @@ describe("第5バッチの個別ビルド", () => {
 
 describe("第5バッチの凸・PT・履歴", () => {
   const profiles = [
-    identity("hsr", "1305", "Dr.レイシオ"), identity("hsr", "1005", "カフカ"), identity("hsr", "1214", "ブラックスワン"), identity("hsr", "1212", "鏡流"),
+    identity("hsr", "1305", "Dr.レイシオ"), identity("hsr", "1005", "カフカ"), identity("hsr", "1307", "ブラックスワン"), identity("hsr", "1212", "鏡流"),
     identity("genshin", "10000025", "行秋"), identity("genshin", "10000023", "香菱"), identity("genshin", "10000031", "フィッシュル"),
     identity("zzz", "1181", "グレース"), identity("zzz", "1171", "バーニス"), identity("zzz", "1151", "ルーシー"),
   ];

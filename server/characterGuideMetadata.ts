@@ -106,6 +106,12 @@ const BATCH_12_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["ニコ", "ノルムー", "ヒューゴ", "ピュロイス", "ビリー", "プルクラ"],
 };
 
+const BATCH_13_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["ルカ", "雲璃", "遠坂凛", "火花", "寒鴉", "帰忘の流離人", "景元", "桂乃芬"],
+  genshin: ["シトラリ", "シャルロット", "シュヴルーズ", "ジン", "スカーク", "スクロース"],
+  zzz: ["プロメイア", "ベン", "ライカン", "リュシア", "儀玄", "橘福福"],
+};
+
 Object.entries(BATCH_2_UPDATED_NAMES).forEach(([game, names]) => {
   const gameId = game as CatalogGameId;
   names.forEach((name) => {
@@ -306,6 +312,25 @@ Object.entries(BATCH_12_UPDATED_NAMES).forEach(([game, names]) => {
       : gameId === "genshin"
         ? "Game8の更新日付き個別ビルド・PTガイドを照合"
         : "Game8の更新日付き個別エージェントガイドを照合";
+  });
+});
+
+Object.entries(BATCH_13_UPDATED_NAMES).forEach(([game, names]) => {
+  const gameId = game as CatalogGameId;
+  names.forEach((name) => {
+    const record = CHARACTER_GUIDE_METADATA[gameId][name];
+    if (!record) return;
+    record.dataAsOf = name === "ルカ" || name === "雲璃" || name === "寒鴉" || name === "帰忘の流離人" || name === "景元" || name === "桂乃芬" ? "2026-08-26"
+      : name === "ベン" || name === "ライカン" ? "2026-08-19"
+        : name === "スクロース" ? "2026-08-14"
+          : name === "シャルロット" || name === "シュヴルーズ" || name === "ジン" || name === "スカーク" ? "2026-08-13"
+            : "2026-08-27";
+    record.updatedAt = "2026-08-27";
+    record.sourceLabel = gameId === "hsr"
+      ? "Game8・GameWith・Prydwenの更新日付き個別ビルド・PTガイドを照合"
+      : gameId === "genshin"
+        ? "Game8・Game8英語版・KeqingMainsの更新日付き個別ビルド・PTガイドを照合"
+        : "Game8・GameWith・Prydwenの更新日付き個別エージェントガイドを照合";
   });
 });
 

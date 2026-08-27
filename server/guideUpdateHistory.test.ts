@@ -34,6 +34,11 @@ describe("ガイド更新履歴", () => {
     expect(batch12Characters).toHaveLength(20);
     expect(batch12Characters.every((item) => item.events.some((event) => event.title === "第12バッチ：個別ビルド・凸・推奨PTを再精査" && event.date === "2026-08-27T01:50:00+09:00"))).toBe(true);
     expect(batch12Characters.every((item) => item.events.some((event) => event.changes.includes("公開UIDは明示Searchのみで検証")))).toBe(true);
+    const batch13Names = ["ルカ", "雲璃", "遠坂凛", "火花", "寒鴉", "帰忘の流離人", "景元", "桂乃芬", "シトラリ", "シャルロット", "シュヴルーズ", "ジン", "スカーク", "スクロース", "プロメイア", "ベン", "ライカン", "リュシア", "儀玄", "橘福福"];
+    const batch13Characters = history.characters.filter((item) => batch13Names.includes(item.name));
+    expect(batch13Characters).toHaveLength(20);
+    expect(batch13Characters.every((item) => item.events.some((event) => event.title === "第13バッチ：個別ビルド・凸・推奨PTを再精査" && event.date === "2026-08-27T02:30:00+09:00"))).toBe(true);
+    expect(batch13Characters.every((item) => item.events.some((event) => event.changes.includes("根拠に明示されない数値の補間を行わず、公開値比較の目標のみ登録")))).toBe(true);
     expect(history.characters.find((item) => item.name === "アンビー")?.updatedAt).toBe("2026-08-26");
   });
 });

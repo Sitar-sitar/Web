@@ -147,6 +147,12 @@ const BATCH_12_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
   zzz: ["ニコ", "ノルムー", "ヒューゴ", "ピュロイス", "ビリー", "プルクラ"],
 };
 
+const BATCH_13_UPDATED_NAMES: Record<CatalogGameId, readonly string[]> = {
+  hsr: ["ルカ", "雲璃", "遠坂凛", "火花", "寒鴉", "帰忘の流離人", "景元", "桂乃芬"],
+  genshin: ["シトラリ", "シャルロット", "シュヴルーズ", "ジン", "スカーク", "スクロース"],
+  zzz: ["プロメイア", "ベン", "ライカン", "リュシア", "儀玄", "橘福福"],
+};
+
 function batch2UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
   if (!BATCH_2_UPDATED_NAMES[game].includes(name)) return undefined;
   return {
@@ -303,6 +309,19 @@ function batch12UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent
   };
 }
 
+function batch13UpdateEvent(game: CatalogGameId, name: string): GuideUpdateEvent | undefined {
+  if (!BATCH_13_UPDATED_NAMES[game].includes(name)) return undefined;
+  return {
+    date: "2026-08-27T02:30:00+09:00",
+    scope: "character",
+    title: "第13バッチ：個別ビルド・凸・推奨PTを再精査",
+    summary: `${name}の公開プロフィール目標、更新日付き個別根拠、ID優先の全6段階凸、最大3案の推奨PTを照合しました。根拠にない数値補間は行わず、戦闘中・条件付き効果は公開プロフィール値から分離しています。`,
+    changes: ["ロール共通の旧目標を個別ビルドへ置換", "確認済みsource IDの全6段階凸をID優先で追加", "根拠に明示されない数値の補間を行わず、公開値比較の目標のみ登録", "戦闘中・編成・条件付き効果を公開値から分離", "根拠で確認できた最大3案の推奨PTを更新", "公開UIDは明示Searchのみで検証"],
+    rationale: "キャラクター固有の公開値目標を根拠に限定し、同名別実装・戦闘内バフ・未確認数値を公開プロフィール評価へ混入させないため。",
+    games: [game],
+  };
+}
+
 export function guideUpdateHistory() {
   const games: CatalogGameId[] = ["hsr", "genshin", "zzz"];
   const characters = games.flatMap((game) => CHARACTER_GUIDE_CATALOG[game].map((name) => {
@@ -328,6 +347,7 @@ export function guideUpdateHistory() {
         ...(batch10UpdateEvent(game, name) ? [batch10UpdateEvent(game, name)!] : []),
         ...(batch11UpdateEvent(game, name) ? [batch11UpdateEvent(game, name)!] : []),
         ...(batch12UpdateEvent(game, name) ? [batch12UpdateEvent(game, name)!] : []),
+        ...(batch13UpdateEvent(game, name) ? [batch13UpdateEvent(game, name)!] : []),
         {
         date: metadata.updatedAt,
         scope: "character" as const,

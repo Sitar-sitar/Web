@@ -87,6 +87,15 @@ jobs:
           mkdir -p site/hoyoverse site/rubber
           cp -a hoyoverse/dist/public/. site/hoyoverse/
           cp -a rubber/dist/public/. site/rubber/
+
+          # GitHub Pages does not provide SPA history fallback for nested paths.
+          # Publish index.html at every known client-side route so direct links and
+          # OAuth redirects such as /admin work without a Pages 404.
+          for route in updates feedback admin admin/feedback; do
+            mkdir -p "site/hoyoverse/$route"
+            cp site/hoyoverse/index.html "site/hoyoverse/$route/index.html"
+          done
+
           cp site/hoyoverse/index.html site/hoyoverse/404.html
           cp site/rubber/index.html site/rubber/404.html
           cat > site/index.html <<'EOF'

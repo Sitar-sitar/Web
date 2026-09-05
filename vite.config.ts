@@ -204,8 +204,25 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
+function vitePluginGitHubPagesCompatibility(): Plugin {
+  return {
+    name: "github-pages-compatibility",
+    enforce: "pre",
+    transform(code, id) {
+      if (!IS_GITHUB_PAGES || !id.endsWith("/client/src/pages/Home.tsx")) {
+        return null;
+      }
+
+      return code.replace(
+        'src="/manus-storage/rubber-index-mark_9a57d3c9.png"',
+        'src={`${import.meta.env.BASE_URL}rubber-index-mark.svg`}',
+      );
+    },
+  };
+}
+
 const manusPlugins = [jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
-const plugins = [react(), tailwindcss(), ...(IS_GITHUB_PAGES ? [] : manusPlugins)];
+const plugins = [react(), tailwindcss(), vitePluginGitHubPagesCompatibility(), ...(IS_GITHUB_PAGES ? [] : manusPlugins)];
 
 export default defineConfig({
   base: IS_GITHUB_PAGES ? "/Web/" : "/",

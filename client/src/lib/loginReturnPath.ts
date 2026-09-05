@@ -1,5 +1,6 @@
 export const LOGIN_RETURN_PATH_KEY = "starrail-build-advisor.login-return-path";
-export const ADMIN_LOGIN_RETURN_PATHS = ["/admin", "/admin/feedback"] as const;
+export const ADMIN_LOGIN_RETURN_PATH = "/admin/feedback";
+export const ADMIN_LOGIN_RETURN_PATHS = ["/admin", ADMIN_LOGIN_RETURN_PATH] as const;
 
 type AdminLoginReturnPath = (typeof ADMIN_LOGIN_RETURN_PATHS)[number];
 

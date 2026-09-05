@@ -3,7 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { consumeLoginReturnPath } from "@/lib/loginReturnPath";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Router as WouterRouter, Switch, useLocation } from "wouter";
 import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -45,6 +45,10 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const routerBase = import.meta.env.BASE_URL === "/"
+    ? undefined
+    : import.meta.env.BASE_URL.replace(/\/$/, "");
+
   return (
     <ErrorBoundary>
       <ThemeProvider
@@ -54,7 +58,9 @@ function App() {
         <TooltipProvider>
           <LanguageProvider>
             <Toaster />
-            <Router />
+            <WouterRouter base={routerBase}>
+              <Router />
+            </WouterRouter>
           </LanguageProvider>
         </TooltipProvider>
       </ThemeProvider>

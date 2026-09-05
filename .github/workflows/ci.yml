@@ -1,0 +1,52 @@
+name: RubberDB CI
+
+# 修正設計書 §9 の CI ゲート。deploy はせず、検査だけを行う。
+on:
+  push:
+    branches:
+      - RubberDB
+  pull_request:
+    branches:
+      - RubberDB
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rubber-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Typecheck / test / build / artifact validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Audit production dependencies
+        run: pnpm audit --audit-level high --prod
+
+      - name: Build (GitHub Pages base)
+        run: pnpm exec vite build --base /Web/rubber/
+
+      - name: Validate build artifact
+        run: node scripts/verify-build-artifact.mjs dist/public --base /Web/rubber/

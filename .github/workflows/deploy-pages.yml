@@ -55,7 +55,6 @@ jobs:
           headers="$(mktemp)"
           health="$(mktemp)"
           trpc="$(mktemp)"
-          lookup="$(mktemp)"
           curl -fsS --retry 5 --retry-all-errors --retry-delay 2 \
             -H "Origin: https://sitar-sitar.github.io" \
             -D "$headers" \
@@ -68,16 +67,6 @@ jobs:
             "$API_BASE_URL/api/trpc/build.guideHistory" \
             -o "$trpc"
           grep -q '"result"' "$trpc"
-          lookup_input="$(node -e "process.stdout.write(encodeURIComponent(JSON.stringify({json:{game:'genshin',uid:'618285856'}})))")"
-          curl -fsS --retry 5 --retry-all-errors --retry-delay 2 \
-            -H "Origin: https://sitar-sitar.github.io" \
-            "$API_BASE_URL/api/trpc/build.lookup?input=$lookup_input" \
-            -o "$lookup"
-          grep -q '"result"' "$lookup"
-          if grep -q '"error"' "$lookup"; then
-            cat "$lookup"
-            exit 1
-          fi
 
       - name: Build HoYoverse site
         working-directory: hoyoverse

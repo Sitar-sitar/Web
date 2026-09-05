@@ -15,6 +15,7 @@ const PROJECT_ROOT = import.meta.dirname;
 const LOG_DIR = path.join(PROJECT_ROOT, ".manus-logs");
 const MAX_LOG_SIZE_BYTES = 1 * 1024 * 1024; // 1MB per log file
 const TRIM_TARGET_BYTES = Math.floor(MAX_LOG_SIZE_BYTES * 0.6); // Trim to 60% to avoid constant re-trimming
+const IS_GITHUB_PAGES = process.env.GITHUB_ACTIONS === "true";
 
 type LogSource = "browserConsole" | "networkRequests" | "sessionReplay";
 
@@ -203,9 +204,11 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+const manusPlugins = [jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+const plugins = [react(), tailwindcss(), ...(IS_GITHUB_PAGES ? [] : manusPlugins)];
 
 export default defineConfig({
+  base: IS_GITHUB_PAGES ? "/Web/" : "/",
   plugins,
   resolve: {
     alias: {

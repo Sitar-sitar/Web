@@ -43,6 +43,10 @@ jobs:
         working-directory: hoyoverse
         run: pnpm install --frozen-lockfile
 
+      - name: Validate HoYoverse API build
+        working-directory: hoyoverse
+        run: pnpm build:api
+
       - name: Build HoYoverse site
         working-directory: hoyoverse
         env:

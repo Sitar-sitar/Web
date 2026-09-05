@@ -1,11 +1,9 @@
-name: Build and deploy GitHub Pages
+name: Build and deploy both sites
 
 on:
   push:
     branches:
-      - hoyoversebuilder
-  pull_request:
-    branches:
+      - RubberDB
       - hoyoversebuilder
   workflow_dispatch:
 
@@ -15,15 +13,24 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-two-sites
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout HoYoverse site
         uses: actions/checkout@v6
+        with:
+          ref: hoyoversebuilder
+          path: hoyoverse
+
+      - name: Checkout RubberDB site
+        uses: actions/checkout@v6
+        with:
+          ref: RubberDB
+          path: rubber
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -33,24 +40,59 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Install dependencies
+      - name: Install HoYoverse dependencies
+        working-directory: hoyoverse
         run: pnpm install --frozen-lockfile
 
-      - name: Build static site
-        run: pnpm exec vite build
+      - name: Build HoYoverse site
+        working-directory: hoyoverse
+        run: pnpm exec vite build --config vite.pages.config.ts --base /Web/hoyoverse/
+
+      - name: Install RubberDB dependencies
+        working-directory: rubber
+        run: pnpm install --frozen-lockfile
+
+      - name: Build RubberDB site
+        working-directory: rubber
+        run: pnpm exec vite build --base /Web/rubber/
+
+      - name: Assemble Pages artifact
+        run: |
+          mkdir -p site/hoyoverse site/rubber
+          cp -a hoyoverse/dist/public/. site/hoyoverse/
+          cp -a rubber/dist/public/. site/rubber/
+          cp site/hoyoverse/index.html site/hoyoverse/404.html
+          cp site/rubber/index.html site/rubber/404.html
+          cat > site/index.html <<'EOF'
+          <!doctype html>
+          <html lang="ja">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width,initial-scale=1" />
+              <title>Sitar-sitar Web</title>
+              <style>
+                body{font-family:system-ui,-apple-system,sans-serif;max-width:720px;margin:64px auto;padding:0 20px;line-height:1.7}
+                a{display:block;margin:16px 0;padding:18px;border:1px solid #ccc;border-radius:12px;text-decoration:none;color:inherit}
+                strong{display:block;font-size:1.15rem}
+              </style>
+            </head>
+            <body>
+              <h1>Sitar-sitar Web</h1>
+              <a href="./hoyoverse/"><strong>HoYoverse Builder</strong>崩壊：スターレイル・原神・ゼンレスゾーンゼロ ビルド支援</a>
+              <a href="./rubber/"><strong>RubberDB</strong>卓球ラバー図鑑</a>
+            </body>
+          </html>
+          EOF
 
       - name: Configure GitHub Pages
-        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
-          path: dist/public
+          path: site
 
   deploy:
-    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

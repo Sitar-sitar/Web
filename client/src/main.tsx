@@ -6,6 +6,11 @@ import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
 import { startLogin } from "./const";
+import {
+  consumeAdminExchangeCodeFromLocation,
+  getAdminBearerToken,
+  setAdminBearerToken,
+} from "./lib/adminSession";
 import { safeTrpcFetch } from "./lib/safeTrpcFetch";
 import "./index.css";
 
@@ -46,10 +51,13 @@ const trpcClient = trpc.createClient({
       url: trpcUrl,
       transformer: superjson,
       headers() {
-        // Preview auto-login fallback: when the browser blocks iframe cookies
-        // (Safari ITP / private browsing / WebView), the runtime mirrors the
-        // session into sessionStorage so we can forward it as a Bearer token.
-        // The regular OAuth cookie flow keeps working and takes priority server-side.
+        // Safari/ITP fallback: the GitHub callback provides a one-time exchange
+        // code in the URL fragment. It is exchanged for a short-lived Bearer
+        // token before React renders, so cross-site cookies are not required.
+        const adminToken = getAdminBearerToken();
+        if (adminToken) return { Authorization: `Bearer ${adminToken}` };
+
+        // Keep the legacy preview fallback for non-production Manus runtimes.
         try {
           const raw = sessionStorage.getItem("manus-cookie");
           if (raw) {
@@ -72,10 +80,39 @@ const trpcClient = trpc.createClient({
   ],
 });
 
-createRoot(document.getElementById("root")!).render(
-  <trpc.Provider client={trpcClient} queryClient={queryClient}>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </trpc.Provider>
-);
+async function bootstrapAdminSession() {
+  const exchangeCode = consumeAdminExchangeCodeFromLocation();
+  if (!exchangeCode) return;
+
+  try {
+    const response = await fetch(`${apiBaseUrl}/api/auth/github/exchange`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: exchangeCode }),
+      cache: "no-store",
+    });
+    if (!response.ok) {
+      throw new Error(`Admin session exchange failed: ${response.status}`);
+    }
+
+    const payload = await response.json() as { token?: string };
+    if (!payload.token) throw new Error("Admin session exchange returned no token");
+    setAdminBearerToken(payload.token);
+  } catch (error) {
+    console.error("[Admin Auth] Failed to exchange one-time code", error);
+  }
+}
+
+async function bootstrap() {
+  await bootstrapAdminSession();
+
+  createRoot(document.getElementById("root")!).render(
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </trpc.Provider>
+  );
+}
+
+void bootstrap();

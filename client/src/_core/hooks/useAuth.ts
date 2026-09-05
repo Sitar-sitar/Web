@@ -1,4 +1,5 @@
 import { startLogin } from "@/const";
+import { clearAdminBearerToken } from "@/lib/adminSession";
 import { trpc } from "@/lib/trpc";
 import { TRPCClientError } from "@trpc/client";
 import { useCallback, useEffect, useMemo } from "react";
@@ -39,9 +40,9 @@ export function useAuth(options?: UseAuthOptions) {
       }
       throw error;
     } finally {
-      // Clear the Preview auto-login token mirrored into sessionStorage, so
-      // header-based sessions (Safari ITP / WebView) are logged out too. The
-      // backend cookie is cleared by the logout mutation.
+      // Remove both the production Safari Bearer fallback and the legacy Preview
+      // token. The backend also clears the HttpOnly session cookie when present.
+      clearAdminBearerToken();
       try {
         sessionStorage.removeItem("manus-cookie");
       } catch {}

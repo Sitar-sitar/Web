@@ -91,7 +91,7 @@ jobs:
           # GitHub Pages does not provide SPA history fallback for nested paths.
           # Publish index.html at every known client-side route so direct links and
           # OAuth redirects such as /admin work without a Pages 404.
-          for route in updates feedback admin admin/feedback; do
+          for route in characters updates feedback admin admin/feedback; do
             mkdir -p "site/hoyoverse/$route"
             cp site/hoyoverse/index.html "site/hoyoverse/$route/index.html"
           done

@@ -47,6 +47,27 @@ jobs:
         working-directory: hoyoverse
         run: pnpm build:api
 
+      - name: Verify Railway API
+        env:
+          API_BASE_URL: https://hoyoverse-builder-api-production.up.railway.app
+        run: |
+          set -euo pipefail
+          headers="$(mktemp)"
+          health="$(mktemp)"
+          trpc="$(mktemp)"
+          curl -fsS --retry 5 --retry-all-errors --retry-delay 2 \
+            -H "Origin: https://sitar-sitar.github.io" \
+            -D "$headers" \
+            "$API_BASE_URL/api/health" \
+            -o "$health"
+          grep -q '"ok":true' "$health"
+          grep -qi '^access-control-allow-origin: https://sitar-sitar.github.io' "$headers"
+          curl -fsS --retry 5 --retry-all-errors --retry-delay 2 \
+            -H "Origin: https://sitar-sitar.github.io" \
+            "$API_BASE_URL/api/trpc/build.guideHistory" \
+            -o "$trpc"
+          grep -q '"result"' "$trpc"
+
       - name: Build HoYoverse site
         working-directory: hoyoverse
         env:

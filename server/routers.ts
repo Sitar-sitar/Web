@@ -139,7 +139,7 @@ export const appRouter = router({
         } catch (error) {
           if (error instanceof TRPCError) throw error;
           console.error("[Feedback] Failed to update feedback status:", error);
-          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Unable to load feedback" });
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Unable to update feedback" });
         }
       }),
   }),

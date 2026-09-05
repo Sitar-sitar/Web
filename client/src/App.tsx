@@ -5,6 +5,7 @@ import { consumeLoginReturnPath } from "@/lib/loginReturnPath";
 import NotFound from "@/pages/NotFound";
 import { Route, Router as WouterRouter, Switch, useLocation } from "wouter";
 import { useEffect } from "react";
+import AdminLogoutButton from "./components/AdminLogoutButton";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -52,6 +53,7 @@ function App() {
             <Toaster />
             <WouterRouter base={routerBase}>
               <Router />
+              <AdminLogoutButton />
             </WouterRouter>
           </LanguageProvider>
         </TooltipProvider>

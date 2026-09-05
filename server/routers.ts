@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { applyBatch15CuratedOverrides } from "./batch15CuratedData";
 import { applyBatch15History } from "./batch15History";
+import { characterReferenceCatalog, characterReferenceFor } from "./characterReference";
 import { createTranslationFeedback, getLookupAnalyticsDashboard, listTranslationFeedback, recordLookupAnalyticsEvent, updateTranslationFeedbackStatus } from "./db";
 import { lookupGameBuild } from "./gameProviders";
 import { guideUpdateHistory } from "./guideUpdateHistory";
@@ -36,7 +37,7 @@ const startOfJst = (date: string) => new Date(`${date}T00:00:00.000+09:00`);
 const endOfJst = (date: string) => new Date(`${date}T23:59:59.999+09:00`);
 
 export const appRouter = router({
-    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
+  // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
@@ -51,6 +52,16 @@ export const appRouter = router({
 
   build: router({
     guideHistory: publicProcedure.query(() => applyBatch15History(guideUpdateHistory())),
+    referenceCatalog: publicProcedure.query(() => characterReferenceCatalog()),
+    reference: publicProcedure
+      .input(z.object({ game: z.enum(["hsr", "genshin", "zzz"]), name: z.string().trim().min(1).max(80) }))
+      .query(({ input }) => {
+        const result = characterReferenceFor(input.game, input.name);
+        if (!result) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "キャラクターが図鑑に見つかりません。" });
+        }
+        return result;
+      }),
     lookup: publicProcedure
       .input(z.object({ game: z.enum(["hsr", "genshin", "zzz"]), uid: z.string().trim().regex(/^\d{8,10}$/, "UIDは8〜10桁の数字で入力してください。") }).superRefine(({ game, uid }, ctx) => {
         if (game !== "zzz" && !/^\d{9,10}$/.test(uid)) {
@@ -132,13 +143,6 @@ export const appRouter = router({
         }
       }),
   }),
-
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
 });
 
 export type AppRouter = typeof appRouter;

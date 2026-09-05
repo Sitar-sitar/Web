@@ -3,6 +3,7 @@ builder = "railpack"
 buildCommand = "corepack enable && pnpm install --frozen-lockfile && pnpm build:api"
 
 [deploy]
+preDeployCommand = ["pnpm exec drizzle-kit migrate"]
 startCommand = "pnpm start:api"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 120

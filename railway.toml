@@ -1,0 +1,10 @@
+[build]
+builder = "railpack"
+buildCommand = "corepack enable && pnpm install --frozen-lockfile && pnpm build:api"
+
+[deploy]
+startCommand = "pnpm start:api"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 120
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 5

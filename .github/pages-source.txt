@@ -1,0 +1,2 @@
+HoYoverse site source: 1362a5dab7566ce0d5111f0b55ba2c5363dfcfe9
+GitHub Pages compatibility commits are applied on top of this source.

@@ -1,0 +1,38 @@
+name: Validate HoYoverse external API
+
+on:
+  pull_request:
+    branches:
+      - hoyoversebuilder
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm check
+
+      - name: Build API
+        run: pnpm build:api
+
+      - name: Build Pages frontend
+        env:
+          VITE_API_BASE_URL: https://api.example.invalid
+        run: pnpm exec vite build --config vite.pages.config.ts --base /Web/hoyoverse/

@@ -43,8 +43,14 @@ jobs:
         working-directory: hoyoverse
         run: pnpm install --frozen-lockfile
 
+      - name: Validate HoYoverse API build
+        working-directory: hoyoverse
+        run: pnpm build:api
+
       - name: Build HoYoverse site
         working-directory: hoyoverse
+        env:
+          VITE_API_BASE_URL: ${{ vars.HOYOVERSE_API_BASE_URL }}
         run: pnpm exec vite build --config vite.pages.config.ts --base /Web/hoyoverse/
 
       - name: Install RubberDB dependencies

@@ -10,6 +10,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
+import CharacterCatalog from "./pages/CharacterCatalog";
 import GuideHistory from "./pages/GuideHistory";
 import TranslationFeedback from "./pages/TranslationFeedback";
 import AdminHome from "./pages/AdminHome";
@@ -30,6 +31,7 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/characters"} component={CharacterCatalog} />
       <Route path={"/updates"} component={GuideHistory} />
       <Route path={"/feedback"} component={TranslationFeedback} />
       <Route path={"/admin"} component={AdminHome} />

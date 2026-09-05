@@ -30,7 +30,7 @@ describe("第15バッチ個別精査", () => {
     expect(guide).not.toBeNull();
     expect(guide?.updatedAt).toBe(BATCH15_DATE);
     expect(guide?.dataAsOf).toBe(BATCH15_DATE);
-    expect(guide?.profileId).toContain("curated:batch15:");
+    expect(guide?.profileId).toMatch(/^curated:batch15(?::|-)/);
     expect(guide?.targetContext?.length).toBeGreaterThan(0);
 
     const parties = batch15PartyFor(game, name);

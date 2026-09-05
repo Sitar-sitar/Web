@@ -3,7 +3,6 @@ import express, { type Express } from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
@@ -73,9 +72,11 @@ async function startServer() {
   });
 
   // Manus-specific routes are only needed by the original full-stack runtime.
-  // The external public API deployment can stay stateless and expose tRPC only.
+  // Keep OAuth code unloaded entirely in API-only deployments so public API
+  // requests do not depend on Manus-specific environment variables.
   if (!apiOnly) {
     registerStorageProxy(app);
+    const { registerOAuthRoutes } = await import("./oauth");
     registerOAuthRoutes(app);
   }
 

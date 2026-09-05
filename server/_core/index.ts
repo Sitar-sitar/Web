@@ -6,6 +6,7 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
+import { registerGitHubAdminAuthRoutes } from "./githubAdminAuth";
 import { serveStatic, setupVite } from "./vite";
 
 const DEFAULT_CORS_ORIGINS = ["https://sitar-sitar.github.io"];
@@ -71,9 +72,12 @@ async function startServer() {
     res.status(200).json({ ok: true, service: "hoyoverse-builder-api" });
   });
 
+  // GitHub App administrator login must be available on the public Railway API
+  // because the production frontend is hosted separately on GitHub Pages.
+  registerGitHubAdminAuthRoutes(app);
+
   // Manus-specific routes are only needed by the original full-stack runtime.
-  // Keep OAuth code unloaded entirely in API-only deployments so public API
-  // requests do not depend on Manus-specific environment variables.
+  // Keep legacy OAuth/storage code unloaded entirely in API-only deployments.
   if (!apiOnly) {
     registerStorageProxy(app);
     const { registerOAuthRoutes } = await import("./oauth");
@@ -99,6 +103,7 @@ async function startServer() {
         service: "hoyoverse-builder-api",
         health: "/api/health",
         trpc: "/api/trpc",
+        adminAuth: "/api/auth/github",
       });
     });
   }

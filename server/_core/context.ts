@@ -1,5 +1,6 @@
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import type { User } from "../../drizzle/schema";
+import { authenticateGitHubAdminRequest } from "./githubAdminAuth";
 
 export type TrpcContext = {
   req: CreateExpressContextOptions["req"];
@@ -12,9 +13,17 @@ export async function createContext(
 ): Promise<TrpcContext> {
   let user: User | null = null;
 
-  // The public Railway API only exposes procedures that do not require Manus
-  // sessions. Avoid loading the Manus auth SDK or attempting cookie auth there.
-  if (process.env.API_ONLY !== "true") {
+  // GitHub App administrator sessions are supported in both the full-stack
+  // runtime and the API-only Railway deployment.
+  try {
+    user = await authenticateGitHubAdminRequest(opts.req);
+  } catch {
+    user = null;
+  }
+
+  // Preserve the legacy Manus session flow only for the original full-stack
+  // runtime. The public Railway API does not load the Manus SDK.
+  if (!user && process.env.API_ONLY !== "true") {
     const { sdk } = await import("./sdk");
     try {
       user = await sdk.authenticateRequest(opts.req);

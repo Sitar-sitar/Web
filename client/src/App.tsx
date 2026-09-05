@@ -11,6 +11,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
 import GuideHistory from "./pages/GuideHistory";
 import TranslationFeedback from "./pages/TranslationFeedback";
+import AdminHome from "./pages/AdminHome";
 import FeedbackAdmin from "./pages/FeedbackAdmin";
 
 function Router() {
@@ -20,29 +21,23 @@ function Router() {
   useEffect(() => {
     if (loading || !isAuthenticated) return;
     const returnTo = consumeLoginReturnPath();
-    if (returnTo && window.location.pathname !== returnTo) {
+    if (returnTo && !window.location.pathname.endsWith(returnTo)) {
       setLocation(returnTo);
     }
   }, [isAuthenticated, loading, setLocation]);
 
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/updates"} component={GuideHistory} />
       <Route path={"/feedback"} component={TranslationFeedback} />
+      <Route path={"/admin"} component={AdminHome} />
       <Route path={"/admin/feedback"} component={FeedbackAdmin} />
       <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
 }
-
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
   const routerBase = import.meta.env.BASE_URL === "/"
@@ -51,10 +46,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <LanguageProvider>
             <Toaster />

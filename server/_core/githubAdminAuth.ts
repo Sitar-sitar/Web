@@ -1,6 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { parse as parseCookieHeader } from "cookie";
-import { randomBytes } from "crypto";
+import { createHash, randomBytes } from "crypto";
+import { sql } from "drizzle-orm";
 import type { Express, Request, Response } from "express";
 import { SignJWT, jwtVerify } from "jose";
 import * as db from "../db";
@@ -14,8 +15,10 @@ const ADMIN_SESSION_ISSUER = "hoyoverse-builder-api";
 const ADMIN_SESSION_AUDIENCE = "hoyoverse-builder-admin";
 const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 12;
 const ADMIN_SESSION_TTL_MS = ADMIN_SESSION_TTL_SECONDS * 1000;
+const ADMIN_BEARER_TTL_SECONDS = 60 * 60;
 const OAUTH_STATE_COOKIE = "github_admin_oauth_state";
 const OAUTH_STATE_TTL_MS = 10 * 60 * 1000;
+const ADMIN_EXCHANGE_CODE_TTL_MS = 2 * 60 * 1000;
 const DEFAULT_ADMIN_FRONTEND_URL = "https://sitar-sitar.github.io/Web/hoyoverse";
 
 type GitHubUser = {
@@ -36,6 +39,13 @@ type AdminSessionClaims = {
 type OAuthStateCookie = {
   nonce: string;
   returnTo: string;
+};
+
+type AdminExchangeRecord = {
+  githubId: string;
+  login: string;
+  name: string | null;
+  avatarUrl: string | null;
 };
 
 export function parseAdminGitHubIds(raw = process.env.ADMIN_GITHUB_IDS ?? "") {
@@ -83,6 +93,7 @@ function getMissingConfiguration() {
   if (!hasGitHubAdminAllowlist()) missing.push("ADMIN_GITHUB_IDS");
   const sessionSecret = process.env.ADMIN_SESSION_SECRET ?? process.env.JWT_SECRET ?? "";
   if (sessionSecret.length < 32) missing.push("ADMIN_SESSION_SECRET");
+  if (!process.env.DATABASE_URL) missing.push("DATABASE_URL");
   return missing;
 }
 
@@ -127,22 +138,95 @@ function getOAuthStateCookieOptions(req: Request) {
   };
 }
 
-async function createAdminSessionToken(user: GitHubUser) {
-  return new SignJWT({
+function hashExchangeCode(code: string) {
+  return createHash("sha256").update(code, "utf8").digest("hex");
+}
+
+async function createAdminExchangeCode(user: GitHubUser) {
+  const database = await db.getDb();
+  if (!database) throw new Error("Administrator exchange-code storage is unavailable");
+
+  const code = randomBytes(32).toString("base64url");
+  const codeHash = hashExchangeCode(code);
+  const expiresAt = new Date(Date.now() + ADMIN_EXCHANGE_CODE_TTL_MS);
+
+  await database.execute(sql`
+    INSERT INTO admin_auth_exchange_codes
+      (codeHash, githubId, login, name, avatarUrl, expiresAt, createdAt)
+    VALUES
+      (${codeHash}, ${String(user.id)}, ${user.login}, ${user.name}, ${user.avatar_url}, ${expiresAt}, NOW())
+  `);
+
+  // Keep the table bounded without relying on a background worker.
+  await database.execute(sql`
+    DELETE FROM admin_auth_exchange_codes
+    WHERE expiresAt < DATE_SUB(NOW(), INTERVAL 1 DAY)
+       OR usedAt < DATE_SUB(NOW(), INTERVAL 1 DAY)
+  `);
+
+  return code;
+}
+
+async function consumeAdminExchangeCode(code: string): Promise<AdminExchangeRecord | null> {
+  const database = await db.getDb();
+  if (!database) throw new Error("Administrator exchange-code storage is unavailable");
+
+  const codeHash = hashExchangeCode(code);
+  const queryResult = await database.execute(sql`
+    SELECT githubId, login, name, avatarUrl
+    FROM admin_auth_exchange_codes
+    WHERE codeHash = ${codeHash}
+      AND usedAt IS NULL
+      AND expiresAt >= NOW()
+    LIMIT 1
+  `);
+  const rows = (queryResult as unknown as [Array<AdminExchangeRecord>, unknown])[0];
+  const record = rows?.[0];
+  if (!record) return null;
+
+  const updateResult = await database.execute(sql`
+    UPDATE admin_auth_exchange_codes
+    SET usedAt = NOW()
+    WHERE codeHash = ${codeHash}
+      AND usedAt IS NULL
+      AND expiresAt >= NOW()
+  `);
+  const updateHeader = (updateResult as unknown as [{ affectedRows?: number }, unknown])[0];
+  if (Number(updateHeader?.affectedRows ?? 0) !== 1) return null;
+
+  return record;
+}
+
+async function signAdminSessionToken(claims: AdminSessionClaims, ttlSeconds: number) {
+  return new SignJWT(claims)
+    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+    .setIssuer(ADMIN_SESSION_ISSUER)
+    .setAudience(ADMIN_SESSION_AUDIENCE)
+    .setSubject(`github:${claims.githubId}`)
+    .setIssuedAt()
+    .setJti(randomBytes(16).toString("hex"))
+    .setExpirationTime(`${ttlSeconds}s`)
+    .sign(getAdminSessionSecret());
+}
+
+async function createAdminSessionToken(user: GitHubUser, ttlSeconds = ADMIN_SESSION_TTL_SECONDS) {
+  return signAdminSessionToken({
     githubId: String(user.id),
     login: user.login,
     name: user.name ?? undefined,
     avatarUrl: user.avatar_url ?? undefined,
     role: "admin",
-  } satisfies AdminSessionClaims)
-    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-    .setIssuer(ADMIN_SESSION_ISSUER)
-    .setAudience(ADMIN_SESSION_AUDIENCE)
-    .setSubject(`github:${user.id}`)
-    .setIssuedAt()
-    .setJti(randomBytes(16).toString("hex"))
-    .setExpirationTime(`${ADMIN_SESSION_TTL_SECONDS}s`)
-    .sign(getAdminSessionSecret());
+  }, ttlSeconds);
+}
+
+async function createAdminBearerToken(record: AdminExchangeRecord) {
+  return signAdminSessionToken({
+    githubId: record.githubId,
+    login: record.login,
+    name: record.name ?? undefined,
+    avatarUrl: record.avatarUrl ?? undefined,
+    role: "admin",
+  }, ADMIN_BEARER_TTL_SECONDS);
 }
 
 function getSessionToken(req: Request) {
@@ -262,6 +346,35 @@ export function registerGitHubAdminAuthRoutes(app: Express) {
     res.redirect(302, authorizeUrl.toString());
   });
 
+  app.post("/api/auth/github/exchange", async (req: Request, res: Response) => {
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("Pragma", "no-cache");
+
+    const code = typeof req.body?.code === "string" ? req.body.code.trim() : "";
+    if (!/^[A-Za-z0-9_-]{43}$/.test(code)) {
+      res.status(400).json({ error: "Invalid administrator exchange code" });
+      return;
+    }
+
+    try {
+      const record = await consumeAdminExchangeCode(code);
+      if (!record) {
+        res.status(401).json({ error: "Administrator exchange code is invalid, expired, or already used" });
+        return;
+      }
+      if (!isGitHubAdminIdAllowed(record.githubId)) {
+        res.status(403).json({ error: "This GitHub account is not an administrator" });
+        return;
+      }
+
+      const token = await createAdminBearerToken(record);
+      res.status(200).json({ token, expiresIn: ADMIN_BEARER_TTL_SECONDS });
+    } catch (error) {
+      console.error("[GitHub Admin Auth] Exchange failed", error);
+      res.status(503).json({ error: "Administrator token exchange is unavailable" });
+    }
+  });
+
   app.get("/api/auth/github/callback", async (req: Request, res: Response) => {
     const code = typeof req.query.code === "string" ? req.query.code : "";
     const state = typeof req.query.state === "string" ? req.query.state : "";
@@ -298,10 +411,17 @@ export function registerGitHubAdminAuthRoutes(app: Express) {
         return;
       }
 
+      // Keep the existing HttpOnly cookie for same-browser compatibility, but
+      // also mint a one-time exchange code for Safari/ITP environments where
+      // cross-site cookies from railway.app cannot be sent back by github.io.
       const sessionToken = await createAdminSessionToken(githubUser);
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ADMIN_SESSION_TTL_MS });
-      res.redirect(302, getFrontendUrl(stateCookie.returnTo));
+
+      const exchangeCode = await createAdminExchangeCode(githubUser);
+      const frontendUrl = new URL(getFrontendUrl(stateCookie.returnTo));
+      frontendUrl.hash = new URLSearchParams({ admin_exchange_code: exchangeCode }).toString();
+      res.redirect(302, frontendUrl.toString());
     } catch (error) {
       console.error("[GitHub Admin Auth] Callback failed", error);
       res.status(502).json({ error: "GitHub administrator authentication failed" });

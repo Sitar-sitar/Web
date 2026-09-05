@@ -36,6 +36,13 @@
       "when": 1787631147336,
       "tag": "0004_striped_shape",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1788588000000,
+      "tag": "0005_swift_exchange_code",
+      "breakpoints": true
     }
   ]
 }

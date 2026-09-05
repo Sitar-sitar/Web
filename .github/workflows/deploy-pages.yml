@@ -3,7 +3,6 @@ name: Build and deploy both sites
 on:
   push:
     branches:
-      - RubberDB
       - hoyoversebuilder
   workflow_dispatch:
 

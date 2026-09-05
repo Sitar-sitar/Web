@@ -7,6 +7,7 @@ import { Route, Router as WouterRouter, Switch, useLocation } from "wouter";
 import { useEffect } from "react";
 import AdminLogoutButton from "./components/AdminLogoutButton";
 import ErrorBoundary from "./components/ErrorBoundary";
+import PublicCatalogShortcut from "./components/PublicCatalogShortcut";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
@@ -55,6 +56,7 @@ function App() {
             <Toaster />
             <WouterRouter base={routerBase}>
               <Router />
+              <PublicCatalogShortcut />
               <AdminLogoutButton />
             </WouterRouter>
           </LanguageProvider>

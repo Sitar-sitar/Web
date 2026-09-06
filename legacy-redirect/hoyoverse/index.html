@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>移行済み — Sitar-sitar Web</title>
+    <style>
+      body{font-family:system-ui,-apple-system,sans-serif;max-width:640px;margin:96px auto;padding:0 20px;line-height:1.7;text-align:center;color:#333}
+      a{color:#0a58ca}
+    </style>
+    <script>
+      (function () {
+        var HOYOVERSE_BASE = "/Web/hoyoverse";
+        var RUBBER_BASE = "/Web/rubber";
+        var path = location.pathname;
+        var suffix = location.search + location.hash;
+        var target;
+        if (path === HOYOVERSE_BASE || path.indexOf(HOYOVERSE_BASE + "/") === 0) {
+          var hoyoRest = path.slice(HOYOVERSE_BASE.length);
+          target = "https://sitar-sitar.github.io/hoyoverse-builder" + (hoyoRest === "" ? "/" : hoyoRest) + suffix;
+        } else if (path === RUBBER_BASE || path.indexOf(RUBBER_BASE + "/") === 0) {
+          var rubberRest = path.slice(RUBBER_BASE.length);
+          target = "https://sitar-sitar.github.io/rubberdb" + (rubberRest === "" ? "/" : rubberRest) + suffix;
+        } else {
+          target = "/Web/";
+        }
+        location.replace(target);
+      })();
+    </script>
+  </head>
+  <body>
+    <p>
+      このURLは移行しました。自動的に移動しない場合は
+      <a href="https://sitar-sitar.github.io/hoyoverse-builder/">HoYoverse Builder</a> または
+      <a href="https://sitar-sitar.github.io/rubberdb/">RubberDB</a> へアクセスしてください。
+    </p>
+  </body>
+</html>

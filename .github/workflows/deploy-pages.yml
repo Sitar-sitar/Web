@@ -1,9 +1,14 @@
-name: Build and deploy both sites
+name: Deploy legacy redirect to GitHub Pages
 
+# このリポジトリは HoYoverse Builder / RubberDB の分離元。
+# 分離後は legacy-redirect/ の静的リダイレクトサイトのみを公開する。
 on:
   push:
     branches:
       - hoyoversebuilder
+    paths:
+      - "legacy-redirect/**"
+      - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -12,167 +17,18 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-two-sites
+  group: pages
   cancel-in-progress: true
 
-# サブサイトごとにビルド責務を分け、どちらが原因で失敗したかをジョブ名で判別できるようにする。
 jobs:
-  build-rubber:
-    name: Build RubberDB
+  deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout RubberDB site
+      - name: Checkout
         uses: actions/checkout@v7
-        with:
-          ref: RubberDB
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 22
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install RubberDB dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Typecheck RubberDB
-        run: pnpm check
-
-      - name: Test RubberDB
-        run: pnpm test
-
-      # 新規アドバイザリで公開が止まらないよう、デプロイ経路では警告扱いにする。
-      # ブロックする検査は RubberDB ブランチの `RubberDB CI` ワークフローが担当する。
-      - name: Audit RubberDB dependencies (warning only)
-        continue-on-error: true
-        run: pnpm audit --audit-level high --prod
-
-      - name: Build RubberDB site
-        run: pnpm exec vite build --base /Web/rubber/
-
-      - name: Validate RubberDB artifact
-        run: node scripts/verify-build-artifact.mjs dist/public --base /Web/rubber/
-
-      - name: Upload RubberDB build
-        uses: actions/upload-artifact@v7
-        with:
-          name: rubber-dist
-          path: dist/public
-          if-no-files-found: error
-          retention-days: 1
-
-  build-hoyoverse:
-    name: Build HoYoverse
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout HoYoverse site
-        uses: actions/checkout@v7
-        with:
-          ref: hoyoversebuilder
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 22
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install HoYoverse dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Validate HoYoverse API build
-        run: pnpm build:api
-
-      - name: Verify Railway API
-        env:
-          API_BASE_URL: https://hoyoverse-builder-api-production.up.railway.app
-        run: |
-          set -euo pipefail
-          headers="$(mktemp)"
-          health="$(mktemp)"
-          trpc="$(mktemp)"
-          curl -fsS --retry 5 --retry-all-errors --retry-delay 2 \
-            -H "Origin: https://sitar-sitar.github.io" \
-            -D "$headers" \
-            "$API_BASE_URL/api/health" \
-            -o "$health"
-          grep -q '"ok":true' "$health"
-          grep -qi '^access-control-allow-origin: https://sitar-sitar.github.io' "$headers"
-          curl -fsS --retry 5 --retry-all-errors --retry-delay 2 \
-            -H "Origin: https://sitar-sitar.github.io" \
-            "$API_BASE_URL/api/trpc/build.guideHistory" \
-            -o "$trpc"
-          grep -q '"result"' "$trpc"
-
-      - name: Build HoYoverse site
-        env:
-          VITE_API_BASE_URL: ${{ vars.HOYOVERSE_API_BASE_URL || 'https://hoyoverse-builder-api-production.up.railway.app' }}
-        run: pnpm exec vite build --config vite.pages.config.ts --base /Web/hoyoverse/
-
-      - name: Upload HoYoverse build
-        uses: actions/upload-artifact@v7
-        with:
-          name: hoyoverse-dist
-          path: dist/public
-          if-no-files-found: error
-          retention-days: 1
-
-  assemble:
-    name: Assemble Pages artifact
-    runs-on: ubuntu-latest
-    needs:
-      - build-rubber
-      - build-hoyoverse
-    steps:
-      - name: Download HoYoverse build
-        uses: actions/download-artifact@v8
-        with:
-          name: hoyoverse-dist
-          path: site/hoyoverse
-
-      - name: Download RubberDB build
-        uses: actions/download-artifact@v8
-        with:
-          name: rubber-dist
-          path: site/rubber
-
-      - name: Assemble Pages artifact
-        run: |
-          set -euo pipefail
-
-          # GitHub Pages does not provide SPA history fallback for nested paths.
-          # Publish index.html at every known client-side route so direct links and
-          # OAuth redirects such as /admin work without a Pages 404.
-          for route in characters updates feedback admin admin/feedback; do
-            mkdir -p "site/hoyoverse/$route"
-            cp site/hoyoverse/index.html "site/hoyoverse/$route/index.html"
-          done
-
-          cp site/hoyoverse/index.html site/hoyoverse/404.html
-          cp site/rubber/index.html site/rubber/404.html
-          cat > site/index.html <<'HTML'
-          <!doctype html>
-          <html lang="ja">
-            <head>
-              <meta charset="utf-8" />
-              <meta name="viewport" content="width=device-width,initial-scale=1" />
-              <title>Sitar-sitar Web</title>
-              <style>
-                body{font-family:system-ui,-apple-system,sans-serif;max-width:720px;margin:64px auto;padding:0 20px;line-height:1.7}
-                a{display:block;margin:16px 0;padding:18px;border:1px solid #ccc;border-radius:12px;text-decoration:none;color:inherit}
-                strong{display:block;font-size:1.15rem}
-              </style>
-            </head>
-            <body>
-              <h1>Sitar-sitar Web</h1>
-              <a href="./hoyoverse/"><strong>HoYoverse Builder</strong>崩壊：スターレイル・原神・ゼンレスゾーンゼロ ビルド支援</a>
-              <a href="./rubber/"><strong>RubberDB</strong>卓球ラバー図鑑</a>
-            </body>
-          </html>
-          HTML
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
@@ -180,15 +36,8 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: site
+          path: legacy-redirect
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: assemble
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
